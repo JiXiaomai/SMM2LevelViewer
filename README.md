@@ -14,10 +14,14 @@ https://tesseract-ocr.github.io/
 
 
 使用方法：
-1.在文本框输入图号
-2.点击[Load Level]按钮
-3.等待加载地图
-4.点击[Map A/B]按键查看地图，点击[Save Image]按钮保存图片
+
+1.在文本框输入图号. Input LEVEL CODE in the textbox.
+
+2.点击[Load Level]按钮. Click [Load Level] Button.
+
+3.等待加载地图. Waiting for loading level to complete.
+
+4.点击[Map A/B]按键查看地图，点击[Save Image]按钮保存图片. Click [Map A/B] button to view the map,and click [Save Image] button to save the map image. 
 
 ![QQ截图20211211112120](https://user-images.githubusercontent.com/20100838/145671934-b4d6f2e5-6e12-49d6-a793-984fbd16ad12.jpg)
 
