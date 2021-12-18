@@ -79,7 +79,7 @@ Public Class Form1
 
     End Sub
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
-        Form2.Show()
+        Form2.ShowDialog()
     End Sub
     Dim B As Bitmap
     Dim G As Graphics
@@ -3230,7 +3230,7 @@ Err:
         Form2.P.Image = GetTile(0, 0, 1, 1)
     End Sub
     Private Sub Button8_Click(sender As Object, e As EventArgs) Handles Button8.Click
-        Form3.Show()
+        Form3.ShowDialog()
     End Sub
     Private Sub TrackBar1_Scroll(sender As Object, e As EventArgs) Handles TrackBar1.Scroll
         Label1.Text = "缩放Zoom:" & 2 ^ TrackBar1.Value
