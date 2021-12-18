@@ -90,6 +90,7 @@ Public Class Form1
         H = MapHdr.BorT \ 16
         W = MapHdr.BorR \ 16
         Zm = 2 ^ TrackBar1.Value
+        Form2.ZoomValue = Zm
         B = New Bitmap(W * Zm, H * Zm)
         G = Graphics.FromImage(B)
         Form2.P.Width = W * Zm
@@ -145,6 +146,7 @@ Public Class Form1
         H = MapHdr.BorT \ 16
         W = MapHdr.BorR \ 16
         Zm = 2 ^ TrackBar1.Value
+        Form3.ZoomValue = Zm
         B = New Bitmap(W * Zm, H * Zm)
         G = Graphics.FromImage(B)
         Form3.P.Width = W * Zm

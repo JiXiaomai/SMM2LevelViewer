@@ -1,6 +1,9 @@
 ﻿Public Class Form3
     Dim MX, MY As Integer, isMove As Boolean
     Dim CX, CY, CX0, CY0 As Integer
+    
+    Public Property ZoomValue As Integer = 64
+    
     Private Sub P_MouseDown(sender As Object, e As MouseEventArgs) Handles P.MouseDown
         MX = e.X
         MY = e.Y
@@ -17,8 +20,8 @@
             P.Left += e.X - MX
             P.Top += e.Y - MY
         End If
-        CX = 1 + e.X \ 16
-        CY = 1 + e.Y \ 16
+        CX = 1 + e.X \ ZoomValue
+        CY = 1 + e.Y \ ZoomValue
         If CX <> CX0 OrElse CY <> CY0 Then
             ToolTip1.Hide(P)
             ObjC = ObjLocData(1, CX, MapHeight(1) + 1 - CY)
