@@ -14,6 +14,11 @@ Partial Class Form3
         End Try
     End Sub
 
+    Protected Overrides Sub OnFormClosing(e As FormClosingEventArgs)
+        e.Cancel = True
+        Me.Hide()
+    End Sub
+
     'Windows 窗体设计器所必需的
     Private components As System.ComponentModel.IContainer
 

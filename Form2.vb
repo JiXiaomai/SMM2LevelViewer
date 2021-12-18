@@ -3,6 +3,9 @@ Public Class Form2
 
     Dim MX, MY As Integer, isMove As Boolean
     Dim CX, CY, CX0, CY0 As Integer
+
+    Public Property ZoomValue As Integer = 64
+
     Private Sub P_MouseDown(sender As Object, e As MouseEventArgs) Handles P.MouseDown
         MX = e.X
         MY = e.Y
@@ -20,8 +23,8 @@ Public Class Form2
             P.Left += e.X - MX
             P.Top += e.Y - MY
         End If
-        CX = 1 + e.X \ 16
-        CY = 1 + e.Y \ 16
+        CX = 1 + e.X \ ZoomValue
+        CY = 1 + e.Y \ ZoomValue
         If CX <> CX0 OrElse CY <> CY0 Then
             ToolTip1.Hide(P)
             ObjC = ObjLocData(0, CX, MapHeight(0) + 1 - CY)
@@ -34,8 +37,7 @@ Public Class Form2
     Protected Overrides Sub OnLoad(e As EventArgs)
         MyBase.OnLoad(e)
         ToolTip1.OwnerDraw = True
-        ToolTip1.AutomaticDelay = 0
-        ToolTip1.AutoPopDelay = 0
+        ToolTip1.AutomaticDelay = 500
         'ToolTip1.SetToolTip(P, "")
     End Sub
     Private Sub ToolTip1_Popup(sender As Object, e As PopupEventArgs) Handles ToolTip1.Popup
