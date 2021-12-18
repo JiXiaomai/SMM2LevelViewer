@@ -34,8 +34,7 @@
     Protected Overrides Sub OnLoad(e As EventArgs)
         MyBase.OnLoad(e)
         ToolTip1.OwnerDraw = True
-        ToolTip1.AutomaticDelay = 0
-        ToolTip1.AutoPopDelay = 0
+        ToolTip1.AutomaticDelay = 500
         'ToolTip1.SetToolTip(P, "")
     End Sub
     Private Sub ToolTip1_Popup(sender As Object, e As PopupEventArgs) Handles ToolTip1.Popup
