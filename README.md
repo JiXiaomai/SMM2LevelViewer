@@ -18,14 +18,6 @@
 
 4.点击[Map A/B]按键查看地图，点击[Save Image]按钮保存图片.
 
-![QQ截图20211211112120](https://user-images.githubusercontent.com/20100838/145671934-b4d6f2e5-6e12-49d6-a793-984fbd16ad12.jpg)
-
-![QQ截图20211211112158](https://user-images.githubusercontent.com/20100838/145671936-6994d302-0cf4-4307-8066-2ac8a0090693.jpg)
-
-![QQ截图20211207230100](https://user-images.githubusercontent.com/20100838/145671941-15b4b5fb-b5dd-4040-8c44-965a58c76a8f.jpg)
-
-![QQ截图20211207225928](https://user-images.githubusercontent.com/20100838/145671944-a039ddfa-63af-465d-9c9a-81353971fd92.jpg)
-
 ## English
 
 Thanks to [TheGreatRambler](https://github.com/TheGreatRambler) for providing / creating the public API.
@@ -43,3 +35,11 @@ This program uses the [Newtonsoft.Json](https://www.newtonsoft.com/json) and [Te
 3. Wait for program to load the level.
 
 4. Click Map A, click Map B for subworld, or click Save Image to save the map as an image.
+
+![QQ截图20211211112120](https://user-images.githubusercontent.com/20100838/145671934-b4d6f2e5-6e12-49d6-a793-984fbd16ad12.jpg)
+
+![QQ截图20211211112158](https://user-images.githubusercontent.com/20100838/145671936-6994d302-0cf4-4307-8066-2ac8a0090693.jpg)
+
+![QQ截图20211207230100](https://user-images.githubusercontent.com/20100838/145671941-15b4b5fb-b5dd-4040-8c44-965a58c76a8f.jpg)
+
+![QQ截图20211207225928](https://user-images.githubusercontent.com/20100838/145671944-a039ddfa-63af-465d-9c9a-81353971fd92.jpg)
