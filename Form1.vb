@@ -3884,6 +3884,7 @@ Err:
         TextBox9.SelectAll()
     End Sub
 
+
     Dim BBB As New Bitmap(300, 50)
     Dim GGG As Graphics = Graphics.FromImage(BBB)
 
