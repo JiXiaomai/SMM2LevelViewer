@@ -27,7 +27,7 @@
         Dim Desc As String
     End Structure
     '关卡文件头H200
-    Public LH As LvlHeader
+    Public LH As LvlHeader, PZoom As Integer = 16
     Public Structure MapObject
         Dim X As Integer
         Dim Y As Integer
@@ -230,7 +230,7 @@
         Dim Offset As Integer
         Offset = IIf(IO, &H201, &H2E0E1)
 
-        FileOpen(1, P, OpenMode.Binary)
+        FileOpen(1, PT & "\decrypt_data\" & P, OpenMode.Binary)
         FileGet(1, LH.StartY, &H0 + 1)
         FileGet(1, LH.GoalY, &H1 + 1)
         FileGet(1, LH.GoalX, &H2 + 1)
@@ -334,6 +334,8 @@
         Next
 
         '0x14584  0x4B0 (0x4 * 300)Sound Effect
+
+
         '蛇砖块0x149F8  0x12D4 (0x3C4 * 5)Snake Block
         ReDim MapSnk(MapHdr.SnakeCount - 1)
         For M = 0 To MapHdr.SnakeCount - 1

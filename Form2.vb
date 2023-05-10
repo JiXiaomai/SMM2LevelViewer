@@ -20,8 +20,8 @@ Public Class Form2
             P.Left += e.X - MX
             P.Top += e.Y - MY
         End If
-        CX = 1 + e.X \ 16
-        CY = 1 + e.Y \ 16
+        CX = 1 + e.X \ PZoom
+        CY = 1 + e.Y \ PZoom
         If CX <> CX0 OrElse CY <> CY0 Then
             ToolTip1.Hide(P)
             ObjC = ObjLocData(0, CX, MapHeight(0) + 1 - CY)

@@ -36,11 +36,15 @@ Partial Class Form2
         Me.P.TabIndex = 0
         Me.P.TabStop = False
         '
+        'ToolTip1
+        '
+        '
         'Form2
         '
+        Me.AllowDrop = True
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(784, 441)
+        Me.ClientSize = New System.Drawing.Size(216, 136)
         Me.Controls.Add(Me.P)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow
         Me.Name = "Form2"

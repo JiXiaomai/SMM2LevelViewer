@@ -36,16 +36,20 @@ Partial Class Form3
         Me.P.TabIndex = 0
         Me.P.TabStop = False
         '
+        'ToolTip1
+        '
+        '
         'Form3
         '
+        Me.AllowDrop = True
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(784, 441)
+        Me.ClientSize = New System.Drawing.Size(587, 466)
         Me.Controls.Add(Me.P)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow
         Me.Name = "Form3"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "Form3"
+        Me.Text = "里世界"
         CType(Me.P, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 

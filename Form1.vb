@@ -5,28 +5,27 @@ Imports System.Diagnostics
 Imports System.Net
 Imports System.IO
 Imports Newtonsoft.Json.Linq
-
+Imports Tesseract
 Public Class Form1
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         isMapIO = True
         RefPic()
         Button2.Enabled = True
     End Sub
-    Private Sub Button6_Click(sender As Object, e As EventArgs) 
+    Private Sub Button6_Click(sender As Object, e As EventArgs)
         isMapIO = False
         LoadEFile(False)
         InitPng()
         DrawObject(False)
 
-        Form2.P.Image = B
+        Form2.P.Image = BMAP1
         Button2.Enabled = True
     End Sub
     Public Sub LoadEFile(IO As Boolean)
         '关卡文件头H00长度200
         LoadLvlData(TextBox1.Text, IO)
         If IO Then
-            Label2.Text += vbCrLf & vbCrLf
-            Label2.Text += "图名：" & LH.Name & vbCrLf
+            Label2.Text = "图名：" & LH.Name & vbCrLf
             Label2.Text += "描述：" & LH.Desc & vbCrLf
             Label2.Text += "时间：" & LH.Timer & vbCrLf
             Label2.Text += "风格：" & LH.GameStyle & vbCrLf
@@ -75,56 +74,59 @@ Public Class Form1
                 TextBox4.Text += I.Name & ":" & I.GetValue(MapHdr).ToString & vbCrLf
             Next
         End If
-
-
     End Sub
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
         Form2.Show()
+        Form2.ClientSize = New Size(500, 500)
+        Form2.P.Size = BSIZE1
+        Form2.P.Image = BMAP1
     End Sub
-    Dim B As Bitmap
+    Dim BMAP1, BMAP2 As Bitmap
+    Dim BSIZE1, BSIZE2 As Size
     Dim G As Graphics
-    Dim Zm As Integer
     Public Sub InitPng()
         Dim i As Integer
         Dim H As Integer, W As Integer
         H = MapHdr.BorT \ 16
         W = MapHdr.BorR \ 16
-        Zm = 2 ^ TrackBar1.Value
-        B = New Bitmap(W * Zm, H * Zm)
-        G = Graphics.FromImage(B)
-        Form2.P.Width = W * Zm
-        Form2.P.Height = H * Zm
+        PZoom = 2 ^ TrackBar1.Value
+        BMAP1 = New Bitmap(W * PZoom, H * PZoom)
+        G = Graphics.FromImage(BMAP1)
+        BSIZE1.Width = W * PZoom
+        BSIZE1.Height = H * PZoom
+        Form2.P.Size = BSIZE1
         G.InterpolationMode = InterpolationMode.NearestNeighbor
+        G.SmoothingMode = SmoothingMode.None
 
         For i = 0 To H
-            G.DrawLine(Pens.LightGray, 0, CSng(i * Zm), CSng(W * Zm), CSng(i * Zm))
+            G.DrawLine(Pens.LightGray, 0, CSng(i * PZoom), CSng(W * PZoom), CSng(i * PZoom))
             If i Mod 13 = 0 Then
-                G.DrawLine(Pens.LightGray, 0, CSng((H - i) * Zm + 1), CSng(W * Zm), CSng((H - i) * Zm + 1))
+                G.DrawLine(Pens.LightGray, 0, CSng((H - i) * PZoom + 1), CSng(W * PZoom), CSng((H - i) * PZoom + 1))
             End If
             If (H - i) Mod 10 = 0 Then
-                G.DrawString((H - i).ToString, Button1.Font, Brushes.Black, 0, CSng(i * Zm))
+                G.DrawString((H - i).ToString, Button1.Font, Brushes.Black, 0, CSng(i * PZoom))
             End If
         Next
         For i = 0 To W
-            G.DrawLine(Pens.LightGray, CSng(i * Zm), 0, CSng(i * Zm), CSng(H * Zm))
+            G.DrawLine(Pens.LightGray, CSng(i * PZoom), 0, CSng(i * PZoom), CSng(H * PZoom))
             If i Mod 24 = 0 Then
-                G.DrawLine(Pens.LightGray, CSng(i * Zm + 1), 0, CSng(i * Zm + 1), CSng(H * Zm))
+                G.DrawLine(Pens.LightGray, CSng(i * PZoom + 1), 0, CSng(i * PZoom + 1), CSng(H * PZoom))
             End If
             If i Mod 10 = 9 Then
-                G.DrawString((i + 1).ToString, Button1.Font, Brushes.Black, CSng(i * Zm), 0)
+                G.DrawString((i + 1).ToString, Button1.Font, Brushes.Black, CSng(i * PZoom), 0)
             End If
         Next
         Dim BC1, BC2 As Color
         If MapHdr.Theme = 2 Then
             BC1 = Color.FromArgb(64, 255, 0, 0)
             BC2 = Color.FromArgb(64, 255, 0, 0)
-            G.FillRectangle(New SolidBrush(BC2), 0, CSng((H - MapHdr.LiqEHeight - 0.5) * Zm), CSng(W * Zm), CSng(H * Zm))
-            G.FillRectangle(New SolidBrush(BC1), 0, CSng((H - MapHdr.LiqSHeight - 0.5) * Zm), CSng(W * Zm), CSng(H * Zm))
+            G.FillRectangle(New SolidBrush(BC2), 0, CSng((H - MapHdr.LiqEHeight - 0.5) * PZoom), CSng(W * PZoom), CSng(H * PZoom))
+            G.FillRectangle(New SolidBrush(BC1), 0, CSng((H - MapHdr.LiqSHeight - 0.5) * PZoom), CSng(W * PZoom), CSng(H * PZoom))
         ElseIf MapHdr.Theme = 9 Then
             BC1 = Color.FromArgb(64, 0, 0, 255)
             BC2 = Color.FromArgb(64, 0, 0, 255)
-            G.FillRectangle(New SolidBrush(BC2), 0, CSng((H - MapHdr.LiqEHeight - 0.5) * Zm), CSng(W * Zm), CSng(H * Zm))
-            G.FillRectangle(New SolidBrush(BC1), 0, CSng((H - MapHdr.LiqSHeight - 0.5) * Zm), CSng(W * Zm), CSng(H * Zm))
+            G.FillRectangle(New SolidBrush(BC2), 0, CSng((H - MapHdr.LiqEHeight - 0.5) * PZoom), CSng(W * PZoom), CSng(H * PZoom))
+            G.FillRectangle(New SolidBrush(BC1), 0, CSng((H - MapHdr.LiqSHeight - 0.5) * PZoom), CSng(W * PZoom), CSng(H * PZoom))
         End If
 
     End Sub
@@ -144,28 +146,29 @@ Public Class Form1
         Dim H As Integer, W As Integer
         H = MapHdr.BorT \ 16
         W = MapHdr.BorR \ 16
-        Zm = 2 ^ TrackBar1.Value
-        B = New Bitmap(W * Zm, H * Zm)
-        G = Graphics.FromImage(B)
-        Form3.P.Width = W * Zm
-        Form3.P.Height = H * Zm
+        PZoom = 2 ^ TrackBar1.Value
+        BMAP2 = New Bitmap(W * PZoom, H * PZoom)
+        G = Graphics.FromImage(BMAP2)
+        BSIZE2.Width = W * PZoom
+        BSIZE2.Height = H * PZoom
+        Form3.P.Size = BSIZE2
         G.InterpolationMode = InterpolationMode.NearestNeighbor
         For i = 0 To H
-            G.DrawLine(Pens.WhiteSmoke, 0, CSng(i * Zm), CSng(W * Zm), CSng(i * Zm))
+            G.DrawLine(Pens.WhiteSmoke, 0, CSng(i * PZoom), CSng(W * PZoom), CSng(i * PZoom))
             If i Mod 13 = 0 Then
-                G.DrawLine(Pens.WhiteSmoke, 0, CSng((H - i) * Zm + 1), CSng(W * Zm), CSng((H - i) * Zm + 1))
+                G.DrawLine(Pens.WhiteSmoke, 0, CSng((H - i) * PZoom + 1), CSng(W * PZoom), CSng((H - i) * PZoom + 1))
             End If
             If (H - i) Mod 10 = 0 Then
-                G.DrawString((H - i).ToString, Button1.Font, Brushes.Black, 0, CSng(i * Zm))
+                G.DrawString((H - i).ToString, Button1.Font, Brushes.Black, 0, CSng(i * PZoom))
             End If
         Next
         For i = 0 To W
-            G.DrawLine(Pens.WhiteSmoke, CSng(i * Zm), 0, CSng(i * Zm), CSng(H * Zm))
+            G.DrawLine(Pens.WhiteSmoke, CSng(i * PZoom), 0, CSng(i * PZoom), CSng(H * PZoom))
             If i Mod 24 = 0 Then
-                G.DrawLine(Pens.WhiteSmoke, CSng(i * Zm + 1), 0, CSng(i * Zm + 1), CSng(H * Zm))
+                G.DrawLine(Pens.WhiteSmoke, CSng(i * PZoom + 1), 0, CSng(i * PZoom + 1), CSng(H * PZoom))
             End If
             If i Mod 10 = 9 Then
-                G.DrawString((i + 1).ToString, Button1.Font, Brushes.Black, CSng(i * Zm), 0)
+                G.DrawString((i + 1).ToString, Button1.Font, Brushes.Black, CSng(i * PZoom), 0)
             End If
         Next
 
@@ -173,13 +176,13 @@ Public Class Form1
         If MapHdr.Theme = 2 Then
             BC1 = Color.FromArgb(64, 255, 0, 0)
             BC2 = Color.FromArgb(64, 255, 0, 0)
-            G.FillRectangle(New SolidBrush(BC2), 0, CSng((H - MapHdr.LiqEHeight - 0.5) * Zm), CSng(W * Zm), CSng(H * Zm))
-            G.FillRectangle(New SolidBrush(BC1), 0, CSng((H - MapHdr.LiqSHeight - 0.5) * Zm), CSng(W * Zm), CSng(H * Zm))
+            G.FillRectangle(New SolidBrush(BC2), 0, CSng((H - MapHdr.LiqEHeight - 0.5) * PZoom), CSng(W * PZoom), CSng(H * PZoom))
+            G.FillRectangle(New SolidBrush(BC1), 0, CSng((H - MapHdr.LiqSHeight - 0.5) * PZoom), CSng(W * PZoom), CSng(H * PZoom))
         ElseIf MapHdr.Theme = 9 Then
             BC1 = Color.FromArgb(64, 0, 0, 255)
             BC2 = Color.FromArgb(64, 0, 0, 255)
-            G.FillRectangle(New SolidBrush(BC2), 0, CSng((H - MapHdr.LiqEHeight - 0.5) * Zm), CSng(W * Zm), CSng(H * Zm))
-            G.FillRectangle(New SolidBrush(BC1), 0, CSng((H - MapHdr.LiqSHeight - 0.5) * Zm), CSng(W * Zm), CSng(H * Zm))
+            G.FillRectangle(New SolidBrush(BC2), 0, CSng((H - MapHdr.LiqEHeight - 0.5) * PZoom), CSng(W * PZoom), CSng(H * PZoom))
+            G.FillRectangle(New SolidBrush(BC1), 0, CSng((H - MapHdr.LiqSHeight - 0.5) * PZoom), CSng(W * PZoom), CSng(H * PZoom))
         End If
 
     End Sub
@@ -207,53 +210,53 @@ Public Class Form1
                         YY += 2
                 End Select
                 For i = 0 To MapTrackBlk(EX - 1).NodeCount - 1
-                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SS.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
-                    'G.DrawString(MapTrackBlk(EX - 1).Node(i).p1, Me.Font, Brushes.Black, (XX) * Zm, (H - YY) * Zm)
+                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SS.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
+                    'G.DrawString(MapTrackBlk(EX - 1).Node(i).p1, Me.Font, Brushes.Black, (XX) * PZOOM, (H - YY) * PZOOM)
                     Select Case MapTrackBlk(EX - 1).Node(i).p1
                         Case 1 'L
-                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SL.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SL.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                             XX -= 2
                         Case 2 'R
-                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SR.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SR.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                             XX += 2
                         Case 3 'D
-                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SD.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SD.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                             YY -= 2
                         Case 4 'U
-                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SU.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SU.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                             YY += 2
                         Case 5 'LD
-                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SRD.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SRD.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                             YY -= 2
                         Case 6 'DL
-                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SUL.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SUL.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                             XX -= 2
                         Case 7 'LU
-                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SRU.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SRU.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                             YY += 2
                         Case 8 'UL
-                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SDL.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SDL.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                             XX -= 2
                         Case 9 'RD
-                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SLD.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SLD.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                             YY -= 2
                         Case 10 'DR
-                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SUR.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SUR.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                             XX += 2
                         Case 11 'RU
-                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SLU.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SLU.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                             YY += 2
                         Case 12 'UR
-                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SDR.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SDR.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                             XX += 2
                         Case 13 'RE
-                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SE.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SE.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                         Case 14 'LE
-                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SE.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SE.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                         Case 15 'UE
-                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SE.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SE.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                         Case 16 'DE
-                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SE.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SE.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                     End Select
                 Next
             Case 119
@@ -270,53 +273,53 @@ Public Class Form1
                         YY += 2
                 End Select
                 For i = 0 To MapMoveBlk(EX - 1).NodeCount - 1
-                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SS.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
-                    'G.DrawString(MapMoveBlk(EX - 1).Node(i).p1, Me.Font, Brushes.Black, (XX) * Zm, (H - YY) * Zm)
+                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SS.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
+                    'G.DrawString(MapMoveBlk(EX - 1).Node(i).p1, Me.Font, Brushes.Black, (XX) * PZOOM, (H - YY) * PZOOM)
                     Select Case MapMoveBlk(EX - 1).Node(i).p1
                         Case 1 'L
-                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SL.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SL.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                             XX -= 2
                         Case 2 'R
-                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SR.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SR.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                             XX += 2
                         Case 3 'D
-                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SD.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SD.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                             YY -= 2
                         Case 4 'U
-                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SU.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SU.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                             YY += 2
                         Case 5 'LD
-                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SRD.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SRD.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                             YY -= 2
                         Case 6 'DL
-                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SUL.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SUL.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                             XX -= 2
                         Case 7 'LU
-                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SRU.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SRU.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                             YY += 2
                         Case 8 'UL
-                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SDL.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SDL.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                             XX -= 2
                         Case 9 'RD
-                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SLD.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SLD.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                             YY -= 2
                         Case 10 'DR
-                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SUR.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SUR.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                             XX += 2
                         Case 11 'RU
-                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SLU.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SLU.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                             YY += 2
                         Case 12 'UR
-                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SDR.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SDR.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                             XX += 2
                         Case 13 'RE
-                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SE.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SE.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                         Case 14 'LE
-                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SE.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SE.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                         Case 15 'UE
-                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SE.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SE.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                         Case 16 'DE
-                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SE.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                            G.DrawImage(Image.FromFile(PT & "\img\CMN\SE.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                     End Select
                 Next
         End Select
@@ -345,53 +348,53 @@ Err:
         End Select
 
         For i = 0 To MapCrp(EX - 1).NodeCount - 1
-            G.DrawImage(Image.FromFile(PT & "\img\CMN\SS.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
-            'G.DrawString(MapCrp(EX - 1).Node(i), Me.Font, Brushes.Black, (XX) * Zm, (H - YY) * Zm)
+            G.DrawImage(Image.FromFile(PT & "\img\CMN\SS.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
+            'G.DrawString(MapCrp(EX - 1).Node(i), Me.Font, Brushes.Black, (XX) * PZOOM, (H - YY) * PZOOM)
             Select Case MapCrp(EX - 1).Node(i)
                 Case 1 'L
-                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SL.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SL.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                     XX -= 2
                 Case 2 'R
-                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SR.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SR.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                     XX += 2
                 Case 3 'D
-                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SD.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SD.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                     YY -= 2
                 Case 4 'U
-                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SU.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SU.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                     YY += 2
                 Case 5 'LD
-                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SRD.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SRD.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                     YY -= 2
                 Case 6 'DL
-                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SUL.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SUL.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                     XX -= 2
                 Case 7 'LU
-                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SRU.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SRU.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                     YY += 2
                 Case 8 'UL
-                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SDL.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SDL.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                     XX -= 2
                 Case 9 'RD
-                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SLD.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SLD.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                     YY -= 2
                 Case 10 'DR
-                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SUR.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SUR.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                     XX += 2
                 Case 11 'RU
-                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SLU.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SLU.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                     YY += 2
                 Case 12 'UR
-                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SDR.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SDR.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                     XX += 2
                 Case 13 'RE
-                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SE.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SE.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                 Case 14 'LE
-                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SE.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SE.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                 Case 15 'UE
-                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SE.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SE.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
                 Case 16 'DE
-                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SE.PNG"), XX * Zm, (H - YY) * Zm, Zm * 2, Zm * 2)
+                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SE.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom * 2, PZoom * 2)
             End Select
         Next
 Err:
@@ -439,53 +442,53 @@ Err:
 
 
         For i = 0 To MapSnk(EX - 1).NodeCount - 1
-            G.DrawImage(Image.FromFile(PT & "\img\CMN\SS.PNG"), XX * Zm, (H - YY) * Zm, Zm, Zm)
-            'G.DrawString(MapSnk(EX - 1).Node(i).Dir, Me.Font, Brushes.Black, (XX + 0.5) * Zm, (H - YY - 0.5) * Zm)
+            G.DrawImage(Image.FromFile(PT & "\img\CMN\SS.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom, PZoom)
+            'G.DrawString(MapSnk(EX - 1).Node(i).Dir, Me.Font, Brushes.Black, (XX + 0.5) * PZOOM, (H - YY - 0.5) * PZOOM)
             Select Case MapSnk(EX - 1).Node(i).Dir
                 Case 1 'L
-                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SL.PNG"), XX * Zm, (H - YY) * Zm, Zm, Zm)
+                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SL.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom, PZoom)
                     XX -= 1
                 Case 2 'R
-                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SR.PNG"), XX * Zm, (H - YY) * Zm, Zm, Zm)
+                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SR.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom, PZoom)
                     XX += 1
                 Case 3 'D
-                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SD.PNG"), XX * Zm, (H - YY) * Zm, Zm, Zm)
+                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SD.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom, PZoom)
                     YY -= 1
                 Case 4 'U
-                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SU.PNG"), XX * Zm, (H - YY) * Zm, Zm, Zm)
+                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SU.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom, PZoom)
                     YY += 1
                 Case 5 'LD
-                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SRD.PNG"), XX * Zm, (H - YY) * Zm, Zm, Zm)
+                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SRD.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom, PZoom)
                     YY -= 1
                 Case 6 'DL
-                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SUL.PNG"), XX * Zm, (H - YY) * Zm, Zm, Zm)
+                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SUL.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom, PZoom)
                     XX -= 1
                 Case 7 'LU
-                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SRU.PNG"), XX * Zm, (H - YY) * Zm, Zm, Zm)
+                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SRU.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom, PZoom)
                     YY += 1
                 Case 8 'UL
-                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SDL.PNG"), XX * Zm, (H - YY) * Zm, Zm, Zm)
+                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SDL.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom, PZoom)
                     XX -= 1
                 Case 9 'RD
-                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SLD.PNG"), XX * Zm, (H - YY) * Zm, Zm, Zm)
+                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SLD.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom, PZoom)
                     YY -= 1
                 Case 10 'DR
-                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SUR.PNG"), XX * Zm, (H - YY) * Zm, Zm, Zm)
+                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SUR.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom, PZoom)
                     XX += 1
                 Case 11 'RU
-                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SLU.PNG"), XX * Zm, (H - YY) * Zm, Zm, Zm)
+                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SLU.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom, PZoom)
                     YY += 1
                 Case 12 'UR
-                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SDR.PNG"), XX * Zm, (H - YY) * Zm, Zm, Zm)
+                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SDR.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom, PZoom)
                     XX += 1
                 Case 13 'RE
-                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SE.PNG"), XX * Zm, (H - YY) * Zm, Zm, Zm)
+                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SE.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom, PZoom)
                 Case 14 'LE
-                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SE.PNG"), XX * Zm, (H - YY) * Zm, Zm, Zm)
+                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SE.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom, PZoom)
                 Case 15 'UE
-                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SE.PNG"), XX * Zm, (H - YY) * Zm, Zm, Zm)
+                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SE.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom, PZoom)
                 Case 16 'DE
-                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SE.PNG"), XX * Zm, (H - YY) * Zm, Zm, Zm)
+                    G.DrawImage(Image.FromFile(PT & "\img\CMN\SE.PNG"), XX * PZoom, (H - YY) * PZoom, PZoom, PZoom)
             End Select
 
         Next
@@ -497,7 +500,7 @@ Err:
         Dim i As Integer, H As Integer
         For i = 0 To MapHdr.IceCount - 1
             If MapIce(i).ID = 0 Then
-                G.DrawImage(GetTile(15, 41, 1, 2), MapIce(i).X * Zm, (MapHdr.BorT \ 16 - 2) * Zm - MapIce(i).Y * Zm, Zm, Zm * 2)
+                G.DrawImage(GetTile(15, 41, 1, 2), MapIce(i).X * PZoom, (MapHdr.BorT \ 16 - 2) * PZoom - MapIce(i).Y * PZoom, PZoom, PZoom * 2)
                 For H = 1 To 2
                     ObjLocData(NowIO, MapIce(i).X + 1, Int(H + MapIce(i).Y)).Obj += "118,"
                     ObjLocData(NowIO, MapIce(i).X + 1, Int(H + MapIce(i).Y)).Flag += ","
@@ -507,7 +510,7 @@ Err:
                     ObjLocData(NowIO, MapIce(i).X + 1, Int(H + MapIce(i).Y)).SubState += ","
                 Next
             Else
-                G.DrawImage(GetTile(15, 39, 1, 2), MapIce(i).X * Zm, (MapHdr.BorT \ 16 - 2) * Zm - MapIce(i).Y * Zm, Zm, Zm * 2)
+                G.DrawImage(GetTile(15, 39, 1, 2), MapIce(i).X * PZoom, (MapHdr.BorT \ 16 - 2) * PZoom - MapIce(i).Y * PZoom, PZoom, PZoom * 2)
                 For H = 1 To 2
                     ObjLocData(NowIO, MapIce(i).X + 1, Int(H + MapIce(i).Y)).Obj += "118A,"
                     ObjLocData(NowIO, MapIce(i).X + 1, Int(H + MapIce(i).Y)).Flag += ","
@@ -529,51 +532,51 @@ Err:
             'LID+1?
             ObjLinkType(MapTrk(i).LID) = 59
             If MapTrk(i).Type < 8 Then
-                G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\T" & MapTrk(i).Type.ToString & ".PNG"), MapTrk(i).X * Zm - Zm, (H - 2) * Zm - MapTrk(i).Y * Zm, Zm * 3, Zm * 3)
+                G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\T" & MapTrk(i).Type.ToString & ".PNG"), MapTrk(i).X * PZoom - PZoom, (H - 2) * PZoom - MapTrk(i).Y * PZoom, PZoom * 3, PZoom * 3)
                 Select Case MapTrk(i).Type
                     Case 0
                         If TrackNode(MapTrk(i).X + 1 + 1, MapTrk(i).Y + 1) = 1 AndAlso MapTrk(i).F0 = 0 Then
-                            G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\T.PNG"), MapTrk(i).X * Zm + Zm, (H - 1) * Zm - MapTrk(i).Y * Zm, Zm, Zm)
+                            G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\T.PNG"), MapTrk(i).X * PZoom + PZoom, (H - 1) * PZoom - MapTrk(i).Y * PZoom, PZoom, PZoom)
                         End If
                         If TrackNode(MapTrk(i).X + 1 - 1, MapTrk(i).Y + 1) = 1 AndAlso MapTrk(i).F1 = 0 Then
-                            G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\T.PNG"), MapTrk(i).X * Zm - Zm, (H - 1) * Zm - MapTrk(i).Y * Zm, Zm, Zm)
+                            G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\T.PNG"), MapTrk(i).X * PZoom - PZoom, (H - 1) * PZoom - MapTrk(i).Y * PZoom, PZoom, PZoom)
                         End If
                     Case 1
                         If TrackNode(MapTrk(i).X + 1, MapTrk(i).Y + 1 + 1) = 1 AndAlso MapTrk(i).F0 = 0 Then
-                            G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\T.PNG"), MapTrk(i).X * Zm, (H - 2) * Zm - MapTrk(i).Y * Zm, Zm, Zm)
+                            G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\T.PNG"), MapTrk(i).X * PZoom, (H - 2) * PZoom - MapTrk(i).Y * PZoom, PZoom, PZoom)
                         End If
                         If TrackNode(MapTrk(i).X + 1, MapTrk(i).Y + 1 - 1) = 1 AndAlso MapTrk(i).F1 = 0 Then
-                            G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\T.PNG"), MapTrk(i).X * Zm, H * Zm - MapTrk(i).Y * Zm, Zm, Zm)
+                            G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\T.PNG"), MapTrk(i).X * PZoom, H * PZoom - MapTrk(i).Y * PZoom, PZoom, PZoom)
                         End If
                     Case 2, 4, 5
                         If TrackNode(MapTrk(i).X + 1 + 1, MapTrk(i).Y + 1 - 1) = 1 AndAlso MapTrk(i).F0 = 0 Then
-                            G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\T.PNG"), MapTrk(i).X * Zm + Zm, H * Zm - MapTrk(i).Y * Zm, Zm, Zm)
+                            G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\T.PNG"), MapTrk(i).X * PZoom + PZoom, H * PZoom - MapTrk(i).Y * PZoom, PZoom, PZoom)
                         End If
                         If TrackNode(MapTrk(i).X + 1 - 1, MapTrk(i).Y + 1 + 1) = 1 AndAlso MapTrk(i).F1 = 0 Then
-                            G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\T.PNG"), MapTrk(i).X * Zm - Zm, (H - 2) * Zm - MapTrk(i).Y * Zm, Zm, Zm)
+                            G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\T.PNG"), MapTrk(i).X * PZoom - PZoom, (H - 2) * PZoom - MapTrk(i).Y * PZoom, PZoom, PZoom)
                         End If
                     Case 3, 6, 7
                         If TrackNode(MapTrk(i).X + 1 + 1, MapTrk(i).Y + 1 + 1) = 1 AndAlso MapTrk(i).F0 = 0 Then
-                            G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\T.PNG"), MapTrk(i).X * Zm + Zm, (H - 2) * Zm - MapTrk(i).Y * Zm, Zm, Zm)
+                            G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\T.PNG"), MapTrk(i).X * PZoom + PZoom, (H - 2) * PZoom - MapTrk(i).Y * PZoom, PZoom, PZoom)
                         End If
                         If TrackNode(MapTrk(i).X + 1 - 1, MapTrk(i).Y + 1 - 1) = 1 AndAlso MapTrk(i).F1 = 0 Then
-                            G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\T.PNG"), MapTrk(i).X * Zm - Zm, H * Zm - MapTrk(i).Y * Zm, Zm, Zm)
+                            G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\T.PNG"), MapTrk(i).X * PZoom - PZoom, H * PZoom - MapTrk(i).Y * PZoom, PZoom, PZoom)
                         End If
                 End Select
             Else 'Y轨道
-                G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\T" & MapTrk(i).Type.ToString & ".PNG"), MapTrk(i).X * Zm - Zm, (H - 4) * Zm - MapTrk(i).Y * Zm, Zm * 5, Zm * 5)
-                'G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\T.PNG"), (MapTrk(i).X - 1 + TrackYPt(MapTrk(i).Type, 0).X) * Zm, H * Zm - (MapTrk(i).Y + TrackYPt(MapTrk(i).Type, 0).Y) * Zm, Zm, Zm)
-                'G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\T.PNG"), (MapTrk(i).X - 1 + TrackYPt(MapTrk(i).Type, 1).X) * Zm, H * Zm - (MapTrk(i).Y + TrackYPt(MapTrk(i).Type, 1).Y) * Zm, Zm, Zm)
-                'G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\T.PNG"), (MapTrk(i).X - 1 + TrackYPt(MapTrk(i).Type, 2).X) * Zm, H * Zm - (MapTrk(i).Y + TrackYPt(MapTrk(i).Type, 2).Y) * Zm, Zm, Zm)
+                G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\T" & MapTrk(i).Type.ToString & ".PNG"), MapTrk(i).X * PZoom - PZoom, (H - 4) * PZoom - MapTrk(i).Y * PZoom, PZoom * 5, PZoom * 5)
+                'G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\T.PNG"), (MapTrk(i).X - 1 + TrackYPt(MapTrk(i).Type, 0).X) * PZOOM, H * PZOOM - (MapTrk(i).Y + TrackYPt(MapTrk(i).Type, 0).Y) * PZOOM, PZOOM, PZOOM)
+                'G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\T.PNG"), (MapTrk(i).X - 1 + TrackYPt(MapTrk(i).Type, 1).X) * PZOOM, H * PZOOM - (MapTrk(i).Y + TrackYPt(MapTrk(i).Type, 1).Y) * PZOOM, PZOOM, PZOOM)
+                'G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\T.PNG"), (MapTrk(i).X - 1 + TrackYPt(MapTrk(i).Type, 2).X) * PZOOM, H * PZOOM - (MapTrk(i).Y + TrackYPt(MapTrk(i).Type, 2).Y) * PZOOM, PZOOM, PZOOM)
 
                 If TrackNode(MapTrk(i).X + TrackYPt(MapTrk(i).Type, 0).X, MapTrk(i).Y + TrackYPt(MapTrk(i).Type, 0).Y) = 1 AndAlso MapTrk(i).F0 = 0 Then
-                    G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\T.PNG"), (MapTrk(i).X - 1 + TrackYPt(MapTrk(i).Type, 0).X) * Zm, (H - 4) * Zm - (MapTrk(i).Y - TrackYPt(MapTrk(i).Type, 0).Y) * Zm, Zm, Zm)
+                    G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\T.PNG"), (MapTrk(i).X - 1 + TrackYPt(MapTrk(i).Type, 0).X) * PZoom, (H - 4) * PZoom - (MapTrk(i).Y - TrackYPt(MapTrk(i).Type, 0).Y) * PZoom, PZoom, PZoom)
                 End If
                 If TrackNode(MapTrk(i).X + TrackYPt(MapTrk(i).Type, 1).X, MapTrk(i).Y + TrackYPt(MapTrk(i).Type, 1).Y) = 1 AndAlso MapTrk(i).F1 = 0 Then
-                    G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\T.PNG"), (MapTrk(i).X - 1 + TrackYPt(MapTrk(i).Type, 1).X) * Zm, (H - 4) * Zm - (MapTrk(i).Y - TrackYPt(MapTrk(i).Type, 1).Y) * Zm, Zm, Zm)
+                    G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\T.PNG"), (MapTrk(i).X - 1 + TrackYPt(MapTrk(i).Type, 1).X) * PZoom, (H - 4) * PZoom - (MapTrk(i).Y - TrackYPt(MapTrk(i).Type, 1).Y) * PZoom, PZoom, PZoom)
                 End If
                 If TrackNode(MapTrk(i).X + TrackYPt(MapTrk(i).Type, 2).X, MapTrk(i).Y + TrackYPt(MapTrk(i).Type, 2).Y) = 1 AndAlso MapTrk(i).F2 = 0 Then
-                    G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\T.PNG"), (MapTrk(i).X - 1 + TrackYPt(MapTrk(i).Type, 2).X) * Zm, (H - 4) * Zm - (MapTrk(i).Y - TrackYPt(MapTrk(i).Type, 2).Y) * Zm, Zm, Zm)
+                    G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\T.PNG"), (MapTrk(i).X - 1 + TrackYPt(MapTrk(i).Type, 2).X) * PZoom, (H - 4) * PZoom - (MapTrk(i).Y - TrackYPt(MapTrk(i).Type, 2).Y) * PZoom, PZoom, PZoom)
                 End If
             End If
         Next
@@ -596,46 +599,46 @@ Err:
                     If (MapObj(i).Flag \ &H100000) Mod &H2 = 0 Then
                         '左斜
                         G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\7.PNG"),
-                                            CSng(CX * Zm), (H - 1) * Zm - CSng(CY * Zm), Zm, Zm)
+                                            CSng(CX * PZoom), (H - 1) * PZoom - CSng(CY * PZoom), PZoom, PZoom)
                         G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\7.PNG"),
-                                            CSng((MapObj(i).W - 1.5 + MapObj(i).X / 160) * Zm), (H - 1) * Zm - CSng((CY + MapObj(i).H - 1) * Zm), Zm, Zm)
-                        'G.DrawString(GroundNode(CX + 1, CY + 1), Me.Font, Brushes.Black, CSng(CX * Zm), (H - 1) * Zm - CSng(CY * Zm))
-                        'G.DrawString(GroundNode(CX + MapObj(i).W, CY + MapObj(i).H), Me.Font, Brushes.Black, CSng((CX + MapObj(i).W - 1) * Zm), (H - 1) * Zm - CSng((CY + MapObj(i).H - 1) * Zm))
+                                            CSng((MapObj(i).W - 1.5 + MapObj(i).X / 160) * PZoom), (H - 1) * PZoom - CSng((CY + MapObj(i).H - 1) * PZoom), PZoom, PZoom)
+                        'G.DrawString(GroundNode(CX + 1, CY + 1), Me.Font, Brushes.Black, CSng(CX * PZOOM), (H - 1) * PZOOM - CSng(CY * PZOOM))
+                        'G.DrawString(GroundNode(CX + MapObj(i).W, CY + MapObj(i).H), Me.Font, Brushes.Black, CSng((CX + MapObj(i).W - 1) * PZOOM), (H - 1) * PZOOM - CSng((CY + MapObj(i).H - 1) * PZOOM))
 
                         For j = 1 To MapObj(i).W - 2 Step 2
                             G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\87.PNG"),
-                                                CSng((CX + j) * Zm),
-                                                (H - 1) * Zm - CSng((j / 2 + MapObj(i).Y / 160) * Zm), Zm * 2, Zm * 2)
-                            'G.DrawString(GroundNode(CX + 1 + j, CY + 3 + (j \ 2)), Me.Font, Brushes.Black, CSng((CX + j) * Zm), (H - 1) * Zm - CSng((CY + 1 + (j \ 2)) * Zm))
-                            'G.DrawString(GroundNode(CX + 1 + j, CY + 2 + (j \ 2)), Me.Font, Brushes.Black, CSng((CX + j) * Zm), (H - 1) * Zm - CSng((CY + (j \ 2)) * Zm))
+                                                CSng((CX + j) * PZoom),
+                                                (H - 1) * PZoom - CSng((j / 2 + MapObj(i).Y / 160) * PZoom), PZoom * 2, PZoom * 2)
+                            'G.DrawString(GroundNode(CX + 1 + j, CY + 3 + (j \ 2)), Me.Font, Brushes.Black, CSng((CX + j) * PZOOM), (H - 1) * PZOOM - CSng((CY + 1 + (j \ 2)) * PZOOM))
+                            'G.DrawString(GroundNode(CX + 1 + j, CY + 2 + (j \ 2)), Me.Font, Brushes.Black, CSng((CX + j) * PZOOM), (H - 1) * PZOOM - CSng((CY + (j \ 2)) * PZOOM))
 
-                            'G.DrawString(GroundNode(CX + 2 + j, CY + 3 + (j \ 2)), Me.Font, Brushes.Black, CSng((CX + j + 1) * Zm), (H - 1) * Zm - CSng((CY + 1 + (j \ 2)) * Zm))
-                            'G.DrawString(GroundNode(CX + 2 + j, CY + 2 + (j \ 2)), Me.Font, Brushes.Black, CSng((CX + j + 1) * Zm), (H - 1) * Zm - CSng((CY + (j \ 2)) * Zm))
+                            'G.DrawString(GroundNode(CX + 2 + j, CY + 3 + (j \ 2)), Me.Font, Brushes.Black, CSng((CX + j + 1) * PZOOM), (H - 1) * PZOOM - CSng((CY + 1 + (j \ 2)) * PZOOM))
+                            'G.DrawString(GroundNode(CX + 2 + j, CY + 2 + (j \ 2)), Me.Font, Brushes.Black, CSng((CX + j + 1) * PZOOM), (H - 1) * PZOOM - CSng((CY + (j \ 2)) * PZOOM))
                         Next
                     Else
                         '右斜
                         G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\7.PNG"),
-                                            CSng((-0.5 + MapObj(i).X / 160) * Zm),
-                                            (H - 1) * Zm - CSng((MapObj(i).H - 1.5 + MapObj(i).Y / 160) * Zm), Zm, Zm)
+                                            CSng((-0.5 + MapObj(i).X / 160) * PZoom),
+                                            (H - 1) * PZoom - CSng((MapObj(i).H - 1.5 + MapObj(i).Y / 160) * PZoom), PZoom, PZoom)
                         G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\7.PNG"),
-                                            CSng((MapObj(i).W - 1.5 + MapObj(i).X / 160) * Zm),
-                                            (H - 1) * Zm - CSng((-0.5 + MapObj(i).Y / 160) * Zm), Zm, Zm)
-                        'G.DrawString(GroundNode(CX + 1, CY + MapObj(i).H), Me.Font, Brushes.Black, CSng(CX * Zm), (H - 1) * Zm - CSng((CY + MapObj(i).H - 1) * Zm))
-                        'G.DrawString(GroundNode(CX + MapObj(i).W, CY + 1), Me.Font, Brushes.Black, CSng((CX + MapObj(i).W - 1) * Zm), (H - 1) * Zm - CSng(CY * Zm))
+                                            CSng((MapObj(i).W - 1.5 + MapObj(i).X / 160) * PZoom),
+                                            (H - 1) * PZoom - CSng((-0.5 + MapObj(i).Y / 160) * PZoom), PZoom, PZoom)
+                        'G.DrawString(GroundNode(CX + 1, CY + MapObj(i).H), Me.Font, Brushes.Black, CSng(CX * PZOOM), (H - 1) * PZOOM - CSng((CY + MapObj(i).H - 1) * PZOOM))
+                        'G.DrawString(GroundNode(CX + MapObj(i).W, CY + 1), Me.Font, Brushes.Black, CSng((CX + MapObj(i).W - 1) * PZOOM), (H - 1) * PZOOM - CSng(CY * PZOOM))
                         For j = 1 To MapObj(i).W - 2 Step 2
 
                             G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\87A.PNG"),
-                                                CSng((j - 0.5 + MapObj(i).X / 160) * Zm),
-                                                (H - 1) * Zm - CSng((-j / 2 + MapObj(i).H - 1 + MapObj(i).Y / 160) * Zm), Zm * 2, Zm * 2)
+                                                CSng((j - 0.5 + MapObj(i).X / 160) * PZoom),
+                                                (H - 1) * PZoom - CSng((-j / 2 + MapObj(i).H - 1 + MapObj(i).Y / 160) * PZoom), PZoom * 2, PZoom * 2)
                             'G.DrawString(GroundNode(CX + 1 + j, CY + MapObj(i).H - (j \ 2)), Me.Font, Brushes.Black,
-                            '			 CSng((CX + j) * Zm), (H - 1) * Zm - CSng((CY + MapObj(i).H - (j \ 2) - 1) * Zm))
+                            '			 CSng((CX + j) * PZOOM), (H - 1) * PZOOM - CSng((CY + MapObj(i).H - (j \ 2) - 1) * PZOOM))
                             'G.DrawString(GroundNode(CX + 1 + j, CY + MapObj(i).H - (j \ 2) - 1), Me.Font, Brushes.Black,
-                            '			 CSng((CX + j) * Zm), (H - 1) * Zm - CSng((CY + MapObj(i).H - (j \ 2) - 2) * Zm))
+                            '			 CSng((CX + j) * PZOOM), (H - 1) * PZOOM - CSng((CY + MapObj(i).H - (j \ 2) - 2) * PZOOM))
 
                             'G.DrawString(GroundNode(CX + 2 + j, CY + MapObj(i).H - (j \ 2)), Me.Font, Brushes.Black,
-                            'CSng((CX + j + 1) * Zm), (H - 1) * Zm - CSng((CY + MapObj(i).H - (j \ 2) - 1) * Zm))
+                            'CSng((CX + j + 1) * PZOOM), (H - 1) * PZOOM - CSng((CY + MapObj(i).H - (j \ 2) - 1) * PZOOM))
                             'G.DrawString(GroundNode(CX + 2 + j, CY + MapObj(i).H - (j \ 2) - 1), Me.Font, Brushes.Black,
-                            'CSng((CX + j + 1) * Zm), (H - 1) * Zm - CSng((CY + MapObj(i).H - (j \ 2) - 2) * Zm))
+                            'CSng((CX + j + 1) * PZOOM), (H - 1) * PZOOM - CSng((CY + MapObj(i).H - (j \ 2) - 2) * PZOOM))
                         Next
 
 
@@ -647,36 +650,36 @@ Err:
                     If (MapObj(i).Flag \ &H100000) Mod &H2 = 0 Then
                         '左斜
                         G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\7.PNG"),
-                                            CSng((CX) * Zm), (H - 1) * Zm - CSng(CY * Zm), Zm, Zm)
+                                            CSng((CX) * PZoom), (H - 1) * PZoom - CSng(CY * PZoom), PZoom, PZoom)
                         G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\7.PNG"),
-                                            CSng((CX + MapObj(i).W - 1) * Zm), (H - 1) * Zm - CSng((CY + MapObj(i).H - 1) * Zm), Zm, Zm)
-                        'G.DrawString(GroundNode(CX + 1, CY + 1), Me.Font, Brushes.Black, CSng((CX) * Zm), (H - 1) * Zm - CSng(CY * Zm))
-                        'G.DrawString(GroundNode(CX + MapObj(i).W, CY + MapObj(i).H), Me.Font, Brushes.Black, CSng((CX + MapObj(i).W - 1) * Zm), (H - 1) * Zm - CSng((CY + MapObj(i).H - 1) * Zm))
+                                            CSng((CX + MapObj(i).W - 1) * PZoom), (H - 1) * PZoom - CSng((CY + MapObj(i).H - 1) * PZoom), PZoom, PZoom)
+                        'G.DrawString(GroundNode(CX + 1, CY + 1), Me.Font, Brushes.Black, CSng((CX) * PZOOM), (H - 1) * PZOOM - CSng(CY * PZOOM))
+                        'G.DrawString(GroundNode(CX + MapObj(i).W, CY + MapObj(i).H), Me.Font, Brushes.Black, CSng((CX + MapObj(i).W - 1) * PZOOM), (H - 1) * PZOOM - CSng((CY + MapObj(i).H - 1) * PZOOM))
                         For j = 1 To MapObj(i).W - 2
                             G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\88.PNG"),
-                                                CSng((CX + j) * Zm),
-                                                (H - 1) * Zm - CSng((CY + j) * Zm), Zm, Zm * 2)
-                            'G.DrawString(GroundNode(CX + 1 + j, CY + 1 + j), Me.Font, Brushes.Black, CSng((CX + j) * Zm), (H - 1) * Zm - CSng((CY + j) * Zm))
-                            'G.DrawString(GroundNode(CX + 1 + j, CY + j), Me.Font, Brushes.Black, CSng((CX + j) * Zm), (H - 1) * Zm - CSng((CY - 1 + j) * Zm))
+                                                CSng((CX + j) * PZoom),
+                                                (H - 1) * PZoom - CSng((CY + j) * PZoom), PZoom, PZoom * 2)
+                            'G.DrawString(GroundNode(CX + 1 + j, CY + 1 + j), Me.Font, Brushes.Black, CSng((CX + j) * PZOOM), (H - 1) * PZOOM - CSng((CY + j) * PZOOM))
+                            'G.DrawString(GroundNode(CX + 1 + j, CY + j), Me.Font, Brushes.Black, CSng((CX + j) * PZOOM), (H - 1) * PZOOM - CSng((CY - 1 + j) * PZOOM))
 
                         Next
                     Else
                         '右斜
                         G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\7.PNG"),
-                                            CSng(CX * Zm),
-                                            (H - 1) * Zm - CSng((CY + MapObj(i).H - 1) * Zm), Zm, Zm)
+                                            CSng(CX * PZoom),
+                                            (H - 1) * PZoom - CSng((CY + MapObj(i).H - 1) * PZoom), PZoom, PZoom)
                         G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\7.PNG"),
-                                            CSng((CX + MapObj(i).W - 1) * Zm),
-                                            (H - 1) * Zm - CSng(CY * Zm), Zm, Zm)
-                        'G.DrawString(GroundNode(CX + MapObj(i).W, CY + 1), Me.Font, Brushes.Black, CSng((CX + MapObj(i).W - 1) * Zm), (H - 1) * Zm - CSng(CY * Zm))
-                        'G.DrawString(GroundNode(CX + 1, CY + MapObj(i).W), Me.Font, Brushes.Black, CSng((CX) * Zm), (H - 1) * Zm - CSng((CY + MapObj(i).H - 1) * Zm))
+                                            CSng((CX + MapObj(i).W - 1) * PZoom),
+                                            (H - 1) * PZoom - CSng(CY * PZoom), PZoom, PZoom)
+                        'G.DrawString(GroundNode(CX + MapObj(i).W, CY + 1), Me.Font, Brushes.Black, CSng((CX + MapObj(i).W - 1) * PZOOM), (H - 1) * PZOOM - CSng(CY * PZOOM))
+                        'G.DrawString(GroundNode(CX + 1, CY + MapObj(i).W), Me.Font, Brushes.Black, CSng((CX) * PZOOM), (H - 1) * PZOOM - CSng((CY + MapObj(i).H - 1) * PZOOM))
 
                         For j = 1 To MapObj(i).W - 2
                             G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\88A.PNG"),
-                                                CSng((CX + j) * Zm),
-                                                (H - 1) * Zm - CSng((CY - j - 1 + MapObj(i).W) * Zm), Zm, Zm * 2)
-                            'G.DrawString(GroundNode(CX + 1 + j, CY - j - 1 + MapObj(i).W), Me.Font, Brushes.Black, CSng((CX + j) * Zm), (H - 1) * Zm - CSng((CY - j - 2 + MapObj(i).W) * Zm))
-                            'G.DrawString(GroundNode(CX + 1 + j, CY - j + MapObj(i).W), Me.Font, Brushes.Black, CSng((CX + j) * Zm), (H - 1) * Zm - CSng((CY - j - 1 + MapObj(i).W) * Zm))
+                                                CSng((CX + j) * PZoom),
+                                                (H - 1) * PZoom - CSng((CY - j - 1 + MapObj(i).W) * PZoom), PZoom, PZoom * 2)
+                            'G.DrawString(GroundNode(CX + 1 + j, CY - j - 1 + MapObj(i).W), Me.Font, Brushes.Black, CSng((CX + j) * PZOOM), (H - 1) * PZOOM - CSng((CY - j - 2 + MapObj(i).W) * PZOOM))
+                            'G.DrawString(GroundNode(CX + 1 + j, CY - j + MapObj(i).W), Me.Font, Brushes.Black, CSng((CX + j) * PZOOM), (H - 1) * PZOOM - CSng((CY - j - 1 + MapObj(i).W) * PZOOM))
                         Next
                     End If
             End Select
@@ -966,98 +969,98 @@ Err:
 
                 Select Case GroundNode(i, j)
                     Case 0
-                        'G.DrawString(GroundNode(i, j), Me.Font, Brushes.Black, (i - 1) * Zm, (H - j) * Zm)
+                        'G.DrawString(GroundNode(i, j), Me.Font, Brushes.Black, (i - 1) * PZOOM, (H - j) * PZOOM)
                     Case 6, 7, 8, 9, 20, 21, 22, 23
                         R = GrdLoc(GetGrdType(GetGrdCode(i - 1, j - 1)))
-                        G.DrawImage(GetTile(R.X, R.Y, 1, 1), (i - 1) * Zm, (H - j) * Zm, Zm, Zm)
+                        G.DrawImage(GetTile(R.X, R.Y, 1, 1), (i - 1) * PZoom, (H - j) * PZoom, PZoom, PZoom)
                         GroundNode(i, j) = 1
                     Case 2
                         If GroundNode(i, j + 1) = 5 Then
-                            G.DrawImage(GetTile(2, 25, 1, 1), (i - 1) * Zm, (H - j) * Zm, Zm, Zm)
+                            G.DrawImage(GetTile(2, 25, 1, 1), (i - 1) * PZoom, (H - j) * PZoom, PZoom, PZoom)
                         ElseIf GroundNode(i - 1, j + 1) = 1 Then
-                            G.DrawImage(GetTile(1, 27, 1, 1), (i - 1) * Zm, (H - j) * Zm, Zm, Zm)
+                            G.DrawImage(GetTile(1, 27, 1, 1), (i - 1) * PZoom, (H - j) * PZoom, PZoom, PZoom)
                         Else
-                            G.DrawImage(GetTile(3, 27, 1, 1), (i - 1) * Zm, (H - j) * Zm, Zm, Zm)
+                            G.DrawImage(GetTile(3, 27, 1, 1), (i - 1) * PZoom, (H - j) * PZoom, PZoom, PZoom)
                         End If
                     Case 3
                         If GroundNode(i, j + 1) = 4 Then
-                            G.DrawImage(GetTile(3, 25, 1, 1), (i - 1) * Zm, (H - j) * Zm, Zm, Zm)
+                            G.DrawImage(GetTile(3, 25, 1, 1), (i - 1) * PZoom, (H - j) * PZoom, PZoom, PZoom)
                         ElseIf GroundNode(i + 1, j + 1) = 1 Then
-                            G.DrawImage(GetTile(0, 27, 1, 1), (i - 1) * Zm, (H - j) * Zm, Zm, Zm)
+                            G.DrawImage(GetTile(0, 27, 1, 1), (i - 1) * PZoom, (H - j) * PZoom, PZoom, PZoom)
                         Else
-                            G.DrawImage(GetTile(2, 27, 1, 1), (i - 1) * Zm, (H - j) * Zm, Zm, Zm)
+                            G.DrawImage(GetTile(2, 27, 1, 1), (i - 1) * PZoom, (H - j) * PZoom, PZoom, PZoom)
                         End If
                     Case 4
                         If GroundNode(i, j - 1) = 3 Then
-                            G.DrawImage(GetTile(3, 24, 1, 1), (i - 1) * Zm, (H - j) * Zm, Zm, Zm)
+                            G.DrawImage(GetTile(3, 24, 1, 1), (i - 1) * PZoom, (H - j) * PZoom, PZoom, PZoom)
                         ElseIf GroundNode(i - 1, j - 1) = 1 Then
-                            G.DrawImage(GetTile(1, 24, 1, 1), (i - 1) * Zm, (H - j) * Zm, Zm, Zm)
+                            G.DrawImage(GetTile(1, 24, 1, 1), (i - 1) * PZoom, (H - j) * PZoom, PZoom, PZoom)
                         Else
-                            G.DrawImage(GetTile(3, 26, 1, 1), (i - 1) * Zm, (H - j) * Zm, Zm, Zm)
+                            G.DrawImage(GetTile(3, 26, 1, 1), (i - 1) * PZoom, (H - j) * PZoom, PZoom, PZoom)
                         End If
                     Case 5
                         If GroundNode(i, j - 1) = 2 Then
-                            G.DrawImage(GetTile(2, 24, 1, 1), (i - 1) * Zm, (H - j) * Zm, Zm, Zm)
+                            G.DrawImage(GetTile(2, 24, 1, 1), (i - 1) * PZoom, (H - j) * PZoom, PZoom, PZoom)
                         ElseIf GroundNode(i + 1, j - 1) = 1 Then
-                            G.DrawImage(GetTile(0, 24, 1, 1), (i - 1) * Zm, (H - j) * Zm, Zm, Zm)
+                            G.DrawImage(GetTile(0, 24, 1, 1), (i - 1) * PZoom, (H - j) * PZoom, PZoom, PZoom)
                         Else
-                            G.DrawImage(GetTile(2, 26, 1, 1), (i - 1) * Zm, (H - j) * Zm, Zm, Zm)
+                            G.DrawImage(GetTile(2, 26, 1, 1), (i - 1) * PZoom, (H - j) * PZoom, PZoom, PZoom)
                         End If
                     Case 12
                         If GroundNode(i, j + 1) = 19 Then
-                            G.DrawImage(GetTile(0, 33, 1, 1), (i - 1) * Zm, (H - j) * Zm, Zm, Zm)
+                            G.DrawImage(GetTile(0, 33, 1, 1), (i - 1) * PZoom, (H - j) * PZoom, PZoom, PZoom)
                         ElseIf GroundNode(i - 1, j + 1) = 1 Then
-                            G.DrawImage(GetTile(2, 31, 1, 1), (i - 1) * Zm, (H - j) * Zm, Zm, Zm)
+                            G.DrawImage(GetTile(2, 31, 1, 1), (i - 1) * PZoom, (H - j) * PZoom, PZoom, PZoom)
                         Else
-                            G.DrawImage(GetTile(5, 31, 1, 1), (i - 1) * Zm, (H - j) * Zm, Zm, Zm)
+                            G.DrawImage(GetTile(5, 31, 1, 1), (i - 1) * PZoom, (H - j) * PZoom, PZoom, PZoom)
                         End If
                     Case 13
                         If GroundNode(i, j + 1) = 18 Then
-                            G.DrawImage(GetTile(3, 33, 1, 1), (i - 1) * Zm, (H - j) * Zm, Zm, Zm)
+                            G.DrawImage(GetTile(3, 33, 1, 1), (i - 1) * PZoom, (H - j) * PZoom, PZoom, PZoom)
                         ElseIf GroundNode(i + 1, j + 1) = 1 Then
-                            G.DrawImage(GetTile(1, 31, 1, 1), (i - 1) * Zm, (H - j) * Zm, Zm, Zm)
+                            G.DrawImage(GetTile(1, 31, 1, 1), (i - 1) * PZoom, (H - j) * PZoom, PZoom, PZoom)
                         Else
-                            G.DrawImage(GetTile(4, 31, 1, 1), (i - 1) * Zm, (H - j) * Zm, Zm, Zm)
+                            G.DrawImage(GetTile(4, 31, 1, 1), (i - 1) * PZoom, (H - j) * PZoom, PZoom, PZoom)
                         End If
                     Case 14
                         If GroundNode(i, j - 1) = 17 Then
-                            G.DrawImage(GetTile(2, 32, 1, 1), (i - 1) * Zm, (H - j) * Zm, Zm, Zm)
+                            G.DrawImage(GetTile(2, 32, 1, 1), (i - 1) * PZoom, (H - j) * PZoom, PZoom, PZoom)
                         ElseIf GroundNode(i - 1, j - 1) = 1 Then
-                            G.DrawImage(GetTile(2, 28, 1, 1), (i - 1) * Zm, (H - j) * Zm, Zm, Zm)
+                            G.DrawImage(GetTile(2, 28, 1, 1), (i - 1) * PZoom, (H - j) * PZoom, PZoom, PZoom)
                         Else
-                            G.DrawImage(GetTile(5, 28, 1, 1), (i - 1) * Zm, (H - j) * Zm, Zm, Zm)
+                            G.DrawImage(GetTile(5, 28, 1, 1), (i - 1) * PZoom, (H - j) * PZoom, PZoom, PZoom)
                         End If
                     Case 15
                         If GroundNode(i, j - 1) = 16 Then
-                            G.DrawImage(GetTile(1, 32, 1, 1), (i - 1) * Zm, (H - j) * Zm, Zm, Zm)
+                            G.DrawImage(GetTile(1, 32, 1, 1), (i - 1) * PZoom, (H - j) * PZoom, PZoom, PZoom)
                         ElseIf GroundNode(i + 1, j - 1) = 1 Then
-                            G.DrawImage(GetTile(1, 28, 1, 1), (i - 1) * Zm, (H - j) * Zm, Zm, Zm)
+                            G.DrawImage(GetTile(1, 28, 1, 1), (i - 1) * PZoom, (H - j) * PZoom, PZoom, PZoom)
                         Else
-                            G.DrawImage(GetTile(4, 28, 1, 1), (i - 1) * Zm, (H - j) * Zm, Zm, Zm)
+                            G.DrawImage(GetTile(4, 28, 1, 1), (i - 1) * PZoom, (H - j) * PZoom, PZoom, PZoom)
                         End If
                     Case 16
-                        G.DrawImage(GetTile(3, 31, 1, 1), (i - 1) * Zm, (H - j) * Zm, Zm, Zm)
+                        G.DrawImage(GetTile(3, 31, 1, 1), (i - 1) * PZoom, (H - j) * PZoom, PZoom, PZoom)
                     Case 17
-                        G.DrawImage(GetTile(0, 31, 1, 1), (i - 1) * Zm, (H - j) * Zm, Zm, Zm)
+                        G.DrawImage(GetTile(0, 31, 1, 1), (i - 1) * PZoom, (H - j) * PZoom, PZoom, PZoom)
                     Case 18
-                        G.DrawImage(GetTile(3, 28, 1, 1), (i - 1) * Zm, (H - j) * Zm, Zm, Zm)
+                        G.DrawImage(GetTile(3, 28, 1, 1), (i - 1) * PZoom, (H - j) * PZoom, PZoom, PZoom)
                     Case 19
-                        G.DrawImage(GetTile(0, 28, 1, 1), (i - 1) * Zm, (H - j) * Zm, Zm, Zm)
+                        G.DrawImage(GetTile(0, 28, 1, 1), (i - 1) * PZoom, (H - j) * PZoom, PZoom, PZoom)
 
                     Case Else
-                        'G.DrawString(GroundNode(i, j), Me.Font, Brushes.Black, (i - 1) * Zm, (H - j) * Zm)
+                        'G.DrawString(GroundNode(i, j), Me.Font, Brushes.Black, (i - 1) * PZOOM, (H - j) * PZOOM)
                 End Select
-                'G.DrawString(GroundNode(i, j), Me.Font, Brushes.Black, (i - 1) * Zm, (H - j) * Zm)
-                'G.DrawString(GetCorCode(i, j).X & "," & GetCorCode(i, j).Y, Me.Font, Brushes.Black, (i - 1) * Zm, (H - j) * Zm + 10)
+                'G.DrawString(GroundNode(i, j), Me.Font, Brushes.Black, (i - 1) * PZOOM, (H - j) * PZOOM)
+                'G.DrawString(GetCorCode(i, j).X & "," & GetCorCode(i, j).Y, Me.Font, Brushes.Black, (i - 1) * PZOOM, (H - j) * PZOOM + 10)
             Next
         Next
         For i = 0 To W
             For j = 0 To H
                 If GroundNode(i, j) = 1 Then
                     R = GetCorCode(i, j)
-                    G.DrawImage(GetTile(R.X, R.Y, 1, 1), (i - 1) * Zm, (H - j) * Zm, Zm, Zm)
-                    'G.DrawString(GroundNode(i, j), Me.Font, Brushes.Black, (i - 1) * Zm, (H - j) * Zm)
-                    'G.DrawString(GetCorCode(i, j).X & "," & GetCorCode(i, j).Y, Me.Font, Brushes.Black, (i - 1) * Zm, (H - j) * Zm + 10)
+                    G.DrawImage(GetTile(R.X, R.Y, 1, 1), (i - 1) * PZoom, (H - j) * PZoom, PZoom, PZoom)
+                    'G.DrawString(GroundNode(i, j), Me.Font, Brushes.Black, (i - 1) * PZOOM, (H - j) * PZOOM)
+                    'G.DrawString(GetCorCode(i, j).X & "," & GetCorCode(i, j).Y, Me.Font, Brushes.Black, (i - 1) * PZOOM, (H - j) * PZOOM + 10)
 
                 End If
             Next
@@ -1246,52 +1249,52 @@ Err:
             Select Case LH.GameStyle
                 Case 12621 '1
                     If MapHdr.Theme = 2 Then
-                        G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\27A.PNG"), CSng((LH.GoalX / 10 - 0.5) * Zm), (MapHdr.BorT \ 16 - LH.GoalY - 4) * Zm, Zm * 2, Zm * 4)
+                        G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\27A.PNG"), CSng((LH.GoalX / 10 - 0.5) * PZoom), (MapHdr.BorT \ 16 - LH.GoalY - 4) * PZoom, PZoom * 2, PZoom * 4)
                         For i = 0 To 13
-                            G.DrawImage(GetTile(15, 15, 1, 1), CSng((LH.GoalX / 10 - 14.5 + i) * Zm), (MapHdr.BorT \ 16 - LH.GoalY) * Zm, Zm, Zm)
+                            G.DrawImage(GetTile(15, 15, 1, 1), CSng((LH.GoalX / 10 - 14.5 + i) * PZoom), (MapHdr.BorT \ 16 - LH.GoalY) * PZoom, PZoom, PZoom)
                         Next
                     Else
-                        G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\27.PNG"), CSng((LH.GoalX / 10 - 0.5) * Zm), (MapHdr.BorT \ 16 - LH.GoalY - 11) * Zm, Zm, Zm * 11)
+                        G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\27.PNG"), CSng((LH.GoalX / 10 - 0.5) * PZoom), (MapHdr.BorT \ 16 - LH.GoalY - 11) * PZoom, PZoom, PZoom * 11)
                     End If
                 Case 13133 '3
                     If MapHdr.Theme = 2 Then
-                        G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\27A.PNG"), CSng((LH.GoalX / 10 - 0.5) * Zm), (MapHdr.BorT \ 16 - LH.GoalY - 4) * Zm, Zm * 2, Zm * 4)
+                        G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\27A.PNG"), CSng((LH.GoalX / 10 - 0.5) * PZoom), (MapHdr.BorT \ 16 - LH.GoalY - 4) * PZoom, PZoom * 2, PZoom * 4)
                         For i = 0 To 13
-                            G.DrawImage(GetTile(15, 15, 1, 1), CSng((LH.GoalX / 10 - 14.5 + i) * Zm), (MapHdr.BorT \ 16 - LH.GoalY) * Zm, Zm, Zm)
+                            G.DrawImage(GetTile(15, 15, 1, 1), CSng((LH.GoalX / 10 - 14.5 + i) * PZoom), (MapHdr.BorT \ 16 - LH.GoalY) * PZoom, PZoom, PZoom)
                         Next
                     Else
-                        G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\27.PNG"), CSng((LH.GoalX / 10 - 0.5) * Zm), (MapHdr.BorT \ 16 - LH.GoalY - 5) * Zm, Zm * 2, Zm * 2)
+                        G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\27.PNG"), CSng((LH.GoalX / 10 - 0.5) * PZoom), (MapHdr.BorT \ 16 - LH.GoalY - 5) * PZoom, PZoom * 2, PZoom * 2)
                     End If
                 Case 22349 'W
                     If MapHdr.Theme = 2 Then
-                        G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\27A.PNG"), CSng((LH.GoalX / 10 - 0.5) * Zm), (MapHdr.BorT \ 16 - LH.GoalY - 4) * Zm, Zm * 2, Zm * 4)
+                        G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\27A.PNG"), CSng((LH.GoalX / 10 - 0.5) * PZoom), (MapHdr.BorT \ 16 - LH.GoalY - 4) * PZoom, PZoom * 2, PZoom * 4)
                         For i = 0 To 13
-                            G.DrawImage(GetTile(15, 15, 1, 1), CSng((LH.GoalX / 10 - 14.5 + i) * Zm), (MapHdr.BorT \ 16 - LH.GoalY) * Zm, Zm, Zm)
+                            G.DrawImage(GetTile(15, 15, 1, 1), CSng((LH.GoalX / 10 - 14.5 + i) * PZoom), (MapHdr.BorT \ 16 - LH.GoalY) * PZoom, PZoom, PZoom)
                         Next
                     Else
                         'For i = 1 To 8
-                        '	G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\27C.PNG"), CSng((LH.GoalX / 10 - 0.5) * Zm), (MapHdr.BorT \ 16 - LH.GoalY - i) * Zm, Zm, Zm)
-                        '	G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\27E.PNG"), CSng((LH.GoalX / 10 + 1.5) * Zm), (MapHdr.BorT \ 16 - LH.GoalY - i) * Zm, Zm, Zm)
+                        '	G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\27C.PNG"), CSng((LH.GoalX / 10 - 0.5) * PZOOM), (MapHdr.BorT \ 16 - LH.GoalY - i) * PZOOM, PZOOM, PZOOM)
+                        '	G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\27E.PNG"), CSng((LH.GoalX / 10 + 1.5) * PZOOM), (MapHdr.BorT \ 16 - LH.GoalY - i) * PZOOM, PZOOM, PZOOM)
                         'Next
-                        'G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\27B.PNG"), CSng((LH.GoalX / 10 - 0.5) * Zm), (MapHdr.BorT \ 16 - LH.GoalY - 9) * Zm, Zm, Zm)
-                        'G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\27D.PNG"), CSng((LH.GoalX / 10 + 1.5) * Zm), (MapHdr.BorT \ 16 - LH.GoalY - 9) * Zm, Zm, Zm)
+                        'G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\27B.PNG"), CSng((LH.GoalX / 10 - 0.5) * PZOOM), (MapHdr.BorT \ 16 - LH.GoalY - 9) * PZOOM, PZOOM, PZOOM)
+                        'G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\27D.PNG"), CSng((LH.GoalX / 10 + 1.5) * PZOOM), (MapHdr.BorT \ 16 - LH.GoalY - 9) * PZOOM, PZOOM, PZOOM)
 
-                        G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\27F.PNG"), CSng((LH.GoalX / 10 - 0.5) * Zm), CSng(MapHdr.BorT \ 16 - LH.GoalY - 8.5) * Zm, Zm, Zm * 9)
-                        G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\27.PNG"), CSng((LH.GoalX / 10) * Zm), CSng(MapHdr.BorT \ 16 - LH.GoalY - 8) * Zm, Zm * 2, Zm)
-                        G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\27G.PNG"), CSng((LH.GoalX / 10 + 1.5) * Zm), CSng(MapHdr.BorT \ 16 - LH.GoalY - 8.5) * Zm, Zm, Zm * 9)
+                        G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\27F.PNG"), CSng((LH.GoalX / 10 - 0.5) * PZoom), CSng(MapHdr.BorT \ 16 - LH.GoalY - 8.5) * PZoom, PZoom, PZoom * 9)
+                        G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\27.PNG"), CSng((LH.GoalX / 10) * PZoom), CSng(MapHdr.BorT \ 16 - LH.GoalY - 8) * PZoom, PZoom * 2, PZoom)
+                        G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\27G.PNG"), CSng((LH.GoalX / 10 + 1.5) * PZoom), CSng(MapHdr.BorT \ 16 - LH.GoalY - 8.5) * PZoom, PZoom, PZoom * 9)
 
                     End If
                 Case 21847 'U
                     If MapHdr.Theme = 2 Then
-                        G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\27A.PNG"), CSng((LH.GoalX / 10 - 0.5) * Zm), (MapHdr.BorT \ 16 - LH.GoalY - 4) * Zm, Zm * 2, Zm * 4)
+                        G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\27A.PNG"), CSng((LH.GoalX / 10 - 0.5) * PZoom), (MapHdr.BorT \ 16 - LH.GoalY - 4) * PZoom, PZoom * 2, PZoom * 4)
                         For i = 0 To 13
-                            G.DrawImage(GetTile(15, 15, 1, 1), CSng((LH.GoalX / 10 - 14.5 + i) * Zm), (MapHdr.BorT \ 16 - LH.GoalY) * Zm, Zm, Zm)
+                            G.DrawImage(GetTile(15, 15, 1, 1), CSng((LH.GoalX / 10 - 14.5 + i) * PZoom), (MapHdr.BorT \ 16 - LH.GoalY) * PZoom, PZoom, PZoom)
                         Next
                     Else
-                        G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\27.PNG"), CSng((LH.GoalX / 10 - 0.5) * Zm), (MapHdr.BorT \ 16 - LH.GoalY - 11) * Zm, Zm, Zm * 11)
+                        G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\27.PNG"), CSng((LH.GoalX / 10 - 0.5) * PZoom), (MapHdr.BorT \ 16 - LH.GoalY - 11) * PZoom, PZoom, PZoom * 11)
                     End If
                 Case 22323 '3D
-                    G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\27.PNG"), CSng((LH.GoalX / 10 - 0.5) * Zm), (MapHdr.BorT \ 16 - LH.GoalY - 11) * Zm, Zm, Zm * 11)
+                    G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\27.PNG"), CSng((LH.GoalX / 10 - 0.5) * PZoom), (MapHdr.BorT \ 16 - LH.GoalY - 11) * PZoom, PZoom, PZoom * 11)
             End Select
 
             '旧代码弃用
@@ -1299,7 +1302,7 @@ Err:
             '	For j = (LH.GoalX - 5) / 10 To (LH.GoalX - 5) / 10 + 9
             '		For i = 0 To LH.GoalY - 1
             '			R = GrdLoc(GetGrdType(GetGrdCode(j, i)))
-            '			G.DrawImage(GetTile(R.X, R.Y, 1, 1), j * Zm, (MapHdr.BorT \ 16 - 1) * Zm - i * Zm, Zm, Zm)
+            '			G.DrawImage(GetTile(R.X, R.Y, 1, 1), j * PZOOM, (MapHdr.BorT \ 16 - 1) * PZOOM - i * PZOOM, PZOOM, PZOOM)
             '		Next
             '	Next
 
@@ -1307,17 +1310,17 @@ Err:
             '	For j = 0 To 6
             '		For i = 0 To LH.StartY - 1
             '			R = GrdLoc(GetGrdType(GetGrdCode(j, i)))
-            '			G.DrawImage(GetTile(R.X, R.Y, 1, 1), j * Zm, (MapHdr.BorT \ 16 - 1) * Zm - i * Zm, Zm, Zm)
+            '			G.DrawImage(GetTile(R.X, R.Y, 1, 1), j * PZOOM, (MapHdr.BorT \ 16 - 1) * PZOOM - i * PZOOM, PZOOM, PZOOM)
             '		Next
             '	Next
 
-            G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\38.PNG"), 1 * Zm, (MapHdr.BorT \ 16 - LH.StartY - 3) * Zm, Zm * 3, Zm * 3)
+            G.DrawImage(Image.FromFile(PT & "\img\" & LH.GameStyle.ToString & "\obj\38.PNG"), 1 * PZoom, (MapHdr.BorT \ 16 - LH.StartY - 3) * PZoom, PZoom * 3, PZoom * 3)
         End If
 
         ''地面
         'For i = 0 To MapHdr.GroundCount - 1
         '	R = GrdLoc(GetGrdType(GetGrdCode(MapGrd(i).X, MapGrd(i).Y)))
-        '	G.DrawImage(GetTile(R.X, R.Y, 1, 1), MapGrd(i).X * Zm, (MapHdr.BorT \ 16 - 1) * Zm - MapGrd(i).Y * Zm, Zm, Zm)
+        '	G.DrawImage(GetTile(R.X, R.Y, 1, 1), MapGrd(i).X * PZOOM, (MapHdr.BorT \ 16 - 1) * PZOOM - MapGrd(i).Y * PZOOM, PZOOM, PZOOM)
         'Next
     End Sub
     Public Function GetGrdCode(x As Integer, y As Integer) As String
@@ -1387,27 +1390,27 @@ Err:
                     If (MapObj(i).Flag \ &H400) Mod 2 = 1 Then
                         KY = 0
                     Else
-                        KY = -3 * Zm
+                        KY = -3 * PZoom
                     End If
                     ObjLinkType(MapObj(i).LID + 1) = 105
 
                     If (MapObj(i).Flag \ &H80) Mod 2 = 1 Then
                         G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\105A.PNG"),
-                        CSng(-1.5 + MapObj(i).X / 160) * Zm, H * Zm - CSng(0.5 + MapObj(i).Y / 160) * Zm + KY, Zm * 3, Zm * 5)
+                        CSng(-1.5 + MapObj(i).X / 160) * PZoom, H * PZoom - CSng(0.5 + MapObj(i).Y / 160) * PZoom + KY, PZoom * 3, PZoom * 5)
                     Else
                         G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\105.PNG"),
-                        CSng(-1.5 + MapObj(i).X / 160) * Zm, H * Zm - CSng(0.5 + MapObj(i).Y / 160) * Zm + KY, Zm * 3, Zm * 5)
+                        CSng(-1.5 + MapObj(i).X / 160) * PZoom, H * PZoom - CSng(0.5 + MapObj(i).Y / 160) * PZoom + KY, PZoom * 3, PZoom * 5)
                     End If
                     'CID
                     If MapObj(i).CID <> -1 Then
                         'G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.Tostring & "\CID\C.PNG"),
-                        ' CSNG((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm),
-                        'H * Zm - CSNG((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm),
-                        'Zm, Zm)
+                        ' CSNG((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZOOM),
+                        'H * PZOOM - CSNG((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZOOM),
+                        'PZOOM, PZOOM)
                         If (MapObj(i).CFlag \ &H4) Mod 2 = 1 Then
-                            G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\CID\" & MapObj(i).CID.ToString & "A.PNG"), LX, LY + KY, Zm, Zm)
+                            G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\CID\" & MapObj(i).CID.ToString & "A.PNG"), LX, LY + KY, PZoom, PZoom)
                         Else
-                            G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\CID\" & MapObj(i).CID.ToString & ".PNG"), LX, LY + KY, Zm, Zm)
+                            G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\CID\" & MapObj(i).CID.ToString & ".PNG"), LX, LY + KY, PZoom, PZoom)
                         End If
                     End If
                 Else
@@ -1415,16 +1418,16 @@ Err:
                     Select Case ObjLinkType(MapObj(i).LID + 1)
                         Case 9 '管道L
                             KX = 0
-                            KY = ((Math.Min(MapObj(i).W, MapObj(i).H) - 1) / 2) * Zm
+                            KY = ((Math.Min(MapObj(i).W, MapObj(i).H) - 1) / 2) * PZoom
                         Case 105 '夹子L
                             KX = 0
-                            KY = -Zm / 4
+                            KY = -PZoom / 4
                         Case 59 '轨道
                             KX = 0
-                            KY = ((Math.Min(MapObj(i).W, MapObj(i).H) - 1) / 2) * Zm
+                            KY = ((Math.Min(MapObj(i).W, MapObj(i).H) - 1) / 2) * PZoom
                         Case 31
                             KX = 0
-                            KY = 0 ' 3 * Zm
+                            KY = 0 ' 3 * PZOOM
                         Case 106 '树
                             KX = 0
                             KY = 0
@@ -1433,15 +1436,15 @@ Err:
                             KY = 0
                     End Select
 
-                    If MapObj(i).LID + 1 = 0 And Not L Or MapObj(i).LID + 1 > 0 And L Or MapObj(i).ID = 9 Then
+                    If MapObj(i).LID + 1 = 0 AndAlso Not L Or MapObj(i).LID + 1 > 0 AndAlso L Or MapObj(i).ID = 9 Then
                         Select Case MapObj(i).ID
                             Case 89 '卷轴相机
-                                LX = CSng((-MapObj(i).W / 2 + (MapObj(i).W \ 2) / 2 + MapObj(i).X / 160) * Zm)
-                                LY = (H + (MapObj(i).H \ 2) / 2) * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY
+                                LX = CSng((-MapObj(i).W / 2 + (MapObj(i).W \ 2) / 2 + MapObj(i).X / 160) * PZoom)
+                                LY = (H + (MapObj(i).H \ 2) / 2) * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY
                                 G.DrawImage(Image.FromFile(PT & "\IMG\CMR\1.PNG"),
-                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm),
-                                    H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY,
-                                    Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom),
+                                    H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY,
+                                    PZoom * MapObj(i).W, PZoom * MapObj(i).H)
                             Case 14
                                 '蘑菇平台
                                 If (MapObj(i).Flag \ &H40000) Mod 2 = 1 Then
@@ -1454,20 +1457,20 @@ Err:
                                 For j = 0 To MapObj(i).W - 1
                                     If j = 0 Then
                                         G.DrawImage(GetTile(3, j2, 1, 1),
-                                            CSng((j + MapObj(i).X \ 160) * Zm), H * Zm - CSng((MapObj(i).H + MapObj(i).Y \ 160) * Zm), Zm, Zm)
+                                            CSng((j + MapObj(i).X \ 160) * PZoom), H * PZoom - CSng((MapObj(i).H + MapObj(i).Y \ 160) * PZoom), PZoom, PZoom)
                                     ElseIf j = MapObj(i).W - 1 Then
                                         G.DrawImage(GetTile(5, j2, 1, 1),
-                                            CSng((j + MapObj(i).X \ 160) * Zm), H * Zm - CSng((MapObj(i).H + MapObj(i).Y \ 160) * Zm), Zm, Zm)
+                                            CSng((j + MapObj(i).X \ 160) * PZoom), H * PZoom - CSng((MapObj(i).H + MapObj(i).Y \ 160) * PZoom), PZoom, PZoom)
                                     Else
                                         G.DrawImage(GetTile(4, j2, 1, 1),
-                                            CSng((j + MapObj(i).X \ 160) * Zm), H * Zm - CSng((MapObj(i).H + MapObj(i).Y \ 160) * Zm), Zm, Zm)
+                                            CSng((j + MapObj(i).X \ 160) * PZoom), H * PZoom - CSng((MapObj(i).H + MapObj(i).Y \ 160) * PZoom), PZoom, PZoom)
                                     End If
                                 Next
                             Case 16
                                 '半碰撞地形
                                 If (MapObj(i).Flag \ &H40000) Mod 2 = 1 Then
                                     j2 = 10
-                                ElseIf (MapObj(i).flag \ &H80000) Mod 2 = 1 Then
+                                ElseIf (MapObj(i).Flag \ &H80000) Mod 2 = 1 Then
                                     j2 = 13
                                 Else
                                     j2 = 7
@@ -1475,13 +1478,13 @@ Err:
                                 For j = 0 To MapObj(i).W - 1
                                     If j = 0 Then
                                         G.DrawImage(GetTile(j2, 3, 1, 1),
-                                            CSng((j + MapObj(i).X \ 160) * Zm), H * Zm - CSng((MapObj(i).H + MapObj(i).Y \ 160) * Zm), Zm, Zm)
+                                            CSng((j + MapObj(i).X \ 160) * PZoom), H * PZoom - CSng((MapObj(i).H + MapObj(i).Y \ 160) * PZoom), PZoom, PZoom)
                                     ElseIf j = MapObj(i).W - 1 Then
                                         G.DrawImage(GetTile(j2 + 2, 3, 1, 1),
-                                            CSng((j + MapObj(i).X \ 160) * Zm), H * Zm - CSng((MapObj(i).H + MapObj(i).Y \ 160) * Zm), Zm, Zm)
+                                            CSng((j + MapObj(i).X \ 160) * PZoom), H * PZoom - CSng((MapObj(i).H + MapObj(i).Y \ 160) * PZoom), PZoom, PZoom)
                                     Else
                                         G.DrawImage(GetTile(j2 + 1, 3, 1, 1),
-                                            CSng((j + MapObj(i).X \ 160) * Zm), H * Zm - CSng((MapObj(i).H + MapObj(i).Y \ 160) * Zm), Zm, Zm)
+                                            CSng((j + MapObj(i).X \ 160) * PZoom), H * PZoom - CSng((MapObj(i).H + MapObj(i).Y \ 160) * PZoom), PZoom, PZoom)
                                     End If
                                 Next
                             Case 71
@@ -1505,13 +1508,13 @@ Err:
                                     For j = 0 To MapObj(i).W - 1
                                         If j = 0 Then
                                             G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\" & TL & ".PNG"),
-                                        CSng((j + MapObj(i).X \ 160) * Zm), (H + j2) * Zm - CSng((MapObj(i).H + MapObj(i).Y \ 160) * Zm), Zm, Zm)
+                                        CSng((j + MapObj(i).X \ 160) * PZoom), (H + j2) * PZoom - CSng((MapObj(i).H + MapObj(i).Y \ 160) * PZoom), PZoom, PZoom)
                                         ElseIf j = MapObj(i).W - 1 Then
                                             G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\" & TR & ".PNG"),
-                                        CSng((j + MapObj(i).X \ 160) * Zm), (H + j2) * Zm - CSng((MapObj(i).H + MapObj(i).Y \ 160) * Zm), Zm, Zm)
+                                        CSng((j + MapObj(i).X \ 160) * PZoom), (H + j2) * PZoom - CSng((MapObj(i).H + MapObj(i).Y \ 160) * PZoom), PZoom, PZoom)
                                         Else
                                             G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\" & TM & ".PNG"),
-                                        CSng((j + MapObj(i).X \ 160) * Zm), (H + j2) * Zm - CSng((MapObj(i).H + MapObj(i).Y \ 160) * Zm), Zm, Zm)
+                                        CSng((j + MapObj(i).X \ 160) * PZoom), (H + j2) * PZoom - CSng((MapObj(i).H + MapObj(i).Y \ 160) * PZoom), PZoom, PZoom)
                                         End If
                                     Next
                                 Next
@@ -1520,13 +1523,13 @@ Err:
                                 For j = 0 To MapObj(i).W - 1
                                     If j = 0 Then
                                         G.DrawImage(GetTile(0, 2, 1, 2),
-                                            CSng((j + MapObj(i).X \ 160) * Zm), H * Zm - CSng((1.5 + MapObj(i).Y / 160) * Zm), Zm, Zm * 2)
+                                            CSng((j + MapObj(i).X \ 160) * PZoom), H * PZoom - CSng((1.5 + MapObj(i).Y / 160) * PZoom), PZoom, PZoom * 2)
                                     ElseIf j = MapObj(i).W - 1 Then
                                         G.DrawImage(GetTile(2, 2, 1, 2),
-                                            CSng((j + MapObj(i).X \ 160) * Zm), H * Zm - CSng((1.5 + MapObj(i).Y / 160) * Zm), Zm, Zm * 2)
+                                            CSng((j + MapObj(i).X \ 160) * PZoom), H * PZoom - CSng((1.5 + MapObj(i).Y / 160) * PZoom), PZoom, PZoom * 2)
                                     Else
                                         G.DrawImage(GetTile(1, 2, 1, 2),
-                                            CSng((j + MapObj(i).X \ 160) * Zm), H * Zm - CSng((1.5 + MapObj(i).Y / 160) * Zm), Zm, Zm * 2)
+                                            CSng((j + MapObj(i).X \ 160) * PZoom), H * PZoom - CSng((1.5 + MapObj(i).Y / 160) * PZoom), PZoom, PZoom * 2)
                                     End If
                                 Next
                             Case 113, 132
@@ -1535,26 +1538,26 @@ Err:
                                     For j = 0 To MapObj(i).W - 1
                                         If j = 0 Then
                                             G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\" & MapObj(i).ID.ToString & "D.PNG"),
-                                            CSng((j - MapObj(i).W / 2 + MapObj(i).X / 160) * Zm), H * Zm - CSng((0.5 + MapObj(i).Y / 160) * Zm), Zm, Zm)
+                                            CSng((j - MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom), H * PZoom - CSng((0.5 + MapObj(i).Y / 160) * PZoom), PZoom, PZoom)
                                         ElseIf j = MapObj(i).W - 1 Then
                                             G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\" & MapObj(i).ID.ToString & "E.PNG"),
-                                            CSng((j - MapObj(i).W / 2 + MapObj(i).X / 160) * Zm), H * Zm - CSng((0.5 + MapObj(i).Y / 160) * Zm), Zm, Zm)
+                                            CSng((j - MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom), H * PZoom - CSng((0.5 + MapObj(i).Y / 160) * PZoom), PZoom, PZoom)
                                         Else
                                             G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\" & MapObj(i).ID.ToString & "C.PNG"),
-                                            CSng((j - MapObj(i).W / 2 + MapObj(i).X / 160) * Zm), H * Zm - CSng((0.5 + MapObj(i).Y / 160) * Zm), Zm, Zm)
+                                            CSng((j - MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom), H * PZoom - CSng((0.5 + MapObj(i).Y / 160) * PZoom), PZoom, PZoom)
                                         End If
                                     Next
                                 Else
                                     For j = 0 To MapObj(i).W - 1
                                         If j = 0 Then
                                             G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\" & MapObj(i).ID.ToString & "A.PNG"),
-                                            CSng((j - MapObj(i).W / 2 + MapObj(i).X \ 160) * Zm), H * Zm - CSng((0.5 + MapObj(i).Y / 160) * Zm), Zm, Zm)
+                                            CSng((j - MapObj(i).W / 2 + MapObj(i).X \ 160) * PZoom), H * PZoom - CSng((0.5 + MapObj(i).Y / 160) * PZoom), PZoom, PZoom)
                                         ElseIf j = MapObj(i).W - 1 Then
                                             G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\" & MapObj(i).ID.ToString & "B.PNG"),
-                                            CSng((j - MapObj(i).W / 2 + MapObj(i).X \ 160) * Zm), H * Zm - CSng((0.5 + MapObj(i).Y / 160) * Zm), Zm, Zm)
+                                            CSng((j - MapObj(i).W / 2 + MapObj(i).X \ 160) * PZoom), H * PZoom - CSng((0.5 + MapObj(i).Y / 160) * PZoom), PZoom, PZoom)
                                         Else
                                             G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\" & MapObj(i).ID.ToString & ".PNG"),
-                                            CSng((j - MapObj(i).W / 2 + MapObj(i).X \ 160) * Zm), H * Zm - CSng((0.5 + MapObj(i).Y / 160) * Zm), Zm, Zm)
+                                            CSng((j - MapObj(i).W / 2 + MapObj(i).X \ 160) * PZoom), H * PZoom - CSng((0.5 + MapObj(i).Y / 160) * PZoom), PZoom, PZoom)
                                         End If
                                     Next
                                 End If
@@ -1579,10 +1582,10 @@ Err:
                                     Case &H7C00040
                                         PR = "G"
                                 End Select
-                                LX = CSng((-0.5 + MapObj(i).X / 160) * Zm)
-                                LY = H * Zm - CSng((MapObj(i).H / 2 + MapObj(i).Y / 160) * Zm)
+                                LX = CSng((-0.5 + MapObj(i).X / 160) * PZoom)
+                                LY = H * PZoom - CSng((MapObj(i).H / 2 + MapObj(i).Y / 160) * PZoom)
                                 G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\" & MapObj(i).ID.ToString & PR & ".PNG"),
-                                                CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm), H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm), Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                                CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom), H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom), PZoom * MapObj(i).W, PZoom * MapObj(i).H)
                             Case 83 '狼牙棒
                                 Select Case MapObj(i).Flag
                                     Case &H6000040
@@ -1602,22 +1605,22 @@ Err:
                                     Case &H7C00040
                                         PR = "G"
                                 End Select
-                                LX = CSng((-0.5 + MapObj(i).X / 160) * Zm)
-                                LY = H * Zm - CSng((MapObj(i).H / 2 + MapObj(i).Y / 160) * Zm)
+                                LX = CSng((-0.5 + MapObj(i).X / 160) * PZoom)
+                                LY = H * PZoom - CSng((MapObj(i).H / 2 + MapObj(i).Y / 160) * PZoom)
                                 G.DrawImage(SetOpacity(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\" & MapObj(i).ID.ToString & PR & ".PNG"), 0.7),
-                                                CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm), H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm), Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                                CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom), H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom), PZoom * MapObj(i).W, PZoom * MapObj(i).H)
                             Case 64
                                 '藤蔓
                                 For j = 1 To MapObj(i).H
                                     If j = 1 Then
                                         G.DrawImage(GetTile(13, 7, 1, 1),
-                                                CSng(-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm, H * Zm - CSng((j + MapObj(i).Y \ 160) * Zm), Zm, Zm)
+                                                CSng(-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom, H * PZoom - CSng((j + MapObj(i).Y \ 160) * PZoom), PZoom, PZoom)
                                     ElseIf j = MapObj(i).H Then
                                         G.DrawImage(GetTile(15, 7, 1, 1),
-                                                CSng(-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm, H * Zm - CSng((j + MapObj(i).Y \ 160) * Zm), Zm, Zm)
+                                                CSng(-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom, H * PZoom - CSng((j + MapObj(i).Y \ 160) * PZoom), PZoom, PZoom)
                                     Else
                                         G.DrawImage(GetTile(14, 7, 1, 1),
-                                                CSng(-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm, H * Zm - CSng((j + MapObj(i).Y \ 160) * Zm), Zm, Zm)
+                                                CSng(-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom, H * PZoom - CSng((j + MapObj(i).Y \ 160) * PZoom), PZoom, PZoom)
                                     End If
                                 Next
                             Case 4, 5, 6, 21, 22, 23, 29, 63, 79, 99, 100, 43, 8
@@ -1631,12 +1634,12 @@ Err:
                                 Else
                                     PP = 0
                                 End If
-                                LX = CSng((-MapObj(i).W / 2 + (MapObj(i).W \ 2) / 2 + MapObj(i).X / 160) * Zm)
-                                LY = (H + (MapObj(i).H \ 2) / 2) * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY
+                                LX = CSng((-MapObj(i).W / 2 + (MapObj(i).W \ 2) / 2 + MapObj(i).X / 160) * PZoom)
+                                LY = (H + (MapObj(i).H \ 2) / 2) * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY
                                 G.DrawImage(GetTile(TileLoc(MapObj(i).ID, PP).X, TileLoc(MapObj(i).ID, PP).Y, 1, 1),
-                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm),
-                                    H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY,
-                                    Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom),
+                                    H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY,
+                                    PZoom * MapObj(i).W, PZoom * MapObj(i).H)
 
                             Case 108
                                 '闪烁砖
@@ -1645,30 +1648,30 @@ Err:
                                 Else
                                     PR = ""
                                 End If
-                                LX = CSng((-MapObj(i).W / 2 + (MapObj(i).W \ 2) / 2 + MapObj(i).X / 160) * Zm)
-                                LY = (H + (MapObj(i).H \ 2) / 2) * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY
+                                LX = CSng((-MapObj(i).W / 2 + (MapObj(i).W \ 2) / 2 + MapObj(i).X / 160) * PZoom)
+                                LY = (H + (MapObj(i).H \ 2) / 2) * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY
                                 G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\" & MapObj(i).ID.ToString & PR & ".PNG"),
-                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm),
-                                    H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY,
-                                    Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom),
+                                    H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY,
+                                    PZoom * MapObj(i).W, PZoom * MapObj(i).H)
 
                             Case 106 '树
-                                LX = CSng((-0.5 + MapObj(i).X / 160) * Zm)
-                                LY = H * Zm - CSng((MapObj(i).H + 0.5 + MapObj(i).Y / 160) * Zm) + KY
+                                LX = CSng((-0.5 + MapObj(i).X / 160) * PZoom)
+                                LY = H * PZoom - CSng((MapObj(i).H + 0.5 + MapObj(i).Y / 160) * PZoom) + KY
                                 G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\106.PNG"),
-                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm),
-                                    H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY,
-                                    Zm * 4, Zm * 4)
+                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom),
+                                    H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY,
+                                    PZoom * 4, PZoom * 4)
                                 For j = 4 To MapObj(i).H - 1
                                     G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\106A.PNG"),
-                                    CSng((-MapObj(i).W / 2 + 1.5 + MapObj(i).X / 160) * Zm),
-                                    (H + j) * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY,
-                                    Zm, Zm)
+                                    CSng((-MapObj(i).W / 2 + 1.5 + MapObj(i).X / 160) * PZoom),
+                                    (H + j) * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY,
+                                    PZoom, PZoom)
                                 Next
                                 G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\106B.PNG"),
-                                    CSng((-MapObj(i).W / 2 + 1 + MapObj(i).X / 160) * Zm),
-                                    H * Zm - CSng((-0.5 + MapObj(i).Y / 160) * Zm) + KY,
-                                    Zm * 2, Zm)
+                                    CSng((-MapObj(i).W / 2 + 1 + MapObj(i).X / 160) * PZoom),
+                                    H * PZoom - CSng((-0.5 + MapObj(i).Y / 160) * PZoom) + KY,
+                                    PZoom * 2, PZoom)
                             Case 85, 119
                                 '机动砖 轨道砖
                                 If (MapObj(i).Flag \ &H4) Mod 2 = 1 Then
@@ -1676,12 +1679,12 @@ Err:
                                 Else
                                     PR = ""
                                 End If
-                                LX = CSng((-MapObj(i).W / 2 + (MapObj(i).W \ 2) / 2 + MapObj(i).X / 160) * Zm)
-                                LY = (H + (MapObj(i).H \ 2) / 2) * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY
+                                LX = CSng((-MapObj(i).W / 2 + (MapObj(i).W \ 2) / 2 + MapObj(i).X / 160) * PZoom)
+                                LY = (H + (MapObj(i).H \ 2) / 2) * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY
                                 G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\" & MapObj(i).ID.ToString & PR & ".PNG"),
-                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm),
-                                    H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY,
-                                    Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom),
+                                    H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY,
+                                    PZoom * MapObj(i).W, PZoom * MapObj(i).H)
                                 DrawMoveBlock(MapObj(i).ID, MapObj(i).Ex, MapObj(i).X, MapObj(i).Y)
                             Case 94
                                 '斜传送带
@@ -1695,108 +1698,51 @@ Err:
                                 End If
                                 If (MapObj(i).Flag \ &H200000) Mod &H2 = 0 Then
                                     '左斜
-                                    LX = CSng((-1 + MapObj(i).W / 2 + MapObj(i).X / 160) * Zm)
-                                    LY = (H - 0.5 - MapObj(i).H / 2) * Zm - CSng((-0.5 + MapObj(i).Y / 160) * Zm)
+                                    LX = CSng((-1 + MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom)
+                                    LY = (H - 0.5 - MapObj(i).H / 2) * PZoom - CSng((-0.5 + MapObj(i).Y / 160) * PZoom)
                                     G.DrawImage(GetTile(C1.X, C1.Y, 1, 1),
-                                            CSng((-0.5 + MapObj(i).X / 160) * Zm), (H - 1) * Zm - CSng((-0.5 + MapObj(i).Y / 160) * Zm), Zm, Zm)
+                                            CSng((-0.5 + MapObj(i).X / 160) * PZoom), (H - 1) * PZoom - CSng((-0.5 + MapObj(i).Y / 160) * PZoom), PZoom, PZoom)
                                     G.DrawImage(GetTile(C1.X + 2, C1.Y, 1, 1),
-                                            CSng((MapObj(i).W - 1.5 + MapObj(i).X / 160) * Zm), (H - 1) * Zm - CSng((MapObj(i).H - 1.5 + MapObj(i).Y / 160) * Zm), Zm, Zm)
+                                            CSng((MapObj(i).W - 1.5 + MapObj(i).X / 160) * PZoom), (H - 1) * PZoom - CSng((MapObj(i).H - 1.5 + MapObj(i).Y / 160) * PZoom), PZoom, PZoom)
                                     For j = 1 To MapObj(i).W - 2
                                         G.DrawImage(GetTile(C2.X + 1, C2.Y, 1, 2),
-                                                CSng((j - 0.5 + MapObj(i).X / 160) * Zm), (H - 1) * Zm - CSng((j - 0.5 + MapObj(i).Y / 160) * Zm), Zm, Zm * 2)
+                                                CSng((j - 0.5 + MapObj(i).X / 160) * PZoom), (H - 1) * PZoom - CSng((j - 0.5 + MapObj(i).Y / 160) * PZoom), PZoom, PZoom * 2)
                                     Next
 
                                 Else
                                     '右斜
-                                    LX = CSng((-1 + MapObj(i).W / 2 + MapObj(i).X / 160) * Zm)
-                                    LY = (H - 0.5 - MapObj(i).H / 2) * Zm - CSng((-0.5 + MapObj(i).Y / 160) * Zm)
+                                    LX = CSng((-1 + MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom)
+                                    LY = (H - 0.5 - MapObj(i).H / 2) * PZoom - CSng((-0.5 + MapObj(i).Y / 160) * PZoom)
                                     G.DrawImage(GetTile(C1.X, C1.Y, 1, 1),
-                                            CSng((-0.5 + MapObj(i).X / 160) * Zm), (H - 1) * Zm - CSng((MapObj(i).H - 1.5 + MapObj(i).Y / 160) * Zm), Zm, Zm)
+                                            CSng((-0.5 + MapObj(i).X / 160) * PZoom), (H - 1) * PZoom - CSng((MapObj(i).H - 1.5 + MapObj(i).Y / 160) * PZoom), PZoom, PZoom)
                                     G.DrawImage(GetTile(C1.X + 2, C1.Y, 1, 1),
-                                            CSng((MapObj(i).W - 1.5 + MapObj(i).X / 160) * Zm), (H - 1) * Zm - CSng((-0.5 + MapObj(i).Y / 160) * Zm), Zm, Zm)
+                                            CSng((MapObj(i).W - 1.5 + MapObj(i).X / 160) * PZoom), (H - 1) * PZoom - CSng((-0.5 + MapObj(i).Y / 160) * PZoom), PZoom, PZoom)
                                     For j = 1 To MapObj(i).W - 2
                                         G.DrawImage(GetTile(C2.X + 4, C2.Y, 1, 2),
-                                                CSng((j - 0.5 + MapObj(i).X / 160) * Zm), (H - 1) * Zm - CSng((-0.5 - j + MapObj(i).H + MapObj(i).Y / 160) * Zm), Zm, Zm * 2)
+                                                CSng((j - 0.5 + MapObj(i).X / 160) * PZoom), (H - 1) * PZoom - CSng((-0.5 - j + MapObj(i).H + MapObj(i).Y / 160) * PZoom), PZoom, PZoom * 2)
                                     Next
                                 End If
 
 
                                 If (MapObj(i).Flag \ &H40000) Mod 2 = 0 Then
                                     If (MapObj(i).Flag \ &H8) Mod 2 = 1 Then
-                                        G.DrawImage(Image.FromFile(P & "\img\CMN\A1.PNG"), LX, LY, Zm, Zm)
+                                        G.DrawImage(Image.FromFile(P & "\img\CMN\A1.PNG"), LX, LY, PZoom, PZoom)
                                     Else
-                                        G.DrawImage(Image.FromFile(P & "\img\CMN\A0.PNG"), LX, LY, Zm, Zm)
+                                        G.DrawImage(Image.FromFile(P & "\img\CMN\A0.PNG"), LX, LY, PZoom, PZoom)
                                     End If
                                 Else
                                     If (MapObj(i).Flag \ &H8) Mod 2 = 1 Then
-                                        G.DrawImage(Image.FromFile(P & "\img\CMN\A3.PNG"), LX, LY, Zm, Zm)
+                                        G.DrawImage(Image.FromFile(P & "\img\CMN\A3.PNG"), LX, LY, PZoom, PZoom)
                                     Else
-                                        G.DrawImage(Image.FromFile(P & "\img\CMN\A2.PNG"), LX, LY, Zm, Zm)
+                                        G.DrawImage(Image.FromFile(P & "\img\CMN\A2.PNG"), LX, LY, PZoom, PZoom)
                                     End If
                                 End If
 
-                            'Case 87
-                            '	'缓坡
-                            '	If (MapObj(i).Flag \ &H100000) Mod &H2 = 0 Then
-                            '		'左斜
-                            '		G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\7.PNG"),
-                            '				CSng((-0.5 + MapObj(i).X / 160) * Zm),
-                            '				(H - 1) * Zm - CSng((-0.5 + MapObj(i).Y / 160) * Zm), Zm, Zm)
-                            '		G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\7.PNG"),
-                            '				CSng((MapObj(i).W - 1.5 + MapObj(i).X / 160) * Zm),
-                            '				(H - 1) * Zm - CSng((MapObj(i).H - 1.5 + MapObj(i).Y / 160) * Zm), Zm, Zm)
-                            '		For j = 1 To MapObj(i).W - 2 Step 2
-                            '			G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\87.PNG"),
-                            '					CSng((j - 0.5 + MapObj(i).X / 160) * Zm),
-                            '					(H - 1) * Zm - CSng((j / 2 + MapObj(i).Y / 160) * Zm), Zm * 2, Zm * 2)
-                            '		Next
-                            '	Else
-                            '		'右斜
-                            '		G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\7.PNG"),
-                            '				CSng((-0.5 + MapObj(i).X / 160) * Zm),
-                            '				(H - 1) * Zm - CSng((MapObj(i).H - 1.5 + MapObj(i).Y / 160) * Zm), Zm, Zm)
-                            '		G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\7.PNG"),
-                            '				CSng((MapObj(i).W - 1.5 + MapObj(i).X / 160) * Zm),
-                            '				(H - 1) * Zm - CSng((-0.5 + MapObj(i).Y / 160) * Zm), Zm, Zm)
-                            '		For j = 1 To MapObj(i).W - 2 Step 2
-                            '			G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\87A.PNG"),
-                            '					CSng((j - 0.5 + MapObj(i).X / 160) * Zm),
-                            '					(H - 1) * Zm - CSng((-j / 2 + MapObj(i).H - 1 + MapObj(i).Y / 160) * Zm), Zm * 2, Zm * 2)
-                            '		Next
-                            '	End If
-                            'Case 88
-                            '	'陡坡
-                            '	If (MapObj(i).Flag \ &H100000) Mod &H2 = 0 Then
-                            '		'左斜
-                            '		G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\7.PNG"),
-                            '				CSng((-0.5 + MapObj(i).X / 160) * Zm),
-                            '				(H - 1) * Zm - CSng((-0.5 + MapObj(i).Y / 160) * Zm), Zm, Zm)
-                            '		G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\7.PNG"),
-                            '				CSng((MapObj(i).W - 1.5 + MapObj(i).X / 160) * Zm),
-                            '				(H - 1) * Zm - CSng((MapObj(i).H - 1.5 + MapObj(i).Y / 160) * Zm), Zm, Zm)
-                            '		For j = 1 To MapObj(i).W - 2
-                            '			G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\88.PNG"),
-                            '					CSng((j - 0.5 + MapObj(i).X / 160) * Zm),
-                            '					(H - 1) * Zm - CSng((j - 0.5 + MapObj(i).Y / 160) * Zm), Zm, Zm * 2)
-                            '		Next
-                            '	Else
-                            '		'右斜
-                            '		G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\7.PNG"),
-                            '				CSng((-0.5 + MapObj(i).X / 160) * Zm),
-                            '				(H - 1) * Zm - CSng((MapObj(i).H - 1.5 + MapObj(i).Y / 160) * Zm), Zm, Zm)
-                            '		G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\7.PNG"),
-                            '				CSng((MapObj(i).W - 1.5 + MapObj(i).X / 160) * Zm),
-                            '				(H - 1) * Zm - CSng((-0.5 + MapObj(i).Y / 160) * Zm), Zm, Zm)
-                            '		For j = 1 To MapObj(i).W - 2
-                            '			G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\88A.PNG"),
-                            '					CSng((j - 0.5 + MapObj(i).X / 160) * Zm),
-                            '					(H - 1) * Zm - CSng((-0.5 - j + MapObj(i).H + MapObj(i).Y / 160) * Zm), Zm, Zm * 2)
-                            '		Next
-                            '	End If
+
                             Case 53
                                 '传送带
-                                LX = CSng((-0.5 + MapObj(i).X / 160) * Zm)
-                                LY = H * Zm - CSng((0.5 + MapObj(i).Y / 160) * Zm)
+                                LX = CSng((-0.5 + MapObj(i).X / 160) * PZoom)
+                                LY = H * PZoom - CSng((0.5 + MapObj(i).Y / 160) * PZoom)
                                 Dim C1 As Point
                                 If (MapObj(i).Flag \ &H400000) Mod 2 = 0 Then
                                     C1 = New Point(8, 0)
@@ -1807,26 +1753,26 @@ Err:
                                 For j = 0 To MapObj(i).W - 1
                                     If j = 0 Then
                                         G.DrawImage(GetTile(C1.X, C1.Y, 1, 1),
-                                        CSng((j - 0.5 + MapObj(i).X / 160) * Zm), H * Zm - CSng((0.5 + MapObj(i).Y / 160) * Zm), Zm, Zm)
+                                        CSng((j - 0.5 + MapObj(i).X / 160) * PZoom), H * PZoom - CSng((0.5 + MapObj(i).Y / 160) * PZoom), PZoom, PZoom)
                                     ElseIf j = MapObj(i).W - 1 Then
                                         G.DrawImage(GetTile(C1.X + 2, C1.Y, 1, 1),
-                                        CSng((j - 0.5 + MapObj(i).X / 160) * Zm), H * Zm - CSng((0.5 + MapObj(i).Y / 160) * Zm), Zm, Zm)
+                                        CSng((j - 0.5 + MapObj(i).X / 160) * PZoom), H * PZoom - CSng((0.5 + MapObj(i).Y / 160) * PZoom), PZoom, PZoom)
                                     Else
                                         G.DrawImage(GetTile(C1.X + 1, C1.Y, 1, 1),
-                                        CSng((j - 0.5 + MapObj(i).X / 160) * Zm), H * Zm - CSng((0.5 + MapObj(i).Y / 160) * Zm), Zm, Zm)
+                                        CSng((j - 0.5 + MapObj(i).X / 160) * PZoom), H * PZoom - CSng((0.5 + MapObj(i).Y / 160) * PZoom), PZoom, PZoom)
                                     End If
 
                                     If (MapObj(i).Flag \ &H40000) Mod 2 = 0 Then
                                         If (MapObj(i).Flag \ &H8) Mod 2 = 1 Then
-                                            G.DrawImage(Image.FromFile(P & "\img\CMN\A1.PNG"), LX + CInt((-0.5 + MapObj(i).W / 2) * Zm), LY, Zm, Zm)
+                                            G.DrawImage(Image.FromFile(P & "\img\CMN\A1.PNG"), LX + CInt((-0.5 + MapObj(i).W / 2) * PZoom), LY, PZoom, PZoom)
                                         Else
-                                            G.DrawImage(Image.FromFile(P & "\img\CMN\A0.PNG"), LX + CInt((-0.5 + MapObj(i).W / 2) * Zm), LY, Zm, Zm)
+                                            G.DrawImage(Image.FromFile(P & "\img\CMN\A0.PNG"), LX + CInt((-0.5 + MapObj(i).W / 2) * PZoom), LY, PZoom, PZoom)
                                         End If
                                     Else
                                         If (MapObj(i).Flag \ &H8) Mod 2 = 1 Then
-                                            G.DrawImage(Image.FromFile(P & "\img\CMN\A3.PNG"), LX + CInt((-0.5 + MapObj(i).W / 2) * Zm), LY, Zm, Zm)
+                                            G.DrawImage(Image.FromFile(P & "\img\CMN\A3.PNG"), LX + CInt((-0.5 + MapObj(i).W / 2) * PZoom), LY, PZoom, PZoom)
                                         Else
-                                            G.DrawImage(Image.FromFile(P & "\img\CMN\A2.PNG"), LX + CInt((-0.5 + MapObj(i).W / 2) * Zm), LY, Zm, Zm)
+                                            G.DrawImage(Image.FromFile(P & "\img\CMN\A2.PNG"), LX + CInt((-0.5 + MapObj(i).W / 2) * PZoom), LY, PZoom, PZoom)
                                         End If
                                     End If
                                 Next
@@ -1849,45 +1795,45 @@ Err:
                                 '以相对左下角为准
                                 Select Case MapObj(i).Flag Mod &H80
                                     Case &H0 'R
-                                        LX = CSng((MapObj(i).H - 1 - 1 - 0.5 + MapObj(i).X / 160) * Zm)
-                                        LY = H * Zm - CSng((MapObj(i).Y / 160) * Zm)
+                                        LX = CSng((MapObj(i).H - 1 - 1 - 0.5 + MapObj(i).X / 160) * PZoom)
+                                        LY = H * PZoom - CSng((MapObj(i).Y / 160) * PZoom)
                                         For j = 0 To MapObj(i).H - 2
                                             G.DrawImage(GetTile(PipeLoc(PP, 4).X, PipeLoc(PP, 4).Y, 1, 2),
-                                                            CSng((j - 0.5 + MapObj(i).X / 160) * Zm), H * Zm - CSng((0.5 + MapObj(i).Y / 160) * Zm), Zm, 2 * Zm)
+                                                            CSng((j - 0.5 + MapObj(i).X / 160) * PZoom), H * PZoom - CSng((0.5 + MapObj(i).Y / 160) * PZoom), PZoom, 2 * PZoom)
                                         Next
                                         G.DrawImage(GetTile(PipeLoc(PP, 3).X, PipeLoc(PP, 3).Y, 1, 2),
-                                                        CSng((j - 0.5 + MapObj(i).X / 160) * Zm), H * Zm - CSng((0.5 + MapObj(i).Y / 160) * Zm), Zm, 2 * Zm)
+                                                        CSng((j - 0.5 + MapObj(i).X / 160) * PZoom), H * PZoom - CSng((0.5 + MapObj(i).Y / 160) * PZoom), PZoom, 2 * PZoom)
                                     Case &H20 'L
-                                        LX = CSng((-MapObj(i).H + 1 + 1 - 0.5 + MapObj(i).X / 160) * Zm)
-                                        LY = H * Zm - CSng((1 + MapObj(i).Y / 160) * Zm)
+                                        LX = CSng((-MapObj(i).H + 1 + 1 - 0.5 + MapObj(i).X / 160) * PZoom)
+                                        LY = H * PZoom - CSng((1 + MapObj(i).Y / 160) * PZoom)
                                         For j = 0 To MapObj(i).H - 2
                                             G.DrawImage(GetTile(PipeLoc(PP, 4).X, PipeLoc(PP, 4).Y, 1, 2),
-                                                            CSng((-j - 0.5 + MapObj(i).X / 160) * Zm), H * Zm - CSng((1.5 + MapObj(i).Y / 160) * Zm), Zm, 2 * Zm)
+                                                            CSng((-j - 0.5 + MapObj(i).X / 160) * PZoom), H * PZoom - CSng((1.5 + MapObj(i).Y / 160) * PZoom), PZoom, 2 * PZoom)
                                         Next
                                         G.DrawImage(GetTile(PipeLoc(PP, 2).X, PipeLoc(PP, 2).Y, 1, 2),
-                                                        CSng((-j - 0.5 + MapObj(i).X / 160) * Zm), H * Zm - CSng((1.5 + MapObj(i).Y / 160) * Zm), Zm, 2 * Zm)
+                                                        CSng((-j - 0.5 + MapObj(i).X / 160) * PZoom), H * PZoom - CSng((1.5 + MapObj(i).Y / 160) * PZoom), PZoom, 2 * PZoom)
                                     Case &H40 'U
-                                        LX = CSng((+MapObj(i).X / 160) * Zm)
-                                        LY = (H - MapObj(i).H + 1 + 1) * Zm - CSng((0.5 + MapObj(i).Y / 160) * Zm)
+                                        LX = CSng((+MapObj(i).X / 160) * PZoom)
+                                        LY = (H - MapObj(i).H + 1 + 1) * PZoom - CSng((0.5 + MapObj(i).Y / 160) * PZoom)
                                         For j = 0 To MapObj(i).H - 2
                                             G.DrawImage(GetTile(PipeLoc(PP, 5).X, PipeLoc(PP, 5).Y, 2, 1),
-                                                            CSng((-0.5 + MapObj(i).X / 160) * Zm), (H - j) * Zm - CSng((0.5 + MapObj(i).Y / 160) * Zm), 2 * Zm, Zm)
+                                                            CSng((-0.5 + MapObj(i).X / 160) * PZoom), (H - j) * PZoom - CSng((0.5 + MapObj(i).Y / 160) * PZoom), 2 * PZoom, PZoom)
                                         Next
                                         G.DrawImage(GetTile(PipeLoc(PP, 0).X, PipeLoc(PP, 0).Y, 2, 1),
-                                                        CSng((-0.5 + MapObj(i).X / 160) * Zm), (H - j) * Zm - CSng((0.5 + MapObj(i).Y / 160) * Zm), 2 * Zm, Zm)
+                                                        CSng((-0.5 + MapObj(i).X / 160) * PZoom), (H - j) * PZoom - CSng((0.5 + MapObj(i).Y / 160) * PZoom), 2 * PZoom, PZoom)
                                     Case &H60 'D
-                                        LX = CSng((-1 + MapObj(i).X / 160) * Zm)
-                                        LY = (H + MapObj(i).H - 1 - 1) * Zm - CSng((0.5 + MapObj(i).Y / 160) * Zm)
+                                        LX = CSng((-1 + MapObj(i).X / 160) * PZoom)
+                                        LY = (H + MapObj(i).H - 1 - 1) * PZoom - CSng((0.5 + MapObj(i).Y / 160) * PZoom)
                                         For j = 0 To MapObj(i).H - 2
                                             G.DrawImage(GetTile(PipeLoc(PP, 5).X, PipeLoc(PP, 5).Y, 2, 1),
-                                                            CSng((-1.5 + MapObj(i).X / 160) * Zm), (H + j) * Zm - CSng((0.5 + MapObj(i).Y / 160) * Zm), 2 * Zm, Zm)
+                                                            CSng((-1.5 + MapObj(i).X / 160) * PZoom), (H + j) * PZoom - CSng((0.5 + MapObj(i).Y / 160) * PZoom), 2 * PZoom, PZoom)
                                         Next
                                         G.DrawImage(GetTile(PipeLoc(PP, 1).X, PipeLoc(PP, 1).Y, 2, 1),
-                                                        CSng((-1.5 + MapObj(i).X / 160) * Zm), (H + j) * Zm - CSng((0.5 + MapObj(i).Y / 160) * Zm), 2 * Zm, Zm)
+                                                        CSng((-1.5 + MapObj(i).X / 160) * PZoom), (H + j) * PZoom - CSng((0.5 + MapObj(i).Y / 160) * PZoom), 2 * PZoom, PZoom)
                                 End Select
                                 PR = ((MapObj(i).Flag Mod &H1000000) \ &H100000 - 1).ToString
                                 If PR <> "-1" Then
-                                    G.DrawImage(Image.FromFile(P & "\img\CMN\C" & PR & ".PNG"), LX, LY, Zm, Zm)
+                                    G.DrawImage(Image.FromFile(P & "\img\CMN\C" & PR & ".PNG"), LX, LY, PZoom, PZoom)
                                 End If
 
                             Case 55
@@ -1900,12 +1846,12 @@ Err:
                                     PR = ""
                                 End If
                                 G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\55" & PR & ".PNG"),
-                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm),
-                                    H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm), Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom),
+                                    H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom), PZoom * MapObj(i).W, PZoom * MapObj(i).H)
                                 PR = ((MapObj(i).Flag Mod &H800000) \ &H200000).ToString
                                 G.DrawImage(Image.FromFile(P & "\img\CMN\C" & PR & ".PNG"),
-                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm),
-                                    (H + 1) * Zm - CSng((MapObj(i).H + MapObj(i).Y / 160) * Zm), Zm, Zm)
+                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom),
+                                    (H + 1) * PZoom - CSng((MapObj(i).H + MapObj(i).Y / 160) * PZoom), PZoom, PZoom)
                             Case 97
                                 '传送箱
                                 If (MapObj(i).Flag \ &H4) Mod 2 = 1 Then
@@ -1914,21 +1860,21 @@ Err:
                                     PR = ""
                                 End If
                                 G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\97" & PR & ".PNG"),
-                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm),
-                                    H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm), Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom),
+                                    H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom), PZoom * MapObj(i).W, PZoom * MapObj(i).H)
                                 PR = ((MapObj(i).Flag Mod &H800000) \ &H200000).ToString
                                 G.DrawImage(Image.FromFile(P & "\img\CMN\C" & PR & ".PNG"),
-                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm),
-                                    H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm), Zm, Zm)
+                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom),
+                                    H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom), PZoom, PZoom)
                             Case 84
                                 '蛇
                                 For j = 0 To MapObj(i).W - 1
                                     If (MapObj(i).Flag \ &H4) Mod 2 = 1 Then
                                         G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\84A.PNG"),
-                                                CSng((j - MapObj(i).W / 2 + MapObj(i).X / 160) * Zm), H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm), Zm, Zm)
+                                                CSng((j - MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom), H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom), PZoom, PZoom)
                                     Else
                                         G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\84.PNG"),
-                                                CSng((j - MapObj(i).W / 2 + MapObj(i).X / 160) * Zm), H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm), Zm, Zm)
+                                                CSng((j - MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom), H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom), PZoom, PZoom)
                                     End If
                                 Next
                                 '&H10方向
@@ -1939,12 +1885,12 @@ Err:
                             Case 68, 82
                                 '齿轮 甜甜圈
 
-                                LX = CSng((-0.5 + MapObj(i).X / 160) * Zm)
-                                LY = (H - 1.5) * Zm - CSng((MapObj(i).Y / 160) * Zm) + KY
+                                LX = CSng((-0.5 + MapObj(i).X / 160) * PZoom)
+                                LY = (H - 1.5) * PZoom - CSng((MapObj(i).Y / 160) * PZoom) + KY
                                 G.DrawImage(SetOpacity(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\" & MapObj(i).ID.ToString & ".PNG"), 0.7),
-                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm),
-                                    H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY,
-                                    Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom),
+                                    H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY,
+                                    PZoom * MapObj(i).W, PZoom * MapObj(i).H)
 
                             Case 0, 10, 15, 19, 20, 35,
                                  48, 56, 57, 60, 76, 92, 95, 102, 72, 50, 51, 65, 80, 114, 119,
@@ -1960,12 +1906,12 @@ Err:
                                 Else
                                     PR = ""
                                 End If
-                                LX = CSng((-MapObj(i).W / 2 + (MapObj(i).W \ 2) / 2 + MapObj(i).X / 160) * Zm)
-                                LY = (H + (MapObj(i).H \ 2) / 2) * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY
+                                LX = CSng((-MapObj(i).W / 2 + (MapObj(i).W \ 2) / 2 + MapObj(i).X / 160) * PZoom)
+                                LY = (H + (MapObj(i).H \ 2) / 2) * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY
                                 G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\" & MapObj(i).ID.ToString & PR & ".PNG"),
-                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm),
-                                    H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY,
-                                    Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom),
+                                    H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY,
+                                    PZoom * MapObj(i).W, PZoom * MapObj(i).H)
                             Case 33
                                 ' 1UP 
                                 If MapHdr.Theme = 0 And MapHdr.Flag = 2 Then
@@ -1973,12 +1919,12 @@ Err:
                                 Else
                                     PR = ""
                                 End If
-                                LX = CSng((-MapObj(i).W / 2 + (MapObj(i).W \ 2) / 2 + MapObj(i).X / 160) * Zm)
-                                LY = (H + (MapObj(i).H \ 2) / 2) * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY
+                                LX = CSng((-MapObj(i).W / 2 + (MapObj(i).W \ 2) / 2 + MapObj(i).X / 160) * PZoom)
+                                LY = (H + (MapObj(i).H \ 2) / 2) * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY
                                 G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\" & MapObj(i).ID.ToString & PR & ".PNG"),
-                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm),
-                                    H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY,
-                                    Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom),
+                                    H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY,
+                                    PZoom * MapObj(i).W, PZoom * MapObj(i).H)
 
                             Case 74
                                 '加邦 
@@ -1991,12 +1937,12 @@ Err:
                                 Else
                                     PR = ""
                                 End If
-                                LX = CSng((-MapObj(i).W / 2 + (MapObj(i).W \ 2) / 2 + MapObj(i).X / 160) * Zm)
-                                LY = (H + (MapObj(i).H \ 2) / 2) * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY
+                                LX = CSng((-MapObj(i).W / 2 + (MapObj(i).W \ 2) / 2 + MapObj(i).X / 160) * PZoom)
+                                LY = (H + (MapObj(i).H \ 2) / 2) * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY
                                 G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\" & MapObj(i).ID.ToString & PR & ".PNG"),
-                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm),
-                                    H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY,
-                                    Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom),
+                                    H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY,
+                                    PZoom * MapObj(i).W, PZoom * MapObj(i).H)
 
                             Case 42
                                 '飞机
@@ -2005,12 +1951,12 @@ Err:
                                 Else
                                     PR = ""
                                 End If
-                                LX = CSng((-MapObj(i).W / 2 + (MapObj(i).W \ 2) / 2 + MapObj(i).X / 160) * Zm)
-                                LY = (H + MapObj(i).H - 2) * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY
+                                LX = CSng((-MapObj(i).W / 2 + (MapObj(i).W \ 2) / 2 + MapObj(i).X / 160) * PZoom)
+                                LY = (H + MapObj(i).H - 2) * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY
                                 G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\" & MapObj(i).ID.ToString & PR & ".PNG"),
-                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm),
-                                    (H + MapObj(i).H - 2) * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY,
-                                    Zm * 2, Zm * 2)
+                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom),
+                                    (H + MapObj(i).H - 2) * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY,
+                                    PZoom * 2, PZoom * 2)
                             Case 34
                                 '火花 
                                 If (MapObj(i).Flag \ &H4) Mod 2 = 1 Then
@@ -2028,12 +1974,12 @@ Err:
                                 End If
 
 
-                                LX = CSng((-MapObj(i).W / 2 + (MapObj(i).W \ 2) / 2 + MapObj(i).X / 160) * Zm)
-                                LY = (H + (MapObj(i).H \ 2) / 2) * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY
+                                LX = CSng((-MapObj(i).W / 2 + (MapObj(i).W \ 2) / 2 + MapObj(i).X / 160) * PZoom)
+                                LY = (H + (MapObj(i).H \ 2) / 2) * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY
                                 G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\" & MapObj(i).ID.ToString & PR & ".PNG"),
-                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm),
-                                    H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY,
-                                    Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom),
+                                    H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY,
+                                    PZoom * MapObj(i).W, PZoom * MapObj(i).H)
 
                             Case 81, 116
                                 'USA  锤子
@@ -2044,12 +1990,12 @@ Err:
                                     PR = ""
                                 End If
 
-                                LX = CSng((-MapObj(i).W / 2 + (MapObj(i).W \ 2) / 2 + MapObj(i).X / 160) * Zm)
-                                LY = (H + (MapObj(i).H \ 2) / 2) * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY
+                                LX = CSng((-MapObj(i).W / 2 + (MapObj(i).W \ 2) / 2 + MapObj(i).X / 160) * PZoom)
+                                LY = (H + (MapObj(i).H \ 2) / 2) * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY
                                 G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\" & MapObj(i).ID.ToString & PR & ".PNG"),
-                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm),
-                                    H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY,
-                                    Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom),
+                                    H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY,
+                                    PZoom * MapObj(i).W, PZoom * MapObj(i).H)
 
                             Case 44
                                 '大蘑菇
@@ -2060,109 +2006,109 @@ Err:
                                     PR = ""
                                 End If
 
-                                LX = CSng((-MapObj(i).W / 2 + (MapObj(i).W \ 2) / 2 + MapObj(i).X / 160) * Zm)
-                                LY = (H + (MapObj(i).H \ 2) / 2) * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY
+                                LX = CSng((-MapObj(i).W / 2 + (MapObj(i).W \ 2) / 2 + MapObj(i).X / 160) * PZoom)
+                                LY = (H + (MapObj(i).H \ 2) / 2) * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY
                                 G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\" & MapObj(i).ID.ToString & PR & ".PNG"),
-                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm),
-                                    H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY,
-                                    Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom),
+                                    H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY,
+                                    PZoom * MapObj(i).W, PZoom * MapObj(i).H)
                             Case 12
                                 '咚咚
-                                LX = CSng((-0.5 + MapObj(i).X / 160) * Zm)
-                                LY = (H + MapObj(i).H / 2 - 0.5) * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY
+                                LX = CSng((-0.5 + MapObj(i).X / 160) * PZoom)
+                                LY = (H + MapObj(i).H / 2 - 0.5) * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY
                                 G.DrawImage(SetOpacity(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\12.PNG"), 0.7),
-                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm),
-                                    H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY,
-                                    Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom),
+                                    H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY,
+                                    PZoom * MapObj(i).W, PZoom * MapObj(i).H)
 
                                 If MapObj(i).LID = -1 Then
                                     Select Case MapObj(i).Flag Mod &H100
                                         Case &H40, &H42, &H44
-                                            G.DrawImage(Image.FromFile(P & "\img\CMN\E1.PNG"), LX, LY, Zm, Zm)
+                                            G.DrawImage(Image.FromFile(P & "\img\CMN\E1.PNG"), LX, LY, PZoom, PZoom)
                                         Case &H48, &H4A, &H4C
-                                            G.DrawImage(Image.FromFile(P & "\img\CMN\E2.PNG"), LX, LY, Zm, Zm)
+                                            G.DrawImage(Image.FromFile(P & "\img\CMN\E2.PNG"), LX, LY, PZoom, PZoom)
                                         Case &H50, &H52, &H54
-                                            G.DrawImage(Image.FromFile(P & "\img\CMN\E0.PNG"), LX, LY, Zm, Zm)
+                                            G.DrawImage(Image.FromFile(P & "\img\CMN\E0.PNG"), LX, LY, PZoom, PZoom)
                                         Case &H58, &H5A, &H5C
-                                            G.DrawImage(Image.FromFile(P & "\img\CMN\E3.PNG"), LX, LY, Zm, Zm)
+                                            G.DrawImage(Image.FromFile(P & "\img\CMN\E3.PNG"), LX, LY, PZoom, PZoom)
                                     End Select
                                 End If
 
                             Case 41
                                 '幽灵
-                                LX = CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm)
-                                LY = H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY
+                                LX = CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom)
+                                LY = H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY
                                 Select Case LH.GameStyle
                                     Case 22323
                                         If (MapObj(i).Flag \ &H4) Mod 2 = 1 Then
-                                            G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\41D.PNG"), LX, LY, Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                            G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\41D.PNG"), LX, LY, PZoom * MapObj(i).W, PZoom * MapObj(i).H)
                                         Else
-                                            G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\41.PNG"), LX, LY, Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                            G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\41.PNG"), LX, LY, PZoom * MapObj(i).W, PZoom * MapObj(i).H)
                                         End If
                                     Case Else
                                         If (MapObj(i).Flag \ &H4) Mod 2 = 1 Then
-                                            G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\41A.PNG"), LX, LY, Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                            G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\41A.PNG"), LX, LY, PZoom * MapObj(i).W, PZoom * MapObj(i).H)
                                         ElseIf (MapObj(i).Flag \ &H1000000) Mod &H8 = &H4 Then
-                                            G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\41C.PNG"), LX, LY, Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                            G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\41C.PNG"), LX, LY, PZoom * MapObj(i).W, PZoom * MapObj(i).H)
                                         ElseIf (MapObj(i).Flag \ &H100) Mod 2 = 1 Then
-                                            G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\41B.PNG"), LX, LY, Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                            G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\41B.PNG"), LX, LY, PZoom * MapObj(i).W, PZoom * MapObj(i).H)
                                         Else
-                                            G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\41.PNG"), LX, LY, Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                            G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\41.PNG"), LX, LY, PZoom * MapObj(i).W, PZoom * MapObj(i).H)
                                         End If
                                 End Select
 
 
                             Case 28, 25, 18
                                 '钢盔 刺龟 P
-                                LX = CSng((-MapObj(i).W / 2 + (MapObj(i).W \ 2) / 2 + MapObj(i).X / 160) * Zm)
-                                LY = (H + (MapObj(i).H \ 2) / 2) * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY
+                                LX = CSng((-MapObj(i).W / 2 + (MapObj(i).W \ 2) / 2 + MapObj(i).X / 160) * PZoom)
+                                LY = (H + (MapObj(i).H \ 2) / 2) * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY
                                 If (MapObj(i).Flag \ &H4) Mod 2 = 1 Then
                                     G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\" & MapObj(i).ID.ToString & "A.PNG"),
-                                        CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm),
-                                    H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY,
-                                    Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                        CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom),
+                                    H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY,
+                                    PZoom * MapObj(i).W, PZoom * MapObj(i).H)
                                 ElseIf (MapObj(i).Flag \ &H1000000) Mod 8 = &H6 Then
                                     G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\" & MapObj(i).ID.ToString & ".PNG"),
-                                        CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm),
-                                    H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY,
-                                    Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                        CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom),
+                                    H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY,
+                                    PZoom * MapObj(i).W, PZoom * MapObj(i).H)
                                 Else
                                     G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\" & MapObj(i).ID.ToString & "B.PNG"),
-                                        CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm),
-                                    H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY,
-                                    Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                        CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom),
+                                    H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY,
+                                    PZoom * MapObj(i).W, PZoom * MapObj(i).H)
                                 End If
                             Case 40
                                 '小刺龟
-                                LX = CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm)
-                                LY = (H + MapObj(i).W) * Zm - CSng((MapObj(i).H * 2 - 0.5 + MapObj(i).Y / 160) * Zm) + KY
+                                LX = CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom)
+                                LY = (H + MapObj(i).W) * PZoom - CSng((MapObj(i).H * 2 - 0.5 + MapObj(i).Y / 160) * PZoom) + KY
                                 If (MapObj(i).Flag \ &H4) Mod 2 = 1 Then
                                     Select Case (MapObj(i).Flag \ &H1000000) Mod 8
                                     '方向6上 4下 0左 2右
                                         Case &H0 'L
-                                            G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\40B0.PNG"), LX, LY, Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                            G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\40B0.PNG"), LX, LY, PZoom * MapObj(i).W, PZoom * MapObj(i).H)
                                         Case &H2 'R
-                                            G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\40B2.PNG"), LX, LY, Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                            G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\40B2.PNG"), LX, LY, PZoom * MapObj(i).W, PZoom * MapObj(i).H)
                                         Case &H4 'D
-                                            G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\40B4.PNG"), LX, LY, Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                            G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\40B4.PNG"), LX, LY, PZoom * MapObj(i).W, PZoom * MapObj(i).H)
                                         Case &H6 'U
-                                            G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\40B6.PNG"), LX, LY, Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                            G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\40B6.PNG"), LX, LY, PZoom * MapObj(i).W, PZoom * MapObj(i).H)
                                     End Select
                                 Else
                                     Select Case (MapObj(i).Flag \ &H1000000) Mod 8
                                     '方向6上 4下 0左 2右
                                         Case &H0 'L
-                                            G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\40A0.PNG"), LX, LY, Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                            G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\40A0.PNG"), LX, LY, PZoom * MapObj(i).W, PZoom * MapObj(i).H)
                                         Case &H2 'R
-                                            G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\40A2.PNG"), LX, LY, Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                            G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\40A2.PNG"), LX, LY, PZoom * MapObj(i).W, PZoom * MapObj(i).H)
                                         Case &H4 'D
-                                            G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\40A4.PNG"), LX, LY, Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                            G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\40A4.PNG"), LX, LY, PZoom * MapObj(i).W, PZoom * MapObj(i).H)
                                         Case &H6 'U
-                                            G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\40A6.PNG"), LX, LY, Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                            G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\40A6.PNG"), LX, LY, PZoom * MapObj(i).W, PZoom * MapObj(i).H)
                                     End Select
                                 End If
-                                LX = CSng((-MapObj(i).W / 2 + (MapObj(i).W \ 2) / 2 + MapObj(i).X / 160) * Zm)
-                                LY = (H + (MapObj(i).H \ 2) / 2) * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY
+                                LX = CSng((-MapObj(i).W / 2 + (MapObj(i).W \ 2) / 2 + MapObj(i).X / 160) * PZoom)
+                                LY = (H + (MapObj(i).H \ 2) / 2) * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY
                             Case 2
                                 '绿花
                                 If (MapObj(i).Flag \ &H4) Mod 2 = 1 Then
@@ -2173,33 +2119,33 @@ Err:
                                 Select Case (MapObj(i).Flag \ &H1000000) Mod &H8
                             '方向6上 4下 0左 2右
                                     Case &H0 'L
-                                        LX = CSng((MapObj(i).H / 2 - 1 + MapObj(i).X / 160) * Zm)
-                                        LY = (H + MapObj(i).W + (MapObj(i).W \ 2) / 2) * Zm - CSng((MapObj(i).H * 2 - 0.5 + MapObj(i).Y / 160) * Zm) + KY
+                                        LX = CSng((MapObj(i).H / 2 - 1 + MapObj(i).X / 160) * PZoom)
+                                        LY = (H + MapObj(i).W + (MapObj(i).W \ 2) / 2) * PZoom - CSng((MapObj(i).H * 2 - 0.5 + MapObj(i).Y / 160) * PZoom) + KY
                                         G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\" & PR & "0.PNG"),
-                                    CSng((-MapObj(i).W * 3 / 2 + MapObj(i).X / 160) * Zm),
-                                    (H + MapObj(i).W) * Zm - CSng((MapObj(i).H * 2 - 0.5 + MapObj(i).Y / 160) * Zm) + KY,
-                                    Zm * MapObj(i).W * 2, Zm * MapObj(i).H)
+                                        CSng((-MapObj(i).W * 3 / 2 + MapObj(i).X / 160) * PZoom),
+                                        (H + MapObj(i).W) * PZoom - CSng((MapObj(i).H * 2 - 0.5 + MapObj(i).Y / 160) * PZoom) + KY,
+                                        PZoom * MapObj(i).W * 2, PZoom * MapObj(i).H)
                                     Case &H2 'R
-                                        LX = CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm)
-                                        LY = (H + MapObj(i).W + (MapObj(i).W \ 2) / 2) * Zm - CSng((MapObj(i).H * 2 - 0.5 + MapObj(i).Y / 160) * Zm) + KY
+                                        LX = CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom)
+                                        LY = (H + MapObj(i).W + (MapObj(i).W \ 2) / 2) * PZoom - CSng((MapObj(i).H * 2 - 0.5 + MapObj(i).Y / 160) * PZoom) + KY
                                         G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\" & PR & "2.PNG"),
-                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm),
-                                    (H + MapObj(i).W) * Zm - CSng((MapObj(i).H * 2 - 0.5 + MapObj(i).Y / 160) * Zm) + KY,
-                                    Zm * MapObj(i).W * 2, Zm * MapObj(i).H)
+                                        CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom),
+                                        (H + MapObj(i).W) * PZoom - CSng((MapObj(i).H * 2 - 0.5 + MapObj(i).Y / 160) * PZoom) + KY,
+                                        PZoom * MapObj(i).W * 2, PZoom * MapObj(i).H)
                                     Case &H4 'D
-                                        LX = CSng((-MapObj(i).W / 2 + (MapObj(i).W \ 2) / 2 + MapObj(i).X / 160) * Zm)
-                                        LY = (H + MapObj(i).W) * Zm - CSng((MapObj(i).H * 2 - 0.5 + MapObj(i).Y / 160) * Zm) + KY
+                                        LX = CSng((-MapObj(i).W / 2 + (MapObj(i).W \ 2) / 2 + MapObj(i).X / 160) * PZoom)
+                                        LY = (H + MapObj(i).W) * PZoom - CSng((MapObj(i).H * 2 - 0.5 + MapObj(i).Y / 160) * PZoom) + KY
                                         G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\" & PR & "4.PNG"),
-                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm),
-                                    (H + MapObj(i).W) * Zm - CSng((MapObj(i).H * 2 - 0.5 + MapObj(i).Y / 160) * Zm) + KY,
-                                    Zm * MapObj(i).W, Zm * MapObj(i).H * 2)
+                                        CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom),
+                                        (H + MapObj(i).W) * PZoom - CSng((MapObj(i).H * 2 - 0.5 + MapObj(i).Y / 160) * PZoom) + KY,
+                                        PZoom * MapObj(i).W, PZoom * MapObj(i).H * 2)
                                     Case &H6 'U
-                                        LX = CSng((-MapObj(i).W / 2 + (MapObj(i).W \ 2) / 2 + MapObj(i).X / 160) * Zm)
-                                        LY = (H + MapObj(i).H + (MapObj(i).W \ 2)) * Zm - CSng((MapObj(i).H * 2 - 0.5 + MapObj(i).Y / 160) * Zm) + KY
+                                        LX = CSng((-MapObj(i).W / 2 + (MapObj(i).W \ 2) / 2 + MapObj(i).X / 160) * PZoom)
+                                        LY = (H + MapObj(i).H + (MapObj(i).W \ 2)) * PZoom - CSng((MapObj(i).H * 2 - 0.5 + MapObj(i).Y / 160) * PZoom) + KY
                                         G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\" & PR & "6.PNG"),
-                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm),
-                                    H * Zm - CSng((MapObj(i).H * 2 - 0.5 + MapObj(i).Y / 160) * Zm) + KY,
-                                    Zm * MapObj(i).W, Zm * MapObj(i).H * 2)
+                                        CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom),
+                                        H * PZoom - CSng((MapObj(i).H * 2 - 0.5 + MapObj(i).Y / 160) * PZoom) + KY,
+                                        PZoom * MapObj(i).W, PZoom * MapObj(i).H * 2)
                                 End Select
                             Case 107
                                 '长长吞食花
@@ -2218,9 +2164,9 @@ Err:
                                     Case &H6
                                         PR += ""
                                 End Select
-                                LX = CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm)
-                                LY = H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY
-                                G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\107" & PR & ".PNG"), LX, LY, Zm * 2, Zm * 2)
+                                LX = CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom)
+                                LY = H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY
+                                G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\107" & PR & ".PNG"), LX, LY, PZoom * 2, PZoom * 2)
                                 DrawCrp(MapObj(i).Ex, MapObj(i).X, MapObj(i).Y)
                             Case 32
                                 '大炮弹
@@ -2245,9 +2191,9 @@ Err:
                                     Case &H7000040
                                         PR = "H"
                                 End Select
-                                LX = CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm)
-                                LY = H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY
-                                G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\32" & PR & ".PNG"), LX, LY, Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                LX = CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom)
+                                LY = H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY
+                                G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\32" & PR & ".PNG"), LX, LY, PZoom * MapObj(i).W, PZoom * MapObj(i).H)
                             Case 1, 46, 52, 58
                                 '慢慢龟，碎碎龟，花花，扳手
                                 If (MapObj(i).Flag \ &H4) Mod 2 = 1 Then
@@ -2255,23 +2201,23 @@ Err:
                                 Else
                                     PR = ""
                                 End If
-                                LX = CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm)
-                                LY = H * Zm - CSng((MapObj(i).H * 2 - 0.5 + MapObj(i).Y / 160) * Zm) + KY
-                                G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\" & MapObj(i).ID.ToString & PR & ".PNG"), LX, LY, Zm * MapObj(i).W, Zm * MapObj(i).H * 2)
-                                LX = CSng((-MapObj(i).W / 2 + (MapObj(i).W \ 2) / 2 + MapObj(i).X / 160) * Zm)
-                                LY = (H + (MapObj(i).H \ 2) / 2) * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY
+                                LX = CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom)
+                                LY = H * PZoom - CSng((MapObj(i).H * 2 - 0.5 + MapObj(i).Y / 160) * PZoom) + KY
+                                G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\" & MapObj(i).ID.ToString & PR & ".PNG"), LX, LY, PZoom * MapObj(i).W, PZoom * MapObj(i).H * 2)
+                                LX = CSng((-MapObj(i).W / 2 + (MapObj(i).W \ 2) / 2 + MapObj(i).X / 160) * PZoom)
+                                LY = (H + (MapObj(i).H \ 2) / 2) * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY
                             Case 30
                                 '裁判
-                                LX = CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm)
-                                LY = H * Zm - CSng((MapObj(i).H - 1 + MapObj(i).Y / 160) * Zm) + KY
-                                G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\30.PNG"), LX, LY, Zm, Zm * 2)
-                                G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\31.PNG"), LX - Zm \ 2, LY + Zm \ 2, Zm * 2, Zm)
+                                LX = CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom)
+                                LY = H * PZoom - CSng((MapObj(i).H - 1 + MapObj(i).Y / 160) * PZoom) + KY
+                                G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\30.PNG"), LX, LY, PZoom, PZoom * 2)
+                                G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\31.PNG"), LX - PZoom \ 2, LY + PZoom \ 2, PZoom * 2, PZoom)
                             Case 31
                                 '裁判云
                                 ObjLinkType(MapObj(i).LID + 1) = 31
-                                LX = CSng((-MapObj(i).W / 2 - 0.5 + MapObj(i).X / 160) * Zm)
-                                LY = H * Zm - CSng((0.5 + MapObj(i).Y / 160) * Zm)
-                                G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\31.PNG"), LX, LY, Zm * 2, Zm)
+                                LX = CSng((-MapObj(i).W / 2 - 0.5 + MapObj(i).X / 160) * PZoom)
+                                LY = H * PZoom - CSng((0.5 + MapObj(i).Y / 160) * PZoom)
+                                G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\31.PNG"), LX, LY, PZoom * 2, PZoom)
 
                             Case 45 '鞋 耀西
                                 Select Case LH.GameStyle
@@ -2289,27 +2235,27 @@ Err:
                                         End If
                                 End Select
 
-                                LX = CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm)
-                                LY = H * Zm - CSng((MapObj(i).H * 2 - 0.5 + MapObj(i).Y / 160) * Zm) + KY
-                                G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\" & MapObj(i).ID.ToString & PR & ".PNG"), LX, LY, Zm * MapObj(i).W, Zm * MapObj(i).H * 2)
-                                LX = CSng((-MapObj(i).W / 2 + (MapObj(i).W \ 2) / 2 + MapObj(i).X / 160) * Zm)
-                                LY = (H + (MapObj(i).H \ 2) / 2) * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY
+                                LX = CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom)
+                                LY = H * PZoom - CSng((MapObj(i).H * 2 - 0.5 + MapObj(i).Y / 160) * PZoom) + KY
+                                G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\" & MapObj(i).ID.ToString & PR & ".PNG"), LX, LY, PZoom * MapObj(i).W, PZoom * MapObj(i).H * 2)
+                                LX = CSng((-MapObj(i).W / 2 + (MapObj(i).W \ 2) / 2 + MapObj(i).X / 160) * PZoom)
+                                LY = (H + (MapObj(i).H \ 2) / 2) * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY
 
                             Case 62
                                 '库巴
-                                LX = CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm)
-                                LY = H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY
+                                LX = CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom)
+                                LY = H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY
                                 Select Case LH.GameStyle
                                     Case 22323
                                         G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\" & MapObj(i).ID.ToString & "A.PNG"),
-                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm),
-                                    H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY,
-                                    Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom),
+                                    H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY,
+                                    PZoom * MapObj(i).W, PZoom * MapObj(i).H)
                                     Case Else
                                         G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\" & MapObj(i).ID.ToString & ".PNG"),
-                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm),
-                                    H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY,
-                                    Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                    CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom),
+                                    H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY,
+                                    PZoom * MapObj(i).W, PZoom * MapObj(i).H)
                                 End Select
 
                             Case 3
@@ -2317,35 +2263,35 @@ Err:
                                 Select Case LH.GameStyle
                                     Case 22323
                                         If (MapObj(i).Flag \ &H4) Mod 2 = 1 Then
-                                            LX = CSng((-MapObj(i).W / 2 + 0.5 + MapObj(i).X / 160) * Zm)
-                                            LY = H * Zm - CSng((1 + MapObj(i).Y / 160) * Zm) + KY
+                                            LX = CSng((-MapObj(i).W / 2 + 0.5 + MapObj(i).X / 160) * PZoom)
+                                            LY = H * PZoom - CSng((1 + MapObj(i).Y / 160) * PZoom) + KY
                                             G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\3B.PNG"),
-                                            CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm),
-                                            (H) * Zm - CSng((1.5 + MapObj(i).Y / 160) * Zm) + KY,
-                                            Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                            CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom),
+                                            (H) * PZoom - CSng((1.5 + MapObj(i).Y / 160) * PZoom) + KY,
+                                            PZoom * MapObj(i).W, PZoom * MapObj(i).H)
                                         Else
-                                            LX = CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm)
-                                            LY = H * Zm - CSng((MapObj(i).H * 2 - 1.5 + MapObj(i).Y / 160) * Zm) + KY
+                                            LX = CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom)
+                                            LY = H * PZoom - CSng((MapObj(i).H * 2 - 1.5 + MapObj(i).Y / 160) * PZoom) + KY
                                             G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\3.PNG"),
-                                            CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm),
-                                            (H + 2) * Zm - CSng((MapObj(i).H * 2 - 0.5 + MapObj(i).Y / 160) * Zm) + KY,
-                                            Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                            CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom),
+                                            (H + 2) * PZoom - CSng((MapObj(i).H * 2 - 0.5 + MapObj(i).Y / 160) * PZoom) + KY,
+                                            PZoom * MapObj(i).W, PZoom * MapObj(i).H)
                                         End If
                                     Case Else
                                         If (MapObj(i).Flag \ &H4000) Mod 2 = 1 Then
-                                            LX = CSng((-MapObj(i).W / 2 + 0.5 + MapObj(i).X / 160) * Zm)
-                                            LY = H * Zm - CSng((1 + MapObj(i).Y / 160) * Zm) + KY
+                                            LX = CSng((-MapObj(i).W / 2 + 0.5 + MapObj(i).X / 160) * PZoom)
+                                            LY = H * PZoom - CSng((1 + MapObj(i).Y / 160) * PZoom) + KY
                                             G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\3A.PNG"),
-                                            CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm),
-                                            H * Zm - CSng((1.5 + MapObj(i).Y / 160) * Zm) + KY,
-                                            Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                            CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom),
+                                            H * PZoom - CSng((1.5 + MapObj(i).Y / 160) * PZoom) + KY,
+                                            PZoom * MapObj(i).W, PZoom * MapObj(i).H)
                                         Else
-                                            LX = CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm)
-                                            LY = H * Zm - CSng((MapObj(i).H * 2 - 1.5 + MapObj(i).Y / 160) * Zm) + KY
+                                            LX = CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom)
+                                            LY = H * PZoom - CSng((MapObj(i).H * 2 - 1.5 + MapObj(i).Y / 160) * PZoom) + KY
                                             G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\3.PNG"),
-                                            CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm),
-                                            H * Zm - CSng((MapObj(i).H * 2 - 0.5 + MapObj(i).Y / 160) * Zm) + KY,
-                                            Zm * MapObj(i).W, 2 * Zm * MapObj(i).H)
+                                            CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom),
+                                            H * PZoom - CSng((MapObj(i).H * 2 - 0.5 + MapObj(i).Y / 160) * PZoom) + KY,
+                                            PZoom * MapObj(i).W, 2 * PZoom * MapObj(i).H)
                                         End If
                                 End Select
 
@@ -2356,22 +2302,22 @@ Err:
                                 Else
                                     PR = ""
                                 End If
-                                LX = CSng((-0.5 + MapObj(i).X / 160) * Zm)
-                                LY = H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY
-                                G.DrawImage(SetOpacity(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\13" & PR & ".PNG"), 0.7), LX, LY, Zm * MapObj(i).W, Zm * 2)
+                                LX = CSng((-0.5 + MapObj(i).X / 160) * PZoom)
+                                LY = H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY
+                                G.DrawImage(SetOpacity(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\13" & PR & ".PNG"), 0.7), LX, LY, PZoom * MapObj(i).W, PZoom * 2)
                                 For j = 2 To MapObj(i).H - 1
                                     If (MapObj(i).Flag \ &H4) Mod 2 = 1 Then
-                                        G.DrawImage(SetOpacity(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\13C.PNG"), 0.7), LX, LY + j * Zm, Zm, Zm)
+                                        G.DrawImage(SetOpacity(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\13C.PNG"), 0.7), LX, LY + j * PZoom, PZoom, PZoom)
                                     Else
-                                        G.DrawImage(SetOpacity(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\13A.PNG"), 0.7), LX, LY + j * Zm, Zm, Zm)
+                                        G.DrawImage(SetOpacity(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\13A.PNG"), 0.7), LX, LY + j * PZoom, PZoom, PZoom)
                                     End If
                                 Next
 
                             Case 39
                                 '魔法师
-                                LX = CSng((2 - MapObj(i).W / 2 - MapObj(i).W + MapObj(i).X / 160) * Zm)
-                                LY = (H + 1) * Zm - CSng((MapObj(i).H * 2 - 0.5 + MapObj(i).Y / 160) * Zm) + KY
-                                G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\39.PNG"), LX - Zm - Zm, LY - Zm + KY, 2 * Zm * MapObj(i).W + KY, 2 * Zm * MapObj(i).H)
+                                LX = CSng((2 - MapObj(i).W / 2 - MapObj(i).W + MapObj(i).X / 160) * PZoom)
+                                LY = (H + 1) * PZoom - CSng((MapObj(i).H * 2 - 0.5 + MapObj(i).Y / 160) * PZoom) + KY
+                                G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\39.PNG"), LX - PZoom - PZoom, LY - PZoom + KY, 2 * PZoom * MapObj(i).W + KY, 2 * PZoom * MapObj(i).H)
                             Case 47
                                 '小炮
                                 If (MapObj(i).Flag \ &H4) Mod 2 = 1 Then
@@ -2415,47 +2361,48 @@ Err:
                                     Case Else
                                         ANG = 0
                                 End Select
-                                LX = CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm)
-                                LY = H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm)
-                                G.TranslateTransform(LX + MapObj(i).W * Zm \ 2, LY + MapObj(i).H * Zm \ 2)
+                                LX = CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom)
+                                LY = H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom)
+                                G.TranslateTransform(LX + MapObj(i).W * PZoom \ 2, LY + MapObj(i).H * PZoom \ 2)
                                 G.RotateTransform(ANG)
                                 G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\47" & PR & ".PNG"),
-                                    -MapObj(i).W * Zm \ 2,
-                                    -MapObj(i).H * Zm \ 2, Zm * MapObj(i).W, Zm * MapObj(i).H)
-                                G.RotateTransform(-ANG)
-                                G.TranslateTransform(-LX - MapObj(i).W * Zm \ 2, -LY - MapObj(i).H * Zm \ 2)
+                                    -MapObj(i).W * PZoom \ 2,
+                                    -MapObj(i).H * PZoom \ 2, PZoom * MapObj(i).W, PZoom * MapObj(i).H)
+                                'G.RotateTransform(-ANG)
+                                'G.TranslateTransform(-LX - MapObj(i).W * PZoom \ 2, -LY - MapObj(i).H * PZoom \ 2)
+                                G.ResetTransform()
                                 G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\47" & PR & D & ".PNG"),
-                                CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm),
-                                H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm), Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom),
+                                H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom), PZoom * MapObj(i).W, PZoom * MapObj(i).H)
                             Case 61
                                 '汪汪
-                                LX = CSng((-0.5 + MapObj(i).X / 160) * Zm)
-                                LY = H * Zm - CSng((0.5 + MapObj(i).Y / 160) * Zm) + KY
+                                LX = CSng((-0.5 + MapObj(i).X / 160) * PZoom)
+                                LY = H * PZoom - CSng((0.5 + MapObj(i).Y / 160) * PZoom) + KY
                                 If (MapObj(i).Flag \ &H4) Mod 2 = 0 Then
                                     G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\61A.PNG"),
-                                            CSng((-0.5 + MapObj(i).X / 160) * Zm),
-                                            H * Zm - CSng((0.5 + MapObj(i).Y / 160) * Zm) + KY,
-                                            Zm, Zm)
+                                            CSng((-0.5 + MapObj(i).X / 160) * PZoom),
+                                            H * PZoom - CSng((0.5 + MapObj(i).Y / 160) * PZoom) + KY,
+                                            PZoom, PZoom)
                                 End If
                                 G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\61.PNG"),
-                                        CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm),
-                                        H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY,
-                                        Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                        CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom),
+                                        H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY,
+                                        PZoom * MapObj(i).W, PZoom * MapObj(i).H)
                             Case 78
                                 '仙人掌
-                                LX = CSng(-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm
-                                LY = (H + 1) * Zm - CSng((MapObj(i).H + MapObj(i).Y \ 160) * Zm) + KY
+                                LX = CSng(-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom
+                                LY = (H + 1) * PZoom - CSng((MapObj(i).H + MapObj(i).Y \ 160) * PZoom) + KY
                                 For j = 0 To MapObj(i).H - 1
                                     If j = MapObj(i).H - 1 Then
                                         G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\78.PNG"),
-                                                CSng(-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm,
-                                                (H - 1) * Zm - CSng((j + MapObj(i).Y \ 160) * Zm) + KY,
-                                                Zm, Zm)
+                                                CSng(-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom,
+                                                (H - 1) * PZoom - CSng((j + MapObj(i).Y \ 160) * PZoom) + KY,
+                                                PZoom, PZoom)
                                     Else
                                         G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\78A.PNG"),
-                                                CSng(-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm,
-                                                (H - 1) * Zm - CSng((j + MapObj(i).Y \ 160) * Zm) + KY,
-                                                Zm, Zm)
+                                                CSng(-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom,
+                                                (H - 1) * PZoom - CSng((j + MapObj(i).Y \ 160) * PZoom) + KY,
+                                                PZoom, PZoom)
                                     End If
                                 Next
                             Case 111
@@ -2467,12 +2414,12 @@ Err:
                                 Else
                                     PR = ""
                                 End If
-                                LX = CSng((-MapObj(i).W + 0.5 + MapObj(i).X / 160) * Zm)
-                                LY = (H + 1) * Zm - CSng((MapObj(i).H * 2 - 0.5 + MapObj(i).Y / 160) * Zm) + KY
+                                LX = CSng((-MapObj(i).W + 0.5 + MapObj(i).X / 160) * PZoom)
+                                LY = (H + 1) * PZoom - CSng((MapObj(i).H * 2 - 0.5 + MapObj(i).Y / 160) * PZoom) + KY
                                 G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\111" & PR & ".PNG"),
-                                    CSng((-MapObj(i).W + MapObj(i).X / 160) * Zm),
-                                    H * Zm - CSng((MapObj(i).H * 2 - 0.5 + MapObj(i).Y / 160) * Zm) + KY,
-                                    2 * Zm * MapObj(i).W, 2 * Zm * MapObj(i).H)
+                                    CSng((-MapObj(i).W + MapObj(i).X / 160) * PZoom),
+                                    H * PZoom - CSng((MapObj(i).H * 2 - 0.5 + MapObj(i).Y / 160) * PZoom) + KY,
+                                    2 * PZoom * MapObj(i).W, 2 * PZoom * MapObj(i).H)
                             Case 70
                                 '大金币 
                                 If (MapObj(i).Flag \ &H40000) Mod 2 = 1 Then
@@ -2483,11 +2430,11 @@ Err:
                                     PR = ""
                                 End If
                                 G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\" & MapObj(i).ID.ToString & PR & ".PNG"),
-                                            CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm),
-                                            H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY,
-                                            Zm * MapObj(i).W, Zm * MapObj(i).H)
-                                LX = CSng((-MapObj(i).W / 2 + 0.5 + MapObj(i).X / 160) * Zm)
-                                LY = H * Zm - CSng((MapObj(i).H - 1 + MapObj(i).Y / 160) * Zm) + KY
+                                            CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom),
+                                            H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY,
+                                            PZoom * MapObj(i).W, PZoom * MapObj(i).H)
+                                LX = CSng((-MapObj(i).W / 2 + 0.5 + MapObj(i).X / 160) * PZoom)
+                                LY = H * PZoom - CSng((MapObj(i).H - 1 + MapObj(i).Y / 160) * PZoom) + KY
                             Case 110
                                 '刺方块
                                 If (MapObj(i).Flag \ &H40000) Mod 2 = 1 Then
@@ -2498,9 +2445,9 @@ Err:
                                     PR = ""
                                 End If
                                 G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\" & MapObj(i).ID.ToString & PR & ".PNG"),
-                                            CSng((-MapObj(i).W / 2 + 0.5 + MapObj(i).X / 160) * Zm),
-                                            H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY,
-                                            Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                            CSng((-MapObj(i).W / 2 + 0.5 + MapObj(i).X / 160) * PZoom),
+                                            H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY,
+                                            PZoom * MapObj(i).W, PZoom * MapObj(i).H)
                             Case 98
                                 '小库巴
                                 If (MapObj(i).Flag \ &H4) Mod 2 = 1 Then
@@ -2508,36 +2455,36 @@ Err:
                                 Else
                                     PR = ""
                                 End If
-                                LX = CSng((-MapObj(i).W + 0.5 + MapObj(i).X / 160) * Zm)
-                                LY = (H + 1) * Zm - CSng((MapObj(i).H * 2 - 0.5 + MapObj(i).Y / 160) * Zm) + KY
+                                LX = CSng((-MapObj(i).W + 0.5 + MapObj(i).X / 160) * PZoom)
+                                LY = (H + 1) * PZoom - CSng((MapObj(i).H * 2 - 0.5 + MapObj(i).Y / 160) * PZoom) + KY
                                 G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\98" & PR & ".PNG"),
-                                    CSng((-MapObj(i).W + MapObj(i).X / 160) * Zm),
-                                    H * Zm - CSng((MapObj(i).H * 2 - 0.5 + MapObj(i).Y / 160) * Zm) + KY,
-                                    2 * Zm * MapObj(i).W, 2 * Zm * MapObj(i).H)
+                                    CSng((-MapObj(i).W + MapObj(i).X / 160) * PZoom),
+                                    H * PZoom - CSng((MapObj(i).H * 2 - 0.5 + MapObj(i).Y / 160) * PZoom) + KY,
+                                    2 * PZoom * MapObj(i).W, 2 * PZoom * MapObj(i).H)
                             Case 103
                                 '骨鱼
-                                LX = CSng((-MapObj(i).W + 0.5 + MapObj(i).X / 160) * Zm)
-                                LY = H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY
-                                G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\103.PNG"), CSng((-MapObj(i).W + MapObj(i).X / 160) * Zm) + KY, LY, 2 * Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                LX = CSng((-MapObj(i).W + 0.5 + MapObj(i).X / 160) * PZoom)
+                                LY = H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY
+                                G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\103.PNG"), CSng((-MapObj(i).W + MapObj(i).X / 160) * PZoom) + KY, LY, 2 * PZoom * MapObj(i).W, PZoom * MapObj(i).H)
 
                             Case 91
                                 '跷跷板
                                 For j = 0 To MapObj(i).W - 1
                                     If j = 0 Then
                                         G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\91A.PNG"),
-                                                CSng((j - MapObj(i).W \ 2 + MapObj(i).X \ 160) * Zm), H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm), Zm, Zm)
+                                                CSng((j - MapObj(i).W \ 2 + MapObj(i).X \ 160) * PZoom), H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom), PZoom, PZoom)
                                     ElseIf j = MapObj(i).W - 1 Then
                                         G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\91B.PNG"),
-                                                CSng((j - MapObj(i).W \ 2 + MapObj(i).X \ 160) * Zm), H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm), Zm, Zm)
+                                                CSng((j - MapObj(i).W \ 2 + MapObj(i).X \ 160) * PZoom), H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom), PZoom, PZoom)
                                     Else
                                         G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\91.PNG"),
-                                                CSng((j - MapObj(i).W \ 2 + MapObj(i).X \ 160) * Zm), H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm), Zm, Zm)
+                                                CSng((j - MapObj(i).W \ 2 + MapObj(i).X \ 160) * PZoom), H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom), PZoom, PZoom)
                                     End If
                                 Next
                                 G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\91C.PNG"),
-                                        CSng((-0.5 + MapObj(i).X / 160) * Zm), H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm), Zm, Zm)
-                                LX = CSng((-0.5 + MapObj(i).X / 160) * Zm)
-                                LY = H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm)
+                                        CSng((-0.5 + MapObj(i).X / 160) * PZoom), H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom), PZoom, PZoom)
+                                LX = CSng((-0.5 + MapObj(i).X / 160) * PZoom)
+                                LY = H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom)
                             Case 36
                                 '熔岩台
                                 If (MapObj(i).Flag \ &H4) Mod 2 = 1 Then
@@ -2550,14 +2497,14 @@ Err:
                                 End If
                                 For j = 0 To MapObj(i).W - 1
                                     G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\36" & PR & ".PNG"),
-                                    CSng((j - MapObj(i).W \ 2 + MapObj(i).X \ 160) * Zm), H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY, Zm, Zm)
+                                    CSng((j - MapObj(i).W \ 2 + MapObj(i).X \ 160) * PZoom), H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY, PZoom, PZoom)
                                 Next
-                                LX = CSng((j - 1 - MapObj(i).W \ 2 + MapObj(i).X \ 160) * Zm)
-                                LY = H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY
+                                LX = CSng((j - 1 - MapObj(i).W \ 2 + MapObj(i).X \ 160) * PZoom)
+                                LY = H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY
                             Case 11
                                 '升降台
-                                LX = CSng((-0.5 + MapObj(i).X / 160) * Zm)
-                                LY = H * Zm - CSng((0.5 + MapObj(i).Y / 160) * Zm) + KY
+                                LX = CSng((-0.5 + MapObj(i).X / 160) * PZoom)
+                                LY = H * PZoom - CSng((0.5 + MapObj(i).Y / 160) * PZoom) + KY
 
                                 For j = 0 To MapObj(i).W - 1
                                     If (MapObj(i).Flag \ &H4) Mod 2 = 0 Then
@@ -2569,7 +2516,7 @@ Err:
                                             PR = ""
                                         End If
                                         G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\11" & PR & ".PNG"),
-                                        CSng((j - MapObj(i).W / 2 + MapObj(i).X / 160) * Zm), H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY, Zm, Zm)
+                                        CSng((j - MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom), H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY, PZoom, PZoom)
                                     Else
                                         If j = 0 Then
                                             PR = "D"
@@ -2579,81 +2526,76 @@ Err:
                                             PR = "C"
                                         End If
                                         G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\11" & PR & ".PNG"),
-                                        CSng((j - MapObj(i).W / 2 + MapObj(i).X / 160) * Zm), H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY, Zm, Zm)
+                                        CSng((j - MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom), H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY, PZoom, PZoom)
                                     End If
                                 Next
-
-                                ''If MapObj(i).LID >= 0 Then
-                                ''	'PR = ((MapObj(i).Flag Mod &H400000) \ &H100000).ToString
-                                ''	'G.DrawImage(Image.FromFile(P & "\img\CMN\D" & PR & ".PNG"), LX, LY, Zm, Zm)
-                                ''ELSE IF    ///END IF
 
                                 If (MapObj(i).Flag \ &H4) Mod 2 = 0 Then
                                     Select Case MapObj(i).Flag Mod &H100
                                         Case &H40
-                                            G.DrawImage(Image.FromFile(P & "\img\CMN\D1.PNG"), LX, LY, Zm, Zm)
+                                            G.DrawImage(Image.FromFile(P & "\img\CMN\D1.PNG"), LX, LY, PZoom, PZoom)
                                         Case &H48
-                                            G.DrawImage(Image.FromFile(P & "\img\CMN\D2.PNG"), LX, LY, Zm, Zm)
+                                            G.DrawImage(Image.FromFile(P & "\img\CMN\D2.PNG"), LX, LY, PZoom, PZoom)
                                         Case &H50
-                                            G.DrawImage(Image.FromFile(P & "\img\CMN\D0.PNG"), LX, LY, Zm, Zm)
+                                            G.DrawImage(Image.FromFile(P & "\img\CMN\D0.PNG"), LX, LY, PZoom, PZoom)
                                         Case &H58
-                                            G.DrawImage(Image.FromFile(P & "\img\CMN\D3.PNG"), LX, LY, Zm, Zm)
+                                            G.DrawImage(Image.FromFile(P & "\img\CMN\D3.PNG"), LX, LY, PZoom, PZoom)
                                     End Select
                                 End If
 
                             Case 54
                                 '喷枪
-                                LX = CSng((-0.5 + MapObj(i).X / 160) * Zm)
-                                LY = H * Zm - CSng((0.5 + MapObj(i).Y / 160) * Zm) + KY
+                                LX = CSng((-0.5 + MapObj(i).X / 160) * PZoom)
+                                LY = H * PZoom - CSng((0.5 + MapObj(i).Y / 160) * PZoom) + KY
                                 Select Case MapObj(i).Flag Mod &H100
                                     Case &H40
-                                        G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54.PNG"), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm), H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY, Zm * MapObj(i).W, Zm * MapObj(i).H)
-                                        'G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54A1.PNG"), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm), (H - 3) * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY, Zm * MapObj(i).W, 3 * Zm * MapObj(i).H)
+                                        G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54.PNG"), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom), H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY, PZoom * MapObj(i).W, PZoom * MapObj(i).H)
+                                        'G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54A1.PNG"), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZOOM), (H - 3) * PZOOM - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZOOM) + KY, PZOOM * MapObj(i).W, 3 * PZOOM * MapObj(i).H)
                                     Case &H48
-                                        G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54A.PNG"), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm), H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY, Zm * MapObj(i).W, Zm * MapObj(i).H)
-                                        'G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54A3.PNG"), CSng((-MapObj(i).W / 2 + 1 + MapObj(i).X / 160) * Zm), H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY, 3 * Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                        G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54A.PNG"), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom), H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY, PZoom * MapObj(i).W, PZoom * MapObj(i).H)
+                                        'G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54A3.PNG"), CSng((-MapObj(i).W / 2 + 1 + MapObj(i).X / 160) * PZOOM), H * PZOOM - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZOOM) + KY, 3 * PZOOM * MapObj(i).W, PZOOM * MapObj(i).H)
                                     Case &H50
-                                        G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54B.PNG"), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm), H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY, Zm * MapObj(i).W, Zm * MapObj(i).H)
-                                        'G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54A5.PNG"), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm), (H + 1) * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY, Zm * MapObj(i).W, 3 * Zm * MapObj(i).H)
+                                        G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54B.PNG"), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom), H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY, PZoom * MapObj(i).W, PZoom * MapObj(i).H)
+                                        'G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54A5.PNG"), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZOOM), (H + 1) * PZOOM - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZOOM) + KY, PZOOM * MapObj(i).W, 3 * PZOOM * MapObj(i).H)
                                     Case &H58
-                                        G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54C.PNG"), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm), H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY, Zm * MapObj(i).W, Zm * MapObj(i).H)
-                                        'G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54A7.PNG"), CSng((-MapObj(i).W / 2 - 3 + MapObj(i).X / 160) * Zm), H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY, 3 * Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                        G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54C.PNG"), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom), H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY, PZoom * MapObj(i).W, PZoom * MapObj(i).H)
+                                        'G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54A7.PNG"), CSng((-MapObj(i).W / 2 - 3 + MapObj(i).X / 160) * PZOOM), H * PZOOM - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZOOM) + KY, 3 * PZOOM * MapObj(i).W, PZOOM * MapObj(i).H)
                                     Case &H44
-                                        G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54.PNG"), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm), H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY, Zm * MapObj(i).W, Zm * MapObj(i).H)
-                                        'G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54A2.PNG"), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm), (H - 3) * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY, Zm * MapObj(i).W, 3 * Zm * MapObj(i).H)
+                                        G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54.PNG"), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom), H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY, PZoom * MapObj(i).W, PZoom * MapObj(i).H)
+                                        'G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54A2.PNG"), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZOOM), (H - 3) * PZOOM - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZOOM) + KY, PZOOM * MapObj(i).W, 3 * PZOOM * MapObj(i).H)
                                     Case &H4C
-                                        G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54A.PNG"), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm), H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY, Zm * MapObj(i).W, Zm * MapObj(i).H)
-                                        'G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54A4.PNG"), CSng((-MapObj(i).W / 2 + 1 + MapObj(i).X / 160) * Zm), H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY, 3 * Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                        G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54A.PNG"), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom), H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY, PZoom * MapObj(i).W, PZoom * MapObj(i).H)
+                                        'G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54A4.PNG"), CSng((-MapObj(i).W / 2 + 1 + MapObj(i).X / 160) * PZOOM), H * PZOOM - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZOOM) + KY, 3 * PZOOM * MapObj(i).W, PZOOM * MapObj(i).H)
                                     Case &H54
-                                        G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54B.PNG"), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm), H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY, Zm * MapObj(i).W, Zm * MapObj(i).H)
-                                        'G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54A6.PNG"), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm), (H + 1) * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY, Zm * MapObj(i).W, 3 * Zm * MapObj(i).H)
+                                        G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54B.PNG"), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom), H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY, PZoom * MapObj(i).W, PZoom * MapObj(i).H)
+                                        'G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54A6.PNG"), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZOOM), (H + 1) * PZOOM - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZOOM) + KY, PZOOM * MapObj(i).W, 3 * PZOOM * MapObj(i).H)
                                     Case &H5C
-                                        G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54C.PNG"), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm), H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY, Zm * MapObj(i).W, Zm * MapObj(i).H)
-                                        'G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54A8.PNG"), CSng((-MapObj(i).W / 2 - 3 + MapObj(i).X / 160) * Zm), H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY, 3 * Zm * MapObj(i).W, Zm * MapObj(i).H)
+                                        G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54C.PNG"), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom), H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom) + KY, PZoom * MapObj(i).W, PZoom * MapObj(i).H)
+                                        'G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54A8.PNG"), CSng((-MapObj(i).W / 2 - 3 + MapObj(i).X / 160) * PZOOM), H * PZOOM - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZOOM) + KY, 3 * PZOOM * MapObj(i).W, PZOOM * MapObj(i).H)
                                 End Select
                             Case 24
                                 '火棍
-                                LX = CSng(-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm
-                                LY = H * Zm - CSng(MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm
+                                LX = CSng(-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom
+                                LY = H * PZoom - CSng(MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom
                                 G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\24.PNG"),
-                                LX, LY, Zm, Zm)
+                                LX, LY, PZoom, PZoom)
 
                             Case 105
                                 '夹子
                                 If MapObj(i).Flag Mod &H400 >= &H100 Then
-                                    KY = Zm * 3
+                                    KY = PZoom * 3
                                     ObjLinkType(MapObj(i).LID + 1) = 105
                                 Else
                                     KY = 0
                                     ObjLinkType(MapObj(i).LID + 1) = 105
                                 End If
-                                LX = CSng(-1.5 + MapObj(i).X / 160) * Zm
-                                LY = H * Zm - CSng(3.5 + MapObj(i).Y / 160) * Zm + KY
+                                LX = CSng(-1.5 + MapObj(i).X / 160) * PZoom
+                                LY = H * PZoom - CSng(3.5 + MapObj(i).Y / 160) * PZoom + KY
 
                                 If (MapObj(i).Flag \ &H80) Mod 2 = 1 Then
-                                    G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\105A.PNG"), LX, LY, Zm * 3, Zm * 5)
+                                    G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\105A.PNG"), LX, LY, PZoom * 3, PZoom * 5)
                                 Else
-                                    G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\105.PNG"), LX, LY, Zm * 3, Zm * 5)
+                                    G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\105.PNG"), LX, LY, PZoom * 3, PZoom * 5)
                                 End If
                         End Select
 
@@ -2664,12 +2606,12 @@ Err:
                         PR += IIf((MapObj(i).Flag \ 2) Mod 2 = 1, "W", "")
                         If PR = "PW" Then PR = "B"
                         If PR.Length > 0 Then
-                            G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\CID\" & PR & ".PNG"), LX, LY, Zm \ 2, Zm \ 2)
+                            G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\CID\" & PR & ".PNG"), LX, LY, PZoom \ 2, PZoom \ 2)
                         End If
 
                         If L And ObjLinkType(MapObj(i).LID + 1) = 59 Then
                             PR = ((MapObj(i).Flag Mod &H400000) \ &H100000).ToString
-                            G.DrawImage(Image.FromFile(P & "\img\CMN\D" & PR & ".PNG"), LX, LY, Zm, Zm)
+                            G.DrawImage(Image.FromFile(P & "\img\CMN\D" & PR & ".PNG"), LX, LY, PZoom, PZoom)
                         End If
 
                     End If
@@ -2689,33 +2631,33 @@ Err:
         Dim P As String = PT
 
         For i = 0 To MapHdr.ObjCount - 1
-            LX = CSng((-0.5 + MapObj(i).X / 160) * Zm)
-            LY = H * Zm - CSng((0.5 + MapObj(i).Y / 160) * Zm)
+            LX = CSng((-0.5 + MapObj(i).X / 160) * PZoom)
+            LY = H * PZoom - CSng((0.5 + MapObj(i).Y / 160) * PZoom)
             Select Case MapObj(i).CID
                 Case -1'无
 
                 Case 44, 81, 116 '状态
                     If (MapObj(i).CFlag \ &H40000) Mod 2 = 1 Then
-                        G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\CID\" & MapObj(i).CID.ToString & "A.PNG"), LX, LY, Zm, Zm)
+                        G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\CID\" & MapObj(i).CID.ToString & "A.PNG"), LX, LY, PZoom, PZoom)
                     Else
-                        G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\CID\" & MapObj(i).CID.ToString & ".PNG"), LX, LY, Zm, Zm)
+                        G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\CID\" & MapObj(i).CID.ToString & ".PNG"), LX, LY, PZoom, PZoom)
                     End If
-                    G.DrawImage(Image.FromFile(P & "\img\CMN\F1.PNG"), LX, LY, Zm, Zm)
+                    G.DrawImage(Image.FromFile(P & "\img\CMN\F1.PNG"), LX, LY, PZoom, PZoom)
                 Case 34 '状态火花
                     If (MapObj(i).CFlag \ &H4) Mod 2 = 1 Then
                         If (MapObj(i).CFlag \ &H40000) Mod 2 = 1 Then
-                            G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\CID\" & MapObj(i).CID.ToString & "C.PNG"), LX, LY, Zm, Zm)
+                            G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\CID\" & MapObj(i).CID.ToString & "C.PNG"), LX, LY, PZoom, PZoom)
                         Else
-                            G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\CID\" & MapObj(i).CID.ToString & "A.PNG"), LX, LY, Zm, Zm)
+                            G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\CID\" & MapObj(i).CID.ToString & "A.PNG"), LX, LY, PZoom, PZoom)
                         End If
                     Else
                         If (MapObj(i).CFlag \ &H40000) Mod 2 = 1 Then
-                            G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\CID\" & MapObj(i).CID.ToString & "B.PNG"), LX, LY, Zm, Zm)
+                            G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\CID\" & MapObj(i).CID.ToString & "B.PNG"), LX, LY, PZoom, PZoom)
                         Else
-                            G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\CID\" & MapObj(i).CID.ToString & ".PNG"), LX, LY, Zm, Zm)
+                            G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\CID\" & MapObj(i).CID.ToString & ".PNG"), LX, LY, PZoom, PZoom)
                         End If
                     End If
-                    G.DrawImage(Image.FromFile(P & "\img\CMN\F1.PNG"), LX, LY, Zm, Zm)
+                    G.DrawImage(Image.FromFile(P & "\img\CMN\F1.PNG"), LX, LY, PZoom, PZoom)
                 Case 111 '机械库巴
                     If (MapObj(i).CFlag \ &H40000) Mod 2 = 1 Then
                         PR = "B"
@@ -2724,8 +2666,8 @@ Err:
                     Else
                         PR = ""
                     End If
-                    G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\CID\" & MapObj(i).CID.ToString & PR & ".PNG"), LX, LY, Zm, Zm)
-                    G.DrawImage(Image.FromFile(P & "\img\CMN\F1.PNG"), LX, LY, Zm, Zm)
+                    G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\CID\" & MapObj(i).CID.ToString & PR & ".PNG"), LX, LY, PZoom, PZoom)
+                    G.DrawImage(Image.FromFile(P & "\img\CMN\F1.PNG"), LX, LY, PZoom, PZoom)
                 Case 76 '加邦
                     If (MapObj(i).Flag \ &H4) Mod 2 = 1 Then
                         If MapHdr.Theme = 6 Then
@@ -2736,23 +2678,23 @@ Err:
                     Else
                         PR = ""
                     End If
-                    G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\CID\" & MapObj(i).CID.ToString & PR & ".PNG"), LX, LY, Zm, Zm)
-                    G.DrawImage(Image.FromFile(P & "\img\CMN\F1.PNG"), LX, LY, Zm, Zm)
+                    G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\CID\" & MapObj(i).CID.ToString & PR & ".PNG"), LX, LY, PZoom, PZoom)
+                    G.DrawImage(Image.FromFile(P & "\img\CMN\F1.PNG"), LX, LY, PZoom, PZoom)
                 Case 33 '1UP
                     If MapHdr.Theme = 1 And MapHdr.Flag = 2 Then
-                        G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\CID\" & MapObj(i).CID.ToString & "A.PNG"), LX, LY, Zm, Zm)
+                        G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\CID\" & MapObj(i).CID.ToString & "A.PNG"), LX, LY, PZoom, PZoom)
                     Else
-                        G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\CID\" & MapObj(i).CID.ToString & ".PNG"), LX, LY, Zm, Zm)
+                        G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\CID\" & MapObj(i).CID.ToString & ".PNG"), LX, LY, PZoom, PZoom)
                     End If
-                    G.DrawImage(Image.FromFile(P & "\img\CMN\F1.PNG"), LX, LY, Zm, Zm)
+                    G.DrawImage(Image.FromFile(P & "\img\CMN\F1.PNG"), LX, LY, PZoom, PZoom)
 
                 Case Else
                     If (MapObj(i).CFlag \ &H4) Mod 2 = 1 Then
-                        G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\CID\" & MapObj(i).CID.ToString & "A.PNG"), LX, LY, Zm, Zm)
+                        G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\CID\" & MapObj(i).CID.ToString & "A.PNG"), LX, LY, PZoom, PZoom)
                     Else
-                        G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\CID\" & MapObj(i).CID.ToString & ".PNG"), LX, LY, Zm, Zm)
+                        G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\CID\" & MapObj(i).CID.ToString & ".PNG"), LX, LY, PZoom, PZoom)
                     End If
-                    G.DrawImage(Image.FromFile(P & "\img\CMN\F1.PNG"), LX, LY, Zm, Zm)
+                    G.DrawImage(Image.FromFile(P & "\img\CMN\F1.PNG"), LX, LY, PZoom, PZoom)
             End Select
 
 
@@ -2770,23 +2712,21 @@ Err:
         ''长度&H40 0000，角度EX/&H38E 38E0
         For i = 0 To MapHdr.ObjCount - 1
             If MapObj(i).ID = 24 Then
-                'If MapObj(i).LID = 0 And Not L Or MapObj(i).LID > 0 And L Then
-                LX = CSng(-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm
-                LY = H * Zm - CSng(MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm
+                LX = CSng(-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom
+                LY = H * PZoom - CSng(MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom
                 FR = MapObj(i).Ex / &H38E38E0
-                G.TranslateTransform(LX + Zm \ 2, LY + Zm \ 2)
+                G.TranslateTransform(LX + PZoom \ 2, LY + PZoom \ 2)
                 G.RotateTransform(-FR * 5)
                 For j = 0 To (MapObj(i).Flag - &H6000000) / &H400000 + 1
-                    G.DrawImage(SetOpacity(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\24A.PNG"), 0.5), -Zm \ 4 + j * Zm, -Zm \ 4, Zm, Zm \ 2)
+                    G.DrawImage(SetOpacity(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\24A.PNG"), 0.5), -PZoom \ 4 + j * PZoom, -PZoom \ 4, PZoom, PZoom \ 2)
                 Next
-                G.RotateTransform(FR * 5)
-                G.TranslateTransform(-LX - Zm \ 2, -LY - Zm \ 2)
-                'End If
-
+                'G.RotateTransform(FR * 5)
+                'G.TranslateTransform(-LX - PZoom \ 2, -LY - PZoom \ 2)
+                G.ResetTransform()
                 If (MapObj(i).Flag \ &H8) Mod 2 = 1 Then
-                    G.DrawImage(Image.FromFile(P & "\img\CMN\B0.PNG"), LX, LY, Zm, Zm)
+                    G.DrawImage(Image.FromFile(P & "\img\CMN\B0.PNG"), LX, LY, PZoom, PZoom)
                 Else
-                    G.DrawImage(Image.FromFile(P & "\img\CMN\B1.PNG"), LX, LY, Zm, Zm)
+                    G.DrawImage(Image.FromFile(P & "\img\CMN\B1.PNG"), LX, LY, PZoom, PZoom)
                 End If
             End If
         Next
@@ -2801,33 +2741,33 @@ Err:
 
         For i = 0 To MapHdr.ObjCount - 1
             If MapObj(i).ID = 54 Then
-                LX = CSng((-0.5 + MapObj(i).X / 160) * Zm)
-                LY = H * Zm - CSng((0.5 + MapObj(i).Y / 160) * Zm)
+                LX = CSng((-0.5 + MapObj(i).X / 160) * PZoom)
+                LY = H * PZoom - CSng((0.5 + MapObj(i).Y / 160) * PZoom)
                 Select Case MapObj(i).Flag Mod &H100
                     Case &H40
-                        '	G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54.PNG"), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm), H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY, Zm * MapObj(i).W, Zm * MapObj(i).H)
-                        G.DrawImage(SetOpacity(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54A1.PNG"), 0.5), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm), (H - 3) * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm), Zm * MapObj(i).W, 3 * Zm * MapObj(i).H)
+                        '	G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54.PNG"), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZOOM), H * PZOOM - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZOOM) + KY, PZOOM * MapObj(i).W, PZOOM * MapObj(i).H)
+                        G.DrawImage(SetOpacity(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54A1.PNG"), 0.5), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom), (H - 3) * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom), PZoom * MapObj(i).W, 3 * PZoom * MapObj(i).H)
                     Case &H48
-                        '	G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54A.PNG"), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm), H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY, Zm * MapObj(i).W, Zm * MapObj(i).H)
-                        G.DrawImage(SetOpacity(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54A3.PNG"), 0.5), CSng((-MapObj(i).W / 2 + 1 + MapObj(i).X / 160) * Zm), H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm), 3 * Zm * MapObj(i).W, Zm * MapObj(i).H)
+                        '	G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54A.PNG"), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZOOM), H * PZOOM - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZOOM) + KY, PZOOM * MapObj(i).W, PZOOM * MapObj(i).H)
+                        G.DrawImage(SetOpacity(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54A3.PNG"), 0.5), CSng((-MapObj(i).W / 2 + 1 + MapObj(i).X / 160) * PZoom), H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom), 3 * PZoom * MapObj(i).W, PZoom * MapObj(i).H)
                     Case &H50
-                        '	G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54B.PNG"), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm), H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY, Zm * MapObj(i).W, Zm * MapObj(i).H)
-                        G.DrawImage(SetOpacity(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54A5.PNG"), 0.5), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm), (H + 1) * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm), Zm * MapObj(i).W, 3 * Zm * MapObj(i).H)
+                        '	G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54B.PNG"), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZOOM), H * PZOOM - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZOOM) + KY, PZOOM * MapObj(i).W, PZOOM * MapObj(i).H)
+                        G.DrawImage(SetOpacity(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54A5.PNG"), 0.5), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom), (H + 1) * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom), PZoom * MapObj(i).W, 3 * PZoom * MapObj(i).H)
                     Case &H58
-                        '	G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54C.PNG"), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm), H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY, Zm * MapObj(i).W, Zm * MapObj(i).H)
-                        G.DrawImage(SetOpacity(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54A7.PNG"), 0.5), CSng((-MapObj(i).W / 2 - 3 + MapObj(i).X / 160) * Zm), H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm), 3 * Zm * MapObj(i).W, Zm * MapObj(i).H)
+                        '	G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54C.PNG"), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZOOM), H * PZOOM - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZOOM) + KY, PZOOM * MapObj(i).W, PZOOM * MapObj(i).H)
+                        G.DrawImage(SetOpacity(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54A7.PNG"), 0.5), CSng((-MapObj(i).W / 2 - 3 + MapObj(i).X / 160) * PZoom), H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom), 3 * PZoom * MapObj(i).W, PZoom * MapObj(i).H)
                     Case &H44
-                        '	G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54.PNG"), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm), H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY, Zm * MapObj(i).W, Zm * MapObj(i).H)
-                        G.DrawImage(SetOpacity(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54A2.PNG"), 0.5), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm), (H - 3) * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm), Zm * MapObj(i).W, 3 * Zm * MapObj(i).H)
+                        '	G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54.PNG"), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZOOM), H * PZOOM - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZOOM) + KY, PZOOM * MapObj(i).W, PZOOM * MapObj(i).H)
+                        G.DrawImage(SetOpacity(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54A2.PNG"), 0.5), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom), (H - 3) * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom), PZoom * MapObj(i).W, 3 * PZoom * MapObj(i).H)
                     Case &H4C
-                        '	G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54A.PNG"), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm), H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY, Zm * MapObj(i).W, Zm * MapObj(i).H)
-                        G.DrawImage(SetOpacity(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54A4.PNG"), 0.5), CSng((-MapObj(i).W / 2 + 1 + MapObj(i).X / 160) * Zm), H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm), 3 * Zm * MapObj(i).W, Zm * MapObj(i).H)
+                        '	G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54A.PNG"), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZOOM), H * PZOOM - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZOOM) + KY, PZOOM * MapObj(i).W, PZOOM * MapObj(i).H)
+                        G.DrawImage(SetOpacity(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54A4.PNG"), 0.5), CSng((-MapObj(i).W / 2 + 1 + MapObj(i).X / 160) * PZoom), H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom), 3 * PZoom * MapObj(i).W, PZoom * MapObj(i).H)
                     Case &H54
-                        '	G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54B.PNG"), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm), H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY, Zm * MapObj(i).W, Zm * MapObj(i).H)
-                        G.DrawImage(SetOpacity(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54A6.PNG"), 0.5), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm), (H + 1) * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm), Zm * MapObj(i).W, 3 * Zm * MapObj(i).H)
+                        '	G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54B.PNG"), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZOOM), H * PZOOM - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZOOM) + KY, PZOOM * MapObj(i).W, PZOOM * MapObj(i).H)
+                        G.DrawImage(SetOpacity(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54A6.PNG"), 0.5), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZoom), (H + 1) * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom), PZoom * MapObj(i).W, 3 * PZoom * MapObj(i).H)
                     Case &H5C
-                        '	G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54C.PNG"), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * Zm), H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm) + KY, Zm * MapObj(i).W, Zm * MapObj(i).H)
-                        G.DrawImage(SetOpacity(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54A8.PNG"), 0.5), CSng((-MapObj(i).W / 2 - 3 + MapObj(i).X / 160) * Zm), H * Zm - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * Zm), 3 * Zm * MapObj(i).W, Zm * MapObj(i).H)
+                        '	G.DrawImage(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54C.PNG"), CSng((-MapObj(i).W / 2 + MapObj(i).X / 160) * PZOOM), H * PZOOM - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZOOM) + KY, PZOOM * MapObj(i).W, PZOOM * MapObj(i).H)
+                        G.DrawImage(SetOpacity(Image.FromFile(P & "\img\" & LH.GameStyle.ToString & "\obj\54A8.PNG"), 0.5), CSng((-MapObj(i).W / 2 - 3 + MapObj(i).X / 160) * PZoom), H * PZoom - CSng((MapObj(i).H - 0.5 + MapObj(i).Y / 160) * PZoom), 3 * PZoom * MapObj(i).W, PZoom * MapObj(i).H)
                 End Select
             End If
         Next
@@ -2959,9 +2899,9 @@ Err:
                                         CP = "D"
                                     End If
                                     G.DrawImage(Image.FromFile(PT & "\IMG\" & LH.GameStyle.ToString & "\OBJ\93" & CP & ".PNG"),
-                                                    (MapCPipe(i).Node(J).X + K) * Zm,
-                                                    (H - 1 - MapCPipe(i).Node(J).Y) * Zm,
-                                                    Zm, 2 * Zm)
+                                                    (MapCPipe(i).Node(J).X + K) * PZoom,
+                                                    (H - 1 - MapCPipe(i).Node(J).Y) * PZoom,
+                                                    PZoom, 2 * PZoom)
                                 Case 1 'L
                                     If K = 0 Then
                                         CP = "E"
@@ -2971,9 +2911,9 @@ Err:
                                         CP = "D"
                                     End If
                                     G.DrawImage(Image.FromFile(PT & "\IMG\" & LH.GameStyle.ToString & "\OBJ\93" & CP & ".PNG"),
-                                                    (MapCPipe(i).Node(J).X - K) * Zm,
-                                                    (H - 1 - MapCPipe(i).Node(J).Y - 1) * Zm,
-                                                     Zm, 2 * Zm)
+                                                    (MapCPipe(i).Node(J).X - K) * PZoom,
+                                                    (H - 1 - MapCPipe(i).Node(J).Y - 1) * PZoom,
+                                                     PZoom, 2 * PZoom)
                                 Case 2 'U
                                     If K = 0 Then
                                         CP = ""
@@ -2983,9 +2923,9 @@ Err:
                                         CP = "A"
                                     End If
                                     G.DrawImage(Image.FromFile(PT & "\IMG\" & LH.GameStyle.ToString & "\OBJ\93" & CP & ".PNG"),
-                                                    MapCPipe(i).Node(J).X * Zm,
-                                                    (H - 1 - MapCPipe(i).Node(J).Y - K) * Zm,
-                                                    2 * Zm, Zm)
+                                                    MapCPipe(i).Node(J).X * PZoom,
+                                                    (H - 1 - MapCPipe(i).Node(J).Y - K) * PZoom,
+                                                    2 * PZoom, PZoom)
                                 Case 3 'D
                                     If K = 0 Then
                                         CP = "B"
@@ -2995,9 +2935,9 @@ Err:
                                         CP = "A"
                                     End If
                                     G.DrawImage(Image.FromFile(PT & "\IMG\" & LH.GameStyle.ToString & "\OBJ\93" & CP & ".PNG"),
-                                                    (MapCPipe(i).Node(J).X - 1) * Zm,
-                                                    (H - 1 - MapCPipe(i).Node(J).Y + K) * Zm,
-                                                    2 * Zm, Zm)
+                                                    (MapCPipe(i).Node(J).X - 1) * PZoom,
+                                                    (H - 1 - MapCPipe(i).Node(J).Y + K) * PZoom,
+                                                    2 * PZoom, PZoom)
                             End Select
                         Next
                     Case MapCPipe(i).NodeCount - 1
@@ -3006,27 +2946,27 @@ Err:
                                 Case 0 'R
                                     CP = IIf(K = MapCPipe(i).Node(J).H - 1, "E", "D")
                                     G.DrawImage(Image.FromFile(PT & "\IMG\" & LH.GameStyle.ToString & "\OBJ\93" & CP & ".PNG"),
-                                                    (MapCPipe(i).Node(J).X + K) * Zm,
-                                                    (H - 1 - MapCPipe(i).Node(J).Y) * Zm,
-                                                    Zm, 2 * Zm)
+                                                    (MapCPipe(i).Node(J).X + K) * PZoom,
+                                                    (H - 1 - MapCPipe(i).Node(J).Y) * PZoom,
+                                                    PZoom, 2 * PZoom)
                                 Case 1 'L
                                     CP = IIf(K = MapCPipe(i).Node(J).H - 1, "C", "D")
                                     G.DrawImage(Image.FromFile(PT & "\IMG\" & LH.GameStyle.ToString & "\OBJ\93" & CP & ".PNG"),
-                                                    (MapCPipe(i).Node(J).X - K) * Zm,
-                                                    (H - 1 - MapCPipe(i).Node(J).Y - 1) * Zm,
-                                                     Zm, 2 * Zm)
+                                                    (MapCPipe(i).Node(J).X - K) * PZoom,
+                                                    (H - 1 - MapCPipe(i).Node(J).Y - 1) * PZoom,
+                                                     PZoom, 2 * PZoom)
                                 Case 2 'U
                                     CP = IIf(K = MapCPipe(i).Node(J).H - 1, "B", "A")
                                     G.DrawImage(Image.FromFile(PT & "\IMG\" & LH.GameStyle.ToString & "\OBJ\93" & CP & ".PNG"),
-                                                    MapCPipe(i).Node(J).X * Zm,
-                                                    (H - 1 - MapCPipe(i).Node(J).Y - K) * Zm,
-                                                    2 * Zm, Zm)
+                                                    MapCPipe(i).Node(J).X * PZoom,
+                                                    (H - 1 - MapCPipe(i).Node(J).Y - K) * PZoom,
+                                                    2 * PZoom, PZoom)
                                 Case 3 'D
                                     CP = IIf(K = MapCPipe(i).Node(J).H - 1, "", "A")
                                     G.DrawImage(Image.FromFile(PT & "\IMG\" & LH.GameStyle.ToString & "\OBJ\93" & CP & ".PNG"),
-                                                    (MapCPipe(i).Node(J).X - 1) * Zm,
-                                                    (H - 1 - MapCPipe(i).Node(J).Y + K) * Zm,
-                                                    2 * Zm, Zm)
+                                                    (MapCPipe(i).Node(J).X - 1) * PZoom,
+                                                    (H - 1 - MapCPipe(i).Node(J).Y + K) * PZoom,
+                                                    2 * PZoom, PZoom)
                             End Select
                         Next
                     Case Else
@@ -3034,50 +2974,50 @@ Err:
                             Select Case MapCPipe(i).Node(J).type
                                 Case 3, 7 'RU DL
                                     G.DrawImage(Image.FromFile(PT & "\IMG\" & LH.GameStyle.ToString & "\OBJ\93G.PNG"),
-                                                        (MapCPipe(i).Node(J).X) * Zm,
-                                                        (H - 2 - MapCPipe(i).Node(J).Y) * Zm,
-                                                        2 * Zm, 2 * Zm)
+                                                        (MapCPipe(i).Node(J).X) * PZoom,
+                                                        (H - 2 - MapCPipe(i).Node(J).Y) * PZoom,
+                                                        2 * PZoom, 2 * PZoom)
                                 Case 4, 9 'RD UL
                                     G.DrawImage(Image.FromFile(PT & "\IMG\" & LH.GameStyle.ToString & "\OBJ\93H.PNG"),
-                                                        (MapCPipe(i).Node(J).X) * Zm,
-                                                        (H - 2 - MapCPipe(i).Node(J).Y) * Zm,
-                                                        2 * Zm, 2 * Zm)
+                                                        (MapCPipe(i).Node(J).X) * PZoom,
+                                                        (H - 2 - MapCPipe(i).Node(J).Y) * PZoom,
+                                                        2 * PZoom, 2 * PZoom)
                                 Case 6, 10 'UR LD
                                     G.DrawImage(Image.FromFile(PT & "\IMG\" & LH.GameStyle.ToString & "\OBJ\93J.PNG"),
-                                                        (MapCPipe(i).Node(J).X) * Zm,
-                                                        (H - 2 - MapCPipe(i).Node(J).Y) * Zm,
-                                                        2 * Zm, 2 * Zm)
+                                                        (MapCPipe(i).Node(J).X) * PZoom,
+                                                        (H - 2 - MapCPipe(i).Node(J).Y) * PZoom,
+                                                        2 * PZoom, 2 * PZoom)
                                 Case 5, 8 'DR LU
                                     G.DrawImage(Image.FromFile(PT & "\IMG\" & LH.GameStyle.ToString & "\OBJ\93F.PNG"),
-                                                        (MapCPipe(i).Node(J).X) * Zm,
-                                                        (H - 2 - MapCPipe(i).Node(J).Y) * Zm,
-                                                        2 * Zm, 2 * Zm)
+                                                        (MapCPipe(i).Node(J).X) * PZoom,
+                                                        (H - 2 - MapCPipe(i).Node(J).Y) * PZoom,
+                                                        2 * PZoom, 2 * PZoom)
                             End Select
-                            'G.DrawString(MapCPipe(i).Node(J).type.ToString, Me.Font, Brushes.Black, (MapCPipe(i).Node(J).X) * Zm, (H - 2 - MapCPipe(i).Node(J).Y) * Zm)
+                            'G.DrawString(MapCPipe(i).Node(J).type.ToString, Me.Font, Brushes.Black, (MapCPipe(i).Node(J).X) * PZOOM, (H - 2 - MapCPipe(i).Node(J).Y) * PZOOM)
 
                         Else
                             For K = 0 To MapCPipe(i).Node(J).H - 1
                                 Select Case MapCPipe(i).Node(J).Dir
                                     Case 0 'R
                                         G.DrawImage(Image.FromFile(PT & "\IMG\" & LH.GameStyle.ToString & "\OBJ\93D.PNG"),
-                                                        (MapCPipe(i).Node(J).X + K) * Zm,
-                                                        (H - 1 - MapCPipe(i).Node(J).Y) * Zm,
-                                                        Zm, 2 * Zm)
+                                                        (MapCPipe(i).Node(J).X + K) * PZoom,
+                                                        (H - 1 - MapCPipe(i).Node(J).Y) * PZoom,
+                                                        PZoom, 2 * PZoom)
                                     Case 1 'L
                                         G.DrawImage(Image.FromFile(PT & "\IMG\" & LH.GameStyle.ToString & "\OBJ\93D.PNG"),
-                                                        (MapCPipe(i).Node(J).X - K) * Zm,
-                                                        (H - 1 - MapCPipe(i).Node(J).Y - 1) * Zm,
-                                                         Zm, 2 * Zm)
+                                                        (MapCPipe(i).Node(J).X - K) * PZoom,
+                                                        (H - 1 - MapCPipe(i).Node(J).Y - 1) * PZoom,
+                                                         PZoom, 2 * PZoom)
                                     Case 2 'U
                                         G.DrawImage(Image.FromFile(PT & "\IMG\" & LH.GameStyle.ToString & "\OBJ\93A.PNG"),
-                                                        MapCPipe(i).Node(J).X * Zm,
-                                                        (H - 1 - MapCPipe(i).Node(J).Y - K) * Zm,
-                                                        2 * Zm, Zm)
+                                                        MapCPipe(i).Node(J).X * PZoom,
+                                                        (H - 1 - MapCPipe(i).Node(J).Y - K) * PZoom,
+                                                        2 * PZoom, PZoom)
                                     Case 3 'D
                                         G.DrawImage(Image.FromFile(PT & "\IMG\" & LH.GameStyle.ToString & "\OBJ\93A.PNG"),
-                                                        (MapCPipe(i).Node(J).X - 1) * Zm,
-                                                        (H - 1 - MapCPipe(i).Node(J).Y + K) * Zm,
-                                                        2 * Zm, Zm)
+                                                        (MapCPipe(i).Node(J).X - 1) * PZoom,
+                                                        (H - 1 - MapCPipe(i).Node(J).Y + K) * PZoom,
+                                                        2 * PZoom, PZoom)
                                 End Select
                             Next
                         End If
@@ -3105,6 +3045,7 @@ Err:
 
         ListBox1.Items.Clear()
         ListBox2.Items.Clear()
+
         NowIO = 0
         LoadEFile(True)
         MapWidth(0) = MapHdr.BorR \ 16
@@ -3116,9 +3057,7 @@ Err:
         DrawObject(True)
         RefList(ListBox1, True)
         'FORM2.P.Image = B
-        Form2.P.Image = B
-
-
+        Form2.P.Image = BMAP1
         'ObjInfo()
 
         NowIO = 1
@@ -3133,9 +3072,8 @@ Err:
         InitPng2()
         DrawObject(False)
         RefList(ListBox2, False)
-        Form3.P.Image = B
+        Form3.P.Image = BMAP2
         'ObjInfo()
-
         'GetLvlInfo()
     End Sub
     Private Declare Function DoFileDownload Lib "shdocvw.dll" (ByVal lpszFile As String) As Integer
@@ -3144,105 +3082,112 @@ Err:
     Dim isMapIO As Boolean = True
     Private Sub Button5_Click(sender As Object, e As EventArgs) Handles Button5.Click
         Dim I As Integer
+        Dim F As FileInfo
         TextBox9.Text = TextBox9.Text.Replace("-", "")
         TextBox9.Text = TextBox9.Text.Replace(" ", "")
-        TextBox9.Text = Strings.Left(TextBox9.Text, 9)
-        'Button2.Enabled = False
-        'Button8.Enabled = False
-        Label2.Text = "马里奥制造2关卡机器人 v010"
-        Label2.Text += vbCrLf & DateTime.Now.ToString & " 加载地图(L00)"
-        If TextBox9.Text.Length = 9 Then
-            If IO.File.Exists(PT & "\MAP\" & TextBox9.Text) Then
-                '存在解密文件
-                Label2.Text += vbCrLf & DateTime.Now.ToString & " 已加载地图(L01)"
-                TextBox1.Text = PT & "\MAP\" & TextBox9.Text
-                'Button2.Enabled = True
-                'Button8.Enabled = True
-                isMapIO = True
-                RefPic()
+        TextBox9.Text = UCase(Strings.Left(TextBox9.Text, 9))
 
+        Label6.Text = DateTime.Now.ToString & " 校验图号"
+        '检查图号
+        Dim LInfo As String = ""
+        I = Code2Num(TextBox9.Text, LInfo)
+        Select Case I
+            Case 0 '关卡ID
+                Label6.Text += vbCrLf & LInfo
+            Case 1 '工匠ID
+                Label6.Text += vbCrLf & DateTime.Now.ToString & " 此ID为工匠ID"
+                Label6.Text += vbCrLf & LInfo
+                Exit Sub
+            Case Else '错误ID
+                Label6.Text += vbCrLf & DateTime.Now.ToString & " 校验失败，图号输入有误"
+                Label6.Text += vbCrLf & LInfo
+                Exit Sub
+        End Select
 
-            ElseIf IO.File.Exists(PT & "\MAP\" & TextBox9.Text & ".DAT") Then
-                '存在地图文件
-                Label2.Text += vbCrLf & DateTime.Now.ToString & " 解析地图(L02)"
-                DeMap(TextBox9.Text & ".DAT", TextBox9.Text)
-                Threading.Thread.Sleep(3000)
-                Label2.Text += vbCrLf & DateTime.Now.ToString & " 已加载地图(L03)"
-                TextBox1.Text = PT & "\MAP\" & TextBox9.Text
-                'Button2.Enabled = True
-                'Button8.Enabled = True
-                isMapIO = True
-                RefPic()
-
+        '====================
+        If IO.File.Exists(PT & "\decrypt_data\" & TextBox9.Text & ".DEC") Then
+            F = New FileInfo(PT & "\decrypt_data\" & TextBox9.Text & ".DEC")
+            If F.Length = 376768 Then
+                I = 2
             Else
-                Label2.Text += vbCrLf & DateTime.Now.ToString & " 从服务器加载地图(L04)"
-                Call URLDownloadToFile(0, UR2 & TextBox9.Text, PT & "\MAP\" & TextBox9.Text & ".DAT", 0, 0)
-                Do
-                    If IO.File.Exists(PT & "\MAP\" & TextBox9.Text & ".DAT") Then
-                        DeMap(TextBox9.Text & ".DAT", TextBox9.Text)
-                        I = 0
-                        Do
-                            I += 1
-                            Label2.Text += vbCrLf & DateTime.Now.ToString & " 解析地图(L05)"
-                            Threading.Thread.Sleep(1000)
-                            If IO.File.Exists(PT & "\MAP\" & TextBox9.Text) Then
-                                Exit Do
-                            End If
-                        Loop Until I > 10
-                        Label2.Text += vbCrLf & DateTime.Now.ToString & " 已加载地图(L06)"
-                        TextBox1.Text = PT & "\MAP\" & TextBox9.Text
-                        isMapIO = True
-                        RefPic()
-                        Exit Sub
-                    Else
-                        I += 1
-                        Threading.Thread.Sleep(1000)
-                    End If
-                Loop Until I > 5
-                Label2.Text += vbCrLf & DateTime.Now.ToString & " 加载地图超时(Error01)"
+                I = 0
+            End If
+        ElseIf IO.File.Exists(PT & "\download_data\" & TextBox9.Text & ".BCD") Then
+            F = New FileInfo(PT & "\download_data\" & TextBox9.Text & ".BCD")
+            If F.Length = 376832 Then
+                I = 1
+            Else
+                I = 0
             End If
         Else
-            Label2.Text += vbCrLf & DateTime.Now.ToString & " 图号错误(Error02)"
+            I = 0
         End If
 
-    End Sub
-    Public Sub DeMap(P1 As String, P2 As String)
-        Dim info As System.Diagnostics.ProcessStartInfo
-        info = New System.Diagnostics.ProcessStartInfo With {
-            .FileName = PT & "\MAP\D.EXE",
-            .Arguments = PT & "\MAP\" & P1 &
-                    " " & PT & "\MAP\" & P2
-        }
-        Dim Proc As System.Diagnostics.Process
-        Try
-            Proc = Process.Start(info)
-            Proc.WaitForExit()
-            If Proc.HasExited = False Then
-                Proc.Kill()
-            End If
-        Catch ex As System.ComponentModel.Win32Exception
-        End Try
+        Select Case I
+            Case 0 '文件不存在，下载新地图
+                Label6.Text += vbCrLf & DateTime.Now.ToString & " 从服务器下载地图"
+                Label6.Text += vbCrLf & DateTime.Now.ToString & " /mm2/level_data/" & TextBox9.Text
+                Application.DoEvents()
+                '下载文件
+                Try
+                    Dim wc = New WebClient
+                    wc.DownloadFile("https://" & MaterialComboBox1.Text & "/mm2/level_data/" & TextBox9.Text, PT & "\download_data\" & TextBox9.Text & ".BCD")
+                    Do
+                        Application.DoEvents()
+                        If IO.File.Exists(PT & "\download_data\" & TextBox9.Text & ".BCD") Then
+                            F = New FileInfo(PT & "\download_data\" & TextBox9.Text & ".BCD")
+                            If F.Length = 376832 Then
+                                DeMap2(TextBox9.Text & ".BCD", TextBox9.Text & ".DEC")
+                                Label6.Text += vbCrLf & DateTime.Now.ToString & " 解析地图"
+                                Label6.Text += vbCrLf & DateTime.Now.ToString & " 已加载地图"
+                                TextBox1.Text = TextBox9.Text & ".DEC"
+                                isMapIO = True
+                                RefPic()
+                                Exit Sub
+                            End If
+                        End If
+                        I += 1
+                        Threading.Thread.Sleep(1000)
+                    Loop Until I > 30
+                    Label6.Text += vbCrLf & DateTime.Now.ToString & " 下载地图超时"
+                Catch ex As Exception
+                    Label6.Text += vbCrLf & DateTime.Now.ToString & " " & ex.Message
+                End Try
+
+            Case 1 '存在BCD地图文件
+                Label6.Text += vbCrLf & DateTime.Now.ToString & " 解析地图"
+                DeMap2(TextBox9.Text & ".BCD", TextBox9.Text & ".DEC")
+                Label6.Text += vbCrLf & DateTime.Now.ToString & " 已从BCD文件加载地图"
+                TextBox1.Text = TextBox9.Text & ".DEC"
+                isMapIO = True
+                RefPic()
+            Case 2 '存在DEC文档，直接读取
+                Label6.Text += vbCrLf & DateTime.Now.ToString & " 已从DEC文件加载地图"
+                TextBox1.Text = TextBox9.Text & ".DEC"
+                isMapIO = True
+                RefPic()
+        End Select
 
     End Sub
-    Private Sub Button7_Click(sender As Object, e As EventArgs) 
+    Sub DeMap2(InF As String, OutF As String) '解密BCD地图文件
+        Dim k() = File.ReadAllBytes(PT & "\download_data\" & InF)
+        Dim r() = Decrypt(k)
+        File.WriteAllBytes(PT & "\decrypt_data\" & OutF, r)
+    End Sub
+    Private Sub Button7_Click(sender As Object, e As EventArgs)
         Form2.P.Image = GetTile(0, 0, 1, 1)
     End Sub
     Private Sub Button8_Click(sender As Object, e As EventArgs) Handles Button8.Click
         Form3.Show()
+        Form3.ClientSize = New Size(500, 500)
+        Form3.P.Size = BSIZE2
+        Form3.P.Image = BMAP2
     End Sub
     Private Sub TrackBar1_Scroll(sender As Object, e As EventArgs) Handles TrackBar1.Scroll
-        Label1.Text = "缩放Zoom:" & 2 ^ TrackBar1.Value
+        PZOOM = 2 ^ TrackBar1.Value
+        TxtZoom.Text = "×" & PZoom.ToString
     End Sub
-    Private Sub Button9_Click(sender As Object, e As EventArgs) 
-        FileCopy("D:\yuzu-windows-msvc-20200531-5ead55df7\user\save\0000000000000000\6D74F859658CF0E9DC9DD5D96A655C71\01009B90006DC000\course_data_000.BCD",
-                 PT & "\MAP\Course_data_000.BCD")
-        DeMap("course_data_000.BCD", "Course_data_000")
-        Threading.Thread.Sleep(3000)
-        Me.Text = "已加载地图_11"
-        TextBox1.Text = PT & "\MAP\Course_data_000"
-        isMapIO = True
-        RefPic()
-    End Sub
+
     Private Function SetObjInfo(idx As Integer, flag As Integer) As ObjStr
         Dim PR, PB As String
         With SetObjInfo
@@ -3401,11 +3346,17 @@ Err:
         Dim i As Integer, P As Integer
         Dim PB As String
         Dim J1, J2 As ObjStr
+        Dim Offset, ADDR As Integer
+        Offset = IIf(IO, &H201, &H2E0E1)
         For i = 0 To MapHdr.ObjCount - 1
             If MapObj(i).CID = -1 Then
-                L.Items.Add(GetItemName(MapObj(i).ID, LH.GameStyle).ToString & " " & (0.5 + MapObj(i).X / 160).ToString & "," & (0.5 + MapObj(i).Y / 160).ToString)
+                'Offset +&H48 + &H0 + M * &H20
+                ADDR = Offset + &H48 + &H0 + i * &H20
+                L.Items.Add(Hex(ADDR) & " " & GetItemName(MapObj(i).ID, LH.GameStyle).ToString & " " & (0.5 + MapObj(i).X / 160).ToString & "," & (0.5 + MapObj(i).Y / 160).ToString)
             Else
-                L.Items.Add(GetItemName(MapObj(i).ID, LH.GameStyle).ToString & "(" & GetItemName(MapObj(i).CID, LH.GameStyle) & ") " & (0.5 + MapObj(i).X / 160).ToString & "," & (0.5 + MapObj(i).Y / 160).ToString)
+                'Offset +&H48 + &H0 + M * &H20
+                ADDR = Offset + &H48 + &H0 + i * &H20
+                L.Items.Add(Hex(ADDR) & " " & GetItemName(MapObj(i).ID, LH.GameStyle).ToString & "(" & GetItemName(MapObj(i).CID, LH.GameStyle) & ") " & (0.5 + MapObj(i).X / 160).ToString & "," & (0.5 + MapObj(i).Y / 160).ToString)
             End If
 
             Select Case MapObj(i).ID
@@ -3496,9 +3447,10 @@ Err:
             End Select
         Next
     End Sub
-    Private Sub Button3_Click(sender As Object, e As EventArgs) 
-        TextBox3.Text = ""
-        ObjInfo()
+    Dim OCRRect As New Rectangle(0, 0, 1, 1)
+    Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
+        Timer1.Enabled = Not Timer1.Enabled
+        Button3.Text = If(Timer1.Enabled, "ON", "OFF")
     End Sub
     Public Sub ObjInfo()
 
@@ -3575,11 +3527,7 @@ Err:
         ms.Read(outBytes, 0, CInt(ms.Length))
         Return outBytes
     End Function
-    Private Sub PictureBox1_Click(sender As Object, e As EventArgs) 
-        On Error Resume Next
-        PictureBox1.Image.Save("E:\OBS录像\极难团\" & Strings.Left(TextBox9.Text, 9) & ".PNG")
-        Me.Text = "已保存"
-    End Sub
+
     Dim G0 As Graphics, B0 As New Bitmap（300, 30）
     Dim UR2 As String
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -3694,6 +3642,27 @@ Err:
         G2.CopyFromScreen(New Point(x, y), New Point(0, 0), New Size(1, 1))
         GetColor = B2.GetPixel(0, 0)
     End Function
+    Private Function OCR(P() As Byte) As String
+        'OCR识别
+        Try
+            Dim engine As TesseractEngine = New TesseractEngine("./tessdata", "eng", EngineMode.Default)
+            Dim img As Pix = Pix.LoadFromMemory(P)
+            Dim page As Page = engine.Process(img)
+            Dim text As String = page.GetText()
+            'Label1.Text = "置信度:" & page.GetMeanConfidence() & vbCrLf
+            OCR = Replace(text.ToUpper, "O", "0")
+            OCR = Replace(OCR, "-", "")
+            OCR = Replace(OCR, "_", "")
+            OCR = Replace(OCR, "+", "")
+            OCR = Replace(OCR, " ", "")
+            OCR = Replace(OCR, "*", "")
+            OCR = Replace(OCR, "/", "")
+            OCR = Replace(OCR, "\", "")
+            OCR = Strings.Left(OCR, 9)
+        Catch R As Exception
+            OCR = ""
+        End Try
+    End Function
 
     Private Sub PicMap_DragEnter(sender As Object, e As DragEventArgs)
         If e.Data.GetDataPresent(DataFormats.FileDrop) Then
@@ -3721,10 +3690,33 @@ Err:
     End Sub
     Private Sub Form1_DragDrop(sender As Object, e As DragEventArgs) Handles Me.DragDrop
         Dim files() As String = e.Data.GetData(DataFormats.FileDrop)
-        For Each path In files
-            TextBox1.Text = path
-        Next
-        RefPic()
+        If File.Exists(files(0)) Then
+            Dim F = New FileInfo(files(0))
+            If UCase(F.Extension) = ".BCD" Then
+                Label6.Text = F.FullName
+                Label6.Text += vbCrLf & PT & "\download_data\" & F.Name
+                File.Copy(F.FullName, PT & "\download_data\" & F.Name)
+                DeMap2(F.Name, UCase(F.Name).Replace(".BCD", ".DEC"))
+                TextBox1.Text = UCase(F.Name).Replace(".BCD", ".DEC")
+                RefPic()
+            ElseIf UCase(F.Extension) = ".DEC" Then
+                Label6.Text = F.FullName
+                Label6.Text += vbCrLf & PT & "\decrypt_data\" & F.Name
+                File.Copy(F.FullName, PT & "\decrypt_data\" & F.Name)
+                TextBox1.Text = F.Name
+                RefPic()
+            End If
+        Else
+            Exit Sub
+        End If
+
+
+    End Sub
+
+    Private Sub Form1_DragEnter(sender As Object, e As DragEventArgs) Handles Me.DragEnter
+        If e.Data.GetDataPresent(DataFormats.FileDrop) Then
+            e.Effect = DragDropEffects.All
+        End If
     End Sub
 
     Private Function GetD(P As String) As String
@@ -3807,7 +3799,7 @@ Err:
             Label2.Text += "标签:" & JSON.SelectToken("tags_name").ToString.Replace(vbCrLf, "") & vbCrLf
             Label2.Text += "最短时间:" & JSON.SelectToken("world_record_pretty").ToString & vbCrLf
             Label2.Text += "上传时间:" & JSON.SelectToken("upload_time_pretty").ToString & vbCrLf
-            'Label2.Text += "过关条件:" & JSON.SelectToken("clear_condition_name").ToString & vbCrLf
+            'LABEL2.Text += "过关条件:" & JSON.SelectToken("clear_condition_name").ToString & vbCrLf
             Label2.Text += "过关:" & JSON.SelectToken("clears").ToString & vbCrLf
             Label2.Text += "尝试:" & JSON.SelectToken("attempts").ToString & vbCrLf
             Label2.Text += "过关率：" & JSON.SelectToken("clear_rate").ToString & vbCrLf
@@ -3851,25 +3843,150 @@ Err:
             MiiCache(1) = Image.FromFile(PT & "\MII\" & JSON.SelectToken("first_completer").SelectToken("code").ToString)
             MiiCache(2) = Image.FromFile(PT & "\MII\" & JSON.SelectToken("record_holder").SelectToken("code").ToString)
             Timer2.Enabled = True
-            End If
-            End Sub
-    Private Sub Button11_Click(sender As Object, e As EventArgs) 
+        End If
+    End Sub
+    Private Sub Button11_Click(sender As Object, e As EventArgs)
         LoadLvlInfo()
     End Sub
     Function GetStrW(s As String) As Single
         Dim B As New Bitmap(300, 100)
         Dim G As Graphics = Graphics.FromImage(B), SZ As SizeF
-        SZ = G.MeasureString(s, Button11.Font)
+        SZ = G.MeasureString(s, Button1.Font)
         GetStrW = SZ.Width
     End Function
 
-    Private Sub Button14_Click(sender As Object, e As EventArgs) 
+    Private Sub Button14_Click(sender As Object, e As EventArgs)
         LoadLvlInfo()
     End Sub
 
     Dim MiiF As Integer, MiiCache(2) As Image
+    Dim ScX() As String, ScY(3) As Integer
+    Private Sub Button3_Click_1(sender As Object, e As EventArgs)
+        Timer1.Enabled = Not Timer1.Enabled
+        Me.Text = If(Timer1.Enabled, "ON", "OFF")
+    End Sub
+    Function GetC(x As Integer, y As Integer) As Color
+        Dim B As New Bitmap(1, 1)
+        Dim G As Graphics = Graphics.FromImage(B)
+        G.CopyFromScreen(New Point(x, y), New Point(0, 0), New Drawing.Size(1, 1))
+        Return B.GetPixel(0, 0)
+    End Function
+
     Dim MiiB(2) As Bitmap, MiiG(2) As Graphics
-    Private Sub Button15_Click(sender As Object, e As EventArgs) 
+
+    Private Sub Button6_Click_1(sender As Object, e As EventArgs) 
+        Dim bcdFileBytes = File.ReadAllBytes(TextBox1.Text)
+        Dim DeData = Decrypt(bcdFileBytes)
+        File.WriteAllBytes(TextBox1.Text & ".DAT", DeData)
+    End Sub
+
+    Private Sub TextBox9_Click(sender As Object, e As EventArgs) Handles TextBox9.Click
+        TextBox9.SelectAll()
+    End Sub
+
+    Dim BBB As New Bitmap(300, 50)
+    Dim GGG As Graphics = Graphics.FromImage(BBB)
+
+    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
+        '255,206,1
+        '0,0,0
+        If GetC(1920 + 225, 57) = Color.FromArgb(255, 0, 0, 0) AndAlso
+            GetC(1920 + 43, 209) = Color.FromArgb(255, 0, 0, 0) AndAlso
+            GetC(1920 + 102, 105) = Color.FromArgb(255, 255, 206, 0) Then
+            '225 57
+            '43 209
+            '102 105
+            GGG.CopyFromScreen(New Point(1920 + 110, 0 + 260), New Point(0, 0), New Drawing.Size(300, 50))
+            PS.Image = BBB
+            TextBox9.Text = OCRbyImg(BBB)
+            Threading.Thread.Sleep(5000)
+        End If
+    End Sub
+    Public Function OCR(testImagePath As String) As String
+        'OCR识别
+        Try
+            Dim engine As TesseractEngine = New TesseractEngine("./tessdata", "eng", EngineMode.Default)
+            Dim img As Pix = Pix.LoadFromFile(testImagePath)
+            Dim page As Page = engine.Process(img)
+            Dim text As String = page.GetText()
+            OCR = text
+            'Dim iter As ResultIterator = page.GetIterator()
+            'iter.Begin()
+            'Do
+            '    Do
+            '        Do
+            '            Do
+
+            '                If iter.IsAtBeginningOf(PageIteratorLevel.Block) Then
+            '                    Label1.Text += "<BLOCK>" & vbCrLf
+            '                End If
+            '                Label1.Text += iter.GetText(PageIteratorLevel.Word) & vbCrLf
+            '                Label1.Text += vbCrLf
+            '                If iter.IsAtFinalOf(PageIteratorLevel.TextLine, PageIteratorLevel.Word) Then
+            '                    Label1.Text += vbCrLf
+            '                End If
+            '            Loop While iter.Next(PageIteratorLevel.TextLine, PageIteratorLevel.Word)
+
+            '            If iter.IsAtFinalOf(PageIteratorLevel.Para, PageIteratorLevel.TextLine) Then
+            '                Label1.Text += vbCrLf
+            '            End If
+            '        Loop While iter.Next(PageIteratorLevel.Para, PageIteratorLevel.TextLine)
+            '    Loop While iter.Next(PageIteratorLevel.Block, PageIteratorLevel.Para)
+            'Loop While iter.Next(PageIteratorLevel.Block)
+        Catch R As Exception
+            OCR = "文本识别错误：" & R.Message & vbCrLf & R.ToString
+        End Try
+    End Function
+    Public Function OCRbyImg(B As Image) As String
+        'OCR识别
+        Dim RE As String
+        Try
+            Dim engine As New TesseractEngine("./tessdata", "eng", EngineMode.Default)
+            Dim MS As New MemoryStream
+            B.Save(MS, Imaging.ImageFormat.Png)
+            Dim Buffer() As Byte
+            ReDim Buffer(MS.Length)
+            MS.Seek(0, SeekOrigin.Begin)
+            MS.Read(Buffer, 0, MS.Length)
+            Dim img As Pix = Pix.LoadFromMemory(Buffer)
+            Dim page As Page = engine.Process(img)
+            Dim text As String = page.GetText()
+            RE = text
+            'Dim iter As ResultIterator = page.GetIterator()
+            'iter.Begin()
+            'Do
+            '    Do
+            '        Do
+            '            Do
+
+            '                If iter.IsAtBeginningOf(PageIteratorLevel.Block) Then
+            '                    Label1.Text += "<BLOCK>" & vbCrLf
+            '                End If
+            '                Label1.Text += iter.GetText(PageIteratorLevel.Word) & vbCrLf
+            '                Label1.Text += vbCrLf
+            '                If iter.IsAtFinalOf(PageIteratorLevel.TextLine, PageIteratorLevel.Word) Then
+            '                    Label1.Text += vbCrLf
+            '                End If
+            '            Loop While iter.Next(PageIteratorLevel.TextLine, PageIteratorLevel.Word)
+
+            '            If iter.IsAtFinalOf(PageIteratorLevel.Para, PageIteratorLevel.TextLine) Then
+            '                Label1.Text += vbCrLf
+            '            End If
+            '        Loop While iter.Next(PageIteratorLevel.Para, PageIteratorLevel.TextLine)
+            '    Loop While iter.Next(PageIteratorLevel.Block, PageIteratorLevel.Para)
+            'Loop While iter.Next(PageIteratorLevel.Block)
+        Catch R As Exception
+            'OCRbyImg = "文本识别错误：" & R.Message & vbCrLf & R.ToString
+            RE = ""
+        End Try
+        RE = UCase(RE)
+        RE = RE.Replace("O", "0")
+        RE = RE.Replace("I", "1")
+        RE = RE.Replace("Z", "2")
+        Return RE
+    End Function
+
+    Private Sub Button15_Click(sender As Object, e As EventArgs)
         Timer2.Enabled = True
     End Sub
 
@@ -3887,11 +4004,6 @@ Err:
         MiiF = MiiF Mod 16
     End Sub
 
-    Private Sub Form1_DragEnter(sender As Object, e As DragEventArgs) Handles Me.DragEnter
-        If e.Data.GetDataPresent(DataFormats.FileDrop) Then
-            e.Effect = DragDropEffects.Copy
-        End If
-    End Sub
 
     Dim GG As Graphics
     Dim GB As Bitmap
