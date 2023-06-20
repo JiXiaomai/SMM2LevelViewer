@@ -2985,7 +2985,7 @@ Err:
                 '下载文件
                 Try
                     Dim wc = New WebClient
-                    wc.DownloadFile("https://" & MaterialComboBox1.Text & "/mm2/level_data/" & TCode.Text, PT & "\download_data\" & TCode.Text & ".BCD")
+                    wc.DownloadFile("https://" & CApi.Text & "/mm2/level_data/" & TCode.Text, PT & "\download_data\" & TCode.Text & ".BCD")
                     Do
                         Application.DoEvents()
                         If IO.File.Exists(PT & "\download_data\" & TCode.Text & ".BCD") Then
