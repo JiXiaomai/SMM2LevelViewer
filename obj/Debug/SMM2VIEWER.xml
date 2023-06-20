@@ -8,18 +8,738 @@ SMM2VIEWER
 <members>
 <member name="T:SMM2VIEWER.My.Resources.Resources">
 <summary>
-  A strongly-typed resource class, for looking up localized strings, etc.
+  一个强类型的资源类，用于查找本地化的字符串等。
 </summary>
 </member>
 <member name="P:SMM2VIEWER.My.Resources.Resources.ResourceManager">
 <summary>
-  Returns the cached ResourceManager instance used by this class.
+  返回此类使用的缓存的 ResourceManager 实例。
 </summary>
 </member>
 <member name="P:SMM2VIEWER.My.Resources.Resources.Culture">
 <summary>
-  Overrides the current thread's CurrentUICulture property for all
-  resource lookups using this strongly typed resource class.
+  重写当前线程的 CurrentUICulture 属性，对
+  使用此强类型资源类的所有资源查找执行重写。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Cmn_BackBtn_00__Cmn_BackBtn_00_Icon_MenuNwk_01_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Cmn_EventClearMark_00__Cmn_EventClearMark_00_EventClearListIcon_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Cmn_EventClearTime_00__Cmn_EventClearTime_00_NCL_IconS32_BestTime_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Cmn_GoodBtn_00__Cmn_GoodBtn_00_Heart_00_d">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Cmn_InfoRealTime_00__Cmn_InfoRealTime_00_Icon_Comment_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Cmn_InfoRealTime_00__Cmn_InfoRealTime_00_Icon_MenuNwk_01_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Cmn_InfoRealTime_00__Cmn_InfoRealTime_00_NCL_IconS_BestTime_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Cmn_InfoRealTime_00__Cmn_InfoRealTime_00_NCL_IconS_Footprint_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Cmn_InfoRealTime_00__Cmn_InfoRealTime_00_NCL_IconS_Good_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Cmn_Mission_00__Cmn_Mission_00_Icon_EditBtn_01_u">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Cmn_NegativeBtn_00__Cmn_NegativeBtn_00_HeartBreak_00_d">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Cmn_NegativeBtn_00__Cmn_NegativeBtn_00_HeartBreak_01_d">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Cmn_PauseMenu_00__Cmn_PauseMenu_00_NCL_IconS_PersonalBest_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Cmn_PauseMenu_00__Cmn_PauseMenu_00_NCL_IconS32_BestTime_d">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Cmn_PauseMenu_00__Cmn_PauseMenu_00_NCL_TitleIcon_03_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Cmn_PauseMenu_00__Cmn_PauseMenu_00_TagIcon_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Cmn_SubBtnS_00__Cmn_SubBtnS_00_Icon_MenuTitleBtn_00_d">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Edit_AreaBtn_00__Edit_AreaBtn_00_Icon_Area_00_q">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Edit_AreaBtn_00__Edit_AreaBtn_00_Icon_Area_01_q">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Edit_AreaBtn_00__Edit_AreaBtn_00_Icon_Veritical_00_t">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Edit_AreaBtn_00__Edit_AreaBtn_00_Icon_Veritical_01_t">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Edit_ChangeHourBtn_00__Edit_ChangeHourBtn_00_EditBtn_SunBtn_00_u">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Edit_ChangeHourBtn_00__Edit_ChangeHourBtn_00_EditBtn_SunBtn_01_u">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Edit_ModeGuide_00__Edit_ModeGuide_00_Icon_LayerIcon_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Edit_ModeGuide_00__Edit_ModeGuide_00_Icon_LayerIcon_01_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Edit_ModeGuide_00__Edit_ModeGuide_00_Icon_LayerIcon_02_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Edit_ModeGuide_00__Edit_ModeGuide_00_Icon_LayerIcon_03_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Edit_NoAutoScrollBtn_00__Edit_NoAutoScrollBtn_00_Icon_Scroll_00_u">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Edit_RingCategory_00__Edit_RingCategory_00_CategoryIcon_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Edit_RingCategory_00__Edit_RingCategory_00_CategoryIcon_01_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Edit_RingCategory_00__Edit_RingCategory_00_CategoryIcon_02_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Edit_RingCategory_00__Edit_RingCategory_00_CategoryIcon_03_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Edit_RingCategory_01__Edit_RingCategory_01_CategoryIcon_04_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Edit_RingCategory_01__Edit_RingCategory_01_CategoryIcon_05_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Edit_RingCategory_01__Edit_RingCategory_01_CategoryIcon_06_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Edit_RingCategory_01__Edit_RingCategory_01_CategoryIcon_07_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Edit_RingCategory_01__Edit_RingCategory_01_CategoryIcon_08_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Edit_ScrollEditBtn_00__Edit_ScrollEditBtn_00_EditBtn_LayerIconS_00_u">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Edit_SoundBtn_00__Edit_SoundBtn_00_Icon_Edit_00_u">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Edit_SoundBtn_00__Edit_SoundBtn_00_Icon_Edit_03_u">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Edit_TimerBtn_00__Edit_TimerBtn_00_Icon_EditBtn_00_u">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Edit_TrashCan_00__Edit_TrashCan_00_Icon_Trashcan_00_u">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Edit_TrashCan_00__Edit_TrashCan_00_Icon_Trashcan_01_u">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Edit_WaterLevelBtn_00__Edit_WaterLevelBtn_00_Icon_Edit_05_u">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Edit_WaterLevelBtn_00__Edit_WaterLevelBtn_00_Icon_Edit_12_u">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Edit_WaterLevelBtn_00__Edit_WaterLevelBtn_00_Icon_Edit_14_u">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Lcl_CourseInfoWindow_00__Lcl_CourseInfoWindow_00_CoopModeIcon_u">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Lcl_CourseInfoWindow_00__Lcl_CourseInfoWindow_00_NCL_ClearCheck32_00_d">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Lcl_CourseInfoWindow_00__Lcl_CourseInfoWindow_00_NCL_IconS_Footprint_d">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Lcl_CourseInfoWindow_00__Lcl_CourseInfoWindow_00_NCL_IconS_Good_d">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Lcl_CourseInfoWindow_00__Lcl_CourseInfoWindow_00_TagIcon_00_d">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Lcl_DecideBtnI_00__Lcl_DecideBtnI_00_NameIcon_00_d">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.MyW_Ending_00__MyW_Ending_00_MyW_Ster_00_d">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.MyW_Ending_00__MyW_Ending_00_NCL_ClearCheck64_00_u">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_ClearCheck_00__Nwk_ClearCheck_00_NCL_ListIconClearF_00_l">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_CommentDrawing_00__Nwk_CommentDrawing_00_CommentPostPen_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_CommentPosting_00__Nwk_CommentPosting_00_CommentPostDrawing_00_t">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_CommentPosting_00__Nwk_CommentPosting_00_CommentPostStamp_00_t">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_CommentPosting_00__Nwk_CommentPosting_00_EmotionIconFrustrated_00_t">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_CommentPosting_00__Nwk_CommentPosting_00_EmotionIconHappy_00_t">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_CommentPosting_00__Nwk_CommentPosting_00_EmotionIconLike_00_t">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_CommentPosting_00__Nwk_CommentPosting_00_EmotionIconNormal_00_t">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_CommentPosting_00__Nwk_CommentPosting_00_EmotionIconPuzzled_00_t">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_CommentPosting_00__Nwk_CommentPosting_00_EmotionIconSurprised_00_t">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_CourseDetail_00__Nwk_CourseDetail_00_NCL_IconS_Footprint_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_CourseDetail_00__Nwk_CourseDetail_00_NCL_IconS_Good_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_CourseList_00__Nwk_CourseList_00_NCL_IconS_BestTime_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_CourseList_00__Nwk_CourseList_00_NCL_IconS_ClearFirst_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_CourseListMaker_00__Nwk_CourseListMaker_00_FriendIcon_00_t">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_CourseListMaker_00__Nwk_CourseListMaker_00_NCL_TitleIcon_01_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_CourseListMaker_00__Nwk_CourseListMaker_00_OfficialUserIcon_t">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_CourseListWindow_00__Nwk_CourseListWindow_00_TagIcon_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_DownloadPlayBtn_00__Nwk_DownloadPlayBtn_00_PlayBtnIconDownload_00_u">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_DpointBtn_00__Nwk_DpointBtn_00_Icon_DpointBtn_00_u">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_DressTabBtn_00__Nwk_DressTabBtn_00_DressIcon_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_DressUp_00__Nwk_DressUp_00_DressIcon_01_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_DressUp_00__Nwk_DressUp_00_DressIcon_02_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_DressUp_00__Nwk_DressUp_00_DressIcon_03_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_DressUp_00__Nwk_DressUp_00_DressIcon_04_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_EndlessModeMenu_00__Nwk_EndlessModeMenu_00_NCL_TitleIcon_03_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_EventClearListBtn_00__Nwk_EventClearListBtn_00_EventClearListIcon_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_EventCourseData_00__Nwk_EventCourseData_00_NCL_IconS_PersonalBest_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_RoomSituation_00__Nwk_RoomSituation_00_BtlModeIcon_00_d">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_RoomSituation_00__Nwk_RoomSituation_00_BtlModeIcon_01_d">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_RoomSituation_00__Nwk_RoomSituation_00_LockIcon_01_t">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_RoomSituation_00__Nwk_RoomSituation_00_MainFrame_00_d">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_SignalLevel_00__Nwk_SignalLevel_00_BalloonPoint_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_SignalLevel_00__Nwk_SignalLevel_00_MainFrameS_00_d">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_SortBtn_00__Nwk_SortBtn_00_BtnMain_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_SortBtn_00__Nwk_SortBtn_00_BtnMainShB_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_SortBtn_00__Nwk_SortBtn_00_BtnMainShT_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_SortBtn_00__Nwk_SortBtn_00_ClearCourseIconBestTime_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_SortBtn_00__Nwk_SortBtn_00_ClearCourseIconClear_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_SortBtn_00__Nwk_SortBtn_00_ClearCourseIconClearFirst_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_SortBtn_00__Nwk_SortBtn_00_ClearCourseIconMCEasy_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_SortBtn_00__Nwk_SortBtn_00_ClearCourseIconMCHard_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_SortBtn_00__Nwk_SortBtn_00_ClearCourseIconMCNormal_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_SortBtn_00__Nwk_SortBtn_00_ClearCourseIconMCVeryHard_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_SortBtn_00__Nwk_SortBtn_00_NCL_BtnIconSearch_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_SortBtn_00__Nwk_SortBtn_00_NCL_SortBattlePoints_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_SortBtn_00__Nwk_SortBtn_00_NCL_SortClear_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_SortBtn_00__Nwk_SortBtn_00_NCL_SortCoursePoints_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_SortBtn_00__Nwk_SortBtn_00_NCL_SortTotal_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_SortBtn_00__Nwk_SortBtn_00_NCL_SortWeekly_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_SortBtn_01__Nwk_SortBtn_01_ClearCourseIconBestTime_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_SortBtn_01__Nwk_SortBtn_01_ClearCourseIconClear_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_SortBtn_01__Nwk_SortBtn_01_ClearCourseIconClearFirst_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_SortBtn_01__Nwk_SortBtn_01_ClearCourseIconMCEasy_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_SortBtn_01__Nwk_SortBtn_01_ClearCourseIconMCHard_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_SortBtn_01__Nwk_SortBtn_01_ClearCourseIconMCNormal_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_SortBtn_01__Nwk_SortBtn_01_ClearCourseIconMCVeryHard_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_SortBtn_01__Nwk_SortBtn_01_NCL_BtnIconSearch_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_SortBtn_01__Nwk_SortBtn_01_NCL_SortBattlePoints_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_SortBtn_01__Nwk_SortBtn_01_NCL_SortClear_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_SortBtn_01__Nwk_SortBtn_01_NCL_SortCoursePoints_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_SortBtn_01__Nwk_SortBtn_01_NCL_SortTotal_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_SortBtn_01__Nwk_SortBtn_01_NCL_SortWeekly_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_SortWindow_00__Nwk_SortWindow_00_NCL_SortClear_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_SortWindow_00__Nwk_SortWindow_00_NCL_SortCoursePoints_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_SortWindow_00__Nwk_SortWindow_00_NCL_SortTotal_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_SortWindow_00__Nwk_SortWindow_00_NCL_SortWeekly_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_StampFilterBtn_00__Nwk_StampFilterBtn_00_CommentPostStamp_00_t">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_TagRegister_00__Nwk_TagRegister_00_TagIcon_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_TitleBtn_00__Nwk_TitleBtn_00_NCL_TitleIcon_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_TitleBtn_01__Nwk_TitleBtn_01_NCL_TitleIcon_01_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_TitleBtn_02__Nwk_TitleBtn_02_NCL_TitleIcon_02_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_UploadCheck_00__Nwk_UploadCheck_00_Icon_Upload_00_u">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_UploadCheck_00__Nwk_UploadCheck_00_Icon_Upload_01_u">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_VoiseBtn_00__Nwk_VoiseBtn_00_VoiseIcon_00_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_VoiseBtn_00__Nwk_VoiseBtn_00_VoiseIcon_01_s">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_WorldMapInfo_00__Nwk_WorldMapInfo_00_WM_GameSkin_airship_00_l">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_WorldMapInfo_00__Nwk_WorldMapInfo_00_WM_GameSkin_athletic_00_l">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_WorldMapInfo_00__Nwk_WorldMapInfo_00_WM_GameSkin_castle_00_l">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_WorldMapInfo_00__Nwk_WorldMapInfo_00_WM_GameSkin_desert_00_l">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_WorldMapInfo_00__Nwk_WorldMapInfo_00_WM_GameSkin_hauntedhouse_00_l">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_WorldMapInfo_00__Nwk_WorldMapInfo_00_WM_GameSkin_plain_00_l">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_WorldMapInfo_00__Nwk_WorldMapInfo_00_WM_GameSkin_snow_00_l">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_WorldMapInfo_00__Nwk_WorldMapInfo_00_WM_GameSkin_underground_00_l">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_WorldMapInfo_00__Nwk_WorldMapInfo_00_WM_GameSkin_water_00_l">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Nwk_WorldMapInfo_00__Nwk_WorldMapInfo_00_WM_GameSkin_woods_00_l">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Play_Comment_00__Play_Comment_00_MCB_FukidashiIcon_00_t">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Play_PlaySceneBattle_00__Play_PlaySceneBattle_00_RespawnPointMiddle_00_u">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Play_PlaySceneBattle_00__Play_PlaySceneBattle_00_RespawnPointStart_00_u">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
+</summary>
+</member>
+<member name="P:SMM2VIEWER.My.Resources.Resources.Qst_Reward_00__Qst_Reward_00_RewordIcon_02_u">
+<summary>
+  查找 System.Drawing.Bitmap 类型的本地化资源。
 </summary>
 </member>
 </members>

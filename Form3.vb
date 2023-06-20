@@ -11,7 +11,7 @@
         isMove = False
     End Sub
 
-
+    Dim TempP As Image
     Private Sub P_MouseMove(sender As Object, e As MouseEventArgs) Handles P.MouseMove
         If isMove Then
             P.Left += e.X - MX
@@ -20,12 +20,23 @@
         CX = 1 + e.X \ PZoom
         CY = 1 + e.Y \ PZoom
         If CX <> CX0 OrElse CY <> CY0 Then
-            ToolTip1.Hide(P)
+            'ToolTip1.Hide(P)
             ObjC = ObjLocData(1, CX, MapHeight(1) + 1 - CY)
-            TTipImg = GetItemImg(ObjC, TTW, TTH)
-            ToolTip1.Show(" ", P)
+            'TTipImg = GetItemImg(ObjC, TTW, TTH)
+            'ToolTip1.Show(" ", P)
+            TempP = GetItemImg(ObjC, TTW, TTH)
+            If TempP Is Nothing Then
+                Card.Left = -500
+            Else
+                Pic.Image = GetItemImg(ObjC, TTW, TTH)
+                Card.Left = P.Left + CX * PZoom
+                Card.Top = P.Top + CY * PZoom
+            End If
+
             CX0 = CX
             CY0 = CY
+        Else
+
         End If
     End Sub
     Protected Overrides Sub OnLoad(e As EventArgs)

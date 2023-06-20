@@ -35,7 +35,8 @@
             code &= Mid(chr1, (num Mod 30) + 1, 1)
             num \= 30
         Loop
-        R += (vbCrLf & IIf(D = "0", "关卡ID：", "工匠ID：") & code)
+        'R += (vbCrLf & IIf(D = "0", "关卡ID：", "工匠ID：") & code)
+        R = code
         Return R
     End Function
     Function Code2Num(code As String, ByRef INFO As String) As Integer

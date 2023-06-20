@@ -46,7 +46,7 @@
     
     mimetype: application/x-microsoft.net.object.binary.base64
     value   : The object must be serialized with 
-            : System.Serialization.Formatters.Binary.BinaryFormatter
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
     
     mimetype: application/x-microsoft.net.object.soap.base64
@@ -60,6 +60,7 @@
             : and then encoded with base64 encoding.
     -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
@@ -68,9 +69,10 @@
               <xsd:sequence>
                 <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="name" use="required" type="xsd:string" />
               <xsd:attribute name="type" type="xsd:string" />
               <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
@@ -85,9 +87,10 @@
                 <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
                 <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
               <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
               <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
@@ -109,9 +112,442 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="Cmn_BackBtn_00--Cmn_BackBtn_00-Icon_MenuNwk_01^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Cmn_BackBtn_00--Cmn_BackBtn_00-Icon_MenuNwk_01^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Cmn_EventClearMark_00--Cmn_EventClearMark_00-EventClearListIcon_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Cmn_EventClearMark_00--Cmn_EventClearMark_00-EventClearListIcon_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Cmn_EventClearTime_00--Cmn_EventClearTime_00-NCL_IconS32_BestTime^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Cmn_EventClearTime_00--Cmn_EventClearTime_00-NCL_IconS32_BestTime^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Cmn_GoodBtn_00--Cmn_GoodBtn_00-Heart_00^d" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Cmn_GoodBtn_00--Cmn_GoodBtn_00-Heart_00^d.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Cmn_InfoRealTime_00--Cmn_InfoRealTime_00-Icon_Comment_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Cmn_InfoRealTime_00--Cmn_InfoRealTime_00-Icon_Comment_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Cmn_InfoRealTime_00--Cmn_InfoRealTime_00-Icon_MenuNwk_01^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Cmn_InfoRealTime_00--Cmn_InfoRealTime_00-Icon_MenuNwk_01^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Cmn_InfoRealTime_00--Cmn_InfoRealTime_00-NCL_IconS_BestTime^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Cmn_InfoRealTime_00--Cmn_InfoRealTime_00-NCL_IconS_BestTime^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Cmn_InfoRealTime_00--Cmn_InfoRealTime_00-NCL_IconS_Footprint^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Cmn_InfoRealTime_00--Cmn_InfoRealTime_00-NCL_IconS_Footprint^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Cmn_InfoRealTime_00--Cmn_InfoRealTime_00-NCL_IconS_Good^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Cmn_InfoRealTime_00--Cmn_InfoRealTime_00-NCL_IconS_Good^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Cmn_Mission_00--Cmn_Mission_00-Icon_EditBtn_01^u" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Cmn_Mission_00--Cmn_Mission_00-Icon_EditBtn_01^u.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Cmn_NegativeBtn_00--Cmn_NegativeBtn_00-HeartBreak_00^d" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Cmn_NegativeBtn_00--Cmn_NegativeBtn_00-HeartBreak_00^d.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Cmn_NegativeBtn_00--Cmn_NegativeBtn_00-HeartBreak_01^d" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Cmn_NegativeBtn_00--Cmn_NegativeBtn_00-HeartBreak_01^d.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Cmn_PauseMenu_00--Cmn_PauseMenu_00-NCL_IconS_PersonalBest^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Cmn_PauseMenu_00--Cmn_PauseMenu_00-NCL_IconS_PersonalBest^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Cmn_PauseMenu_00--Cmn_PauseMenu_00-NCL_IconS32_BestTime^d" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Cmn_PauseMenu_00--Cmn_PauseMenu_00-NCL_IconS32_BestTime^d.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Cmn_PauseMenu_00--Cmn_PauseMenu_00-NCL_TitleIcon_03^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Cmn_PauseMenu_00--Cmn_PauseMenu_00-NCL_TitleIcon_03^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Cmn_PauseMenu_00--Cmn_PauseMenu_00-TagIcon_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Cmn_PauseMenu_00--Cmn_PauseMenu_00-TagIcon_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Cmn_SubBtnS_00--Cmn_SubBtnS_00-Icon_MenuTitleBtn_00^d" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Cmn_SubBtnS_00--Cmn_SubBtnS_00-Icon_MenuTitleBtn_00^d.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Edit_AreaBtn_00--Edit_AreaBtn_00-Icon_Area_00^q" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Edit_AreaBtn_00--Edit_AreaBtn_00-Icon_Area_00^q.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Edit_AreaBtn_00--Edit_AreaBtn_00-Icon_Area_01^q" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Edit_AreaBtn_00--Edit_AreaBtn_00-Icon_Area_01^q.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Edit_AreaBtn_00--Edit_AreaBtn_00-Icon_Veritical_00^t" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Edit_AreaBtn_00--Edit_AreaBtn_00-Icon_Veritical_00^t.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Edit_AreaBtn_00--Edit_AreaBtn_00-Icon_Veritical_01^t" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Edit_AreaBtn_00--Edit_AreaBtn_00-Icon_Veritical_01^t.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Edit_ChangeHourBtn_00--Edit_ChangeHourBtn_00-EditBtn_SunBtn_00^u" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Edit_ChangeHourBtn_00--Edit_ChangeHourBtn_00-EditBtn_SunBtn_00^u.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Edit_ChangeHourBtn_00--Edit_ChangeHourBtn_00-EditBtn_SunBtn_01^u" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Edit_ChangeHourBtn_00--Edit_ChangeHourBtn_00-EditBtn_SunBtn_01^u.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Edit_ModeGuide_00--Edit_ModeGuide_00-Icon_LayerIcon_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Edit_ModeGuide_00--Edit_ModeGuide_00-Icon_LayerIcon_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Edit_ModeGuide_00--Edit_ModeGuide_00-Icon_LayerIcon_01^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Edit_ModeGuide_00--Edit_ModeGuide_00-Icon_LayerIcon_01^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Edit_ModeGuide_00--Edit_ModeGuide_00-Icon_LayerIcon_02^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Edit_ModeGuide_00--Edit_ModeGuide_00-Icon_LayerIcon_02^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Edit_ModeGuide_00--Edit_ModeGuide_00-Icon_LayerIcon_03^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Edit_ModeGuide_00--Edit_ModeGuide_00-Icon_LayerIcon_03^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Edit_NoAutoScrollBtn_00--Edit_NoAutoScrollBtn_00-Icon_Scroll_00^u" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Edit_NoAutoScrollBtn_00--Edit_NoAutoScrollBtn_00-Icon_Scroll_00^u.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Edit_RingCategory_00--Edit_RingCategory_00-CategoryIcon_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Edit_RingCategory_00--Edit_RingCategory_00-CategoryIcon_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Edit_RingCategory_00--Edit_RingCategory_00-CategoryIcon_01^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Edit_RingCategory_00--Edit_RingCategory_00-CategoryIcon_01^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Edit_RingCategory_00--Edit_RingCategory_00-CategoryIcon_02^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Edit_RingCategory_00--Edit_RingCategory_00-CategoryIcon_02^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Edit_RingCategory_00--Edit_RingCategory_00-CategoryIcon_03^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Edit_RingCategory_00--Edit_RingCategory_00-CategoryIcon_03^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Edit_RingCategory_01--Edit_RingCategory_01-CategoryIcon_04^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Edit_RingCategory_01--Edit_RingCategory_01-CategoryIcon_04^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Edit_RingCategory_01--Edit_RingCategory_01-CategoryIcon_05^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Edit_RingCategory_01--Edit_RingCategory_01-CategoryIcon_05^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Edit_RingCategory_01--Edit_RingCategory_01-CategoryIcon_06^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Edit_RingCategory_01--Edit_RingCategory_01-CategoryIcon_06^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Edit_RingCategory_01--Edit_RingCategory_01-CategoryIcon_07^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Edit_RingCategory_01--Edit_RingCategory_01-CategoryIcon_07^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Edit_RingCategory_01--Edit_RingCategory_01-CategoryIcon_08^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Edit_RingCategory_01--Edit_RingCategory_01-CategoryIcon_08^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Edit_ScrollEditBtn_00--Edit_ScrollEditBtn_00-EditBtn_LayerIconS_00^u" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Edit_ScrollEditBtn_00--Edit_ScrollEditBtn_00-EditBtn_LayerIconS_00^u.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Edit_SoundBtn_00--Edit_SoundBtn_00-Icon_Edit_00^u" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Edit_SoundBtn_00--Edit_SoundBtn_00-Icon_Edit_00^u.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Edit_SoundBtn_00--Edit_SoundBtn_00-Icon_Edit_03^u" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Edit_SoundBtn_00--Edit_SoundBtn_00-Icon_Edit_03^u.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Edit_TimerBtn_00--Edit_TimerBtn_00-Icon_EditBtn_00^u" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Edit_TimerBtn_00--Edit_TimerBtn_00-Icon_EditBtn_00^u.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Edit_TrashCan_00--Edit_TrashCan_00-Icon_Trashcan_00^u" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Edit_TrashCan_00--Edit_TrashCan_00-Icon_Trashcan_00^u.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Edit_TrashCan_00--Edit_TrashCan_00-Icon_Trashcan_01^u" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Edit_TrashCan_00--Edit_TrashCan_00-Icon_Trashcan_01^u.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Edit_WaterLevelBtn_00--Edit_WaterLevelBtn_00-Icon_Edit_05^u" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Edit_WaterLevelBtn_00--Edit_WaterLevelBtn_00-Icon_Edit_05^u.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Edit_WaterLevelBtn_00--Edit_WaterLevelBtn_00-Icon_Edit_12^u" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Edit_WaterLevelBtn_00--Edit_WaterLevelBtn_00-Icon_Edit_12^u.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Edit_WaterLevelBtn_00--Edit_WaterLevelBtn_00-Icon_Edit_14^u" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Edit_WaterLevelBtn_00--Edit_WaterLevelBtn_00-Icon_Edit_14^u.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Lcl_CourseInfoWindow_00--Lcl_CourseInfoWindow_00-CoopModeIcon^u" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Lcl_CourseInfoWindow_00--Lcl_CourseInfoWindow_00-CoopModeIcon^u.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Lcl_CourseInfoWindow_00--Lcl_CourseInfoWindow_00-NCL_ClearCheck32_00^d" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Lcl_CourseInfoWindow_00--Lcl_CourseInfoWindow_00-NCL_ClearCheck32_00^d.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Lcl_CourseInfoWindow_00--Lcl_CourseInfoWindow_00-NCL_IconS_Footprint^d" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Lcl_CourseInfoWindow_00--Lcl_CourseInfoWindow_00-NCL_IconS_Footprint^d.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Lcl_CourseInfoWindow_00--Lcl_CourseInfoWindow_00-NCL_IconS_Good^d" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Lcl_CourseInfoWindow_00--Lcl_CourseInfoWindow_00-NCL_IconS_Good^d.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Lcl_CourseInfoWindow_00--Lcl_CourseInfoWindow_00-TagIcon_00^d" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Lcl_CourseInfoWindow_00--Lcl_CourseInfoWindow_00-TagIcon_00^d.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Lcl_DecideBtnI_00--Lcl_DecideBtnI_00-NameIcon_00^d" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Lcl_DecideBtnI_00--Lcl_DecideBtnI_00-NameIcon_00^d.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="MyW_Ending_00--MyW_Ending_00-MyW_Ster_00^d" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\MyW_Ending_00--MyW_Ending_00-MyW_Ster_00^d.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="MyW_Ending_00--MyW_Ending_00-NCL_ClearCheck64_00^u" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\MyW_Ending_00--MyW_Ending_00-NCL_ClearCheck64_00^u.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_ClearCheck_00--Nwk_ClearCheck_00-NCL_ListIconClearF_00^l" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_ClearCheck_00--Nwk_ClearCheck_00-NCL_ListIconClearF_00^l.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_CommentDrawing_00--Nwk_CommentDrawing_00-CommentPostPen_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_CommentDrawing_00--Nwk_CommentDrawing_00-CommentPostPen_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_CommentPosting_00--Nwk_CommentPosting_00-CommentPostDrawing_00^t" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_CommentPosting_00--Nwk_CommentPosting_00-CommentPostDrawing_00^t.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_CommentPosting_00--Nwk_CommentPosting_00-CommentPostStamp_00^t" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_CommentPosting_00--Nwk_CommentPosting_00-CommentPostStamp_00^t.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_CommentPosting_00--Nwk_CommentPosting_00-EmotionIconFrustrated_00^t" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_CommentPosting_00--Nwk_CommentPosting_00-EmotionIconFrustrated_00^t.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_CommentPosting_00--Nwk_CommentPosting_00-EmotionIconHappy_00^t" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_CommentPosting_00--Nwk_CommentPosting_00-EmotionIconHappy_00^t.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_CommentPosting_00--Nwk_CommentPosting_00-EmotionIconLike_00^t" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_CommentPosting_00--Nwk_CommentPosting_00-EmotionIconLike_00^t.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_CommentPosting_00--Nwk_CommentPosting_00-EmotionIconNormal_00^t" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_CommentPosting_00--Nwk_CommentPosting_00-EmotionIconNormal_00^t.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_CommentPosting_00--Nwk_CommentPosting_00-EmotionIconPuzzled_00^t" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_CommentPosting_00--Nwk_CommentPosting_00-EmotionIconPuzzled_00^t.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_CommentPosting_00--Nwk_CommentPosting_00-EmotionIconSurprised_00^t" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_CommentPosting_00--Nwk_CommentPosting_00-EmotionIconSurprised_00^t.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_CourseDetail_00--Nwk_CourseDetail_00-NCL_IconS_Footprint^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_CourseDetail_00--Nwk_CourseDetail_00-NCL_IconS_Footprint^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_CourseDetail_00--Nwk_CourseDetail_00-NCL_IconS_Good^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_CourseDetail_00--Nwk_CourseDetail_00-NCL_IconS_Good^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_CourseList_00--Nwk_CourseList_00-NCL_IconS_BestTime^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_CourseList_00--Nwk_CourseList_00-NCL_IconS_BestTime^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_CourseList_00--Nwk_CourseList_00-NCL_IconS_ClearFirst^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_CourseList_00--Nwk_CourseList_00-NCL_IconS_ClearFirst^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_CourseListMaker_00--Nwk_CourseListMaker_00-FriendIcon_00^t" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_CourseListMaker_00--Nwk_CourseListMaker_00-FriendIcon_00^t.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_CourseListMaker_00--Nwk_CourseListMaker_00-NCL_TitleIcon_01^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_CourseListMaker_00--Nwk_CourseListMaker_00-NCL_TitleIcon_01^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_CourseListMaker_00--Nwk_CourseListMaker_00-OfficialUserIcon^t" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_CourseListMaker_00--Nwk_CourseListMaker_00-OfficialUserIcon^t.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_CourseListWindow_00--Nwk_CourseListWindow_00-TagIcon_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_CourseListWindow_00--Nwk_CourseListWindow_00-TagIcon_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_DownloadPlayBtn_00--Nwk_DownloadPlayBtn_00-PlayBtnIconDownload_00^u" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_DownloadPlayBtn_00--Nwk_DownloadPlayBtn_00-PlayBtnIconDownload_00^u.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_DpointBtn_00--Nwk_DpointBtn_00-Icon_DpointBtn_00^u" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_DpointBtn_00--Nwk_DpointBtn_00-Icon_DpointBtn_00^u.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_DressTabBtn_00--Nwk_DressTabBtn_00-DressIcon_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_DressTabBtn_00--Nwk_DressTabBtn_00-DressIcon_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_DressUp_00--Nwk_DressUp_00-DressIcon_01^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_DressUp_00--Nwk_DressUp_00-DressIcon_01^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_DressUp_00--Nwk_DressUp_00-DressIcon_02^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_DressUp_00--Nwk_DressUp_00-DressIcon_02^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_DressUp_00--Nwk_DressUp_00-DressIcon_03^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_DressUp_00--Nwk_DressUp_00-DressIcon_03^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_DressUp_00--Nwk_DressUp_00-DressIcon_04^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_DressUp_00--Nwk_DressUp_00-DressIcon_04^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_EndlessModeMenu_00--Nwk_EndlessModeMenu_00-NCL_TitleIcon_03^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_EndlessModeMenu_00--Nwk_EndlessModeMenu_00-NCL_TitleIcon_03^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_EventClearListBtn_00--Nwk_EventClearListBtn_00-EventClearListIcon_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_EventClearListBtn_00--Nwk_EventClearListBtn_00-EventClearListIcon_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_EventCourseData_00--Nwk_EventCourseData_00-NCL_IconS_PersonalBest^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_EventCourseData_00--Nwk_EventCourseData_00-NCL_IconS_PersonalBest^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_RoomSituation_00--Nwk_RoomSituation_00-BtlModeIcon_00^d" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_RoomSituation_00--Nwk_RoomSituation_00-BtlModeIcon_00^d.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_RoomSituation_00--Nwk_RoomSituation_00-BtlModeIcon_01^d" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_RoomSituation_00--Nwk_RoomSituation_00-BtlModeIcon_01^d.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_RoomSituation_00--Nwk_RoomSituation_00-LockIcon_01^t" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_RoomSituation_00--Nwk_RoomSituation_00-LockIcon_01^t.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_RoomSituation_00--Nwk_RoomSituation_00-MainFrame_00^d" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_RoomSituation_00--Nwk_RoomSituation_00-MainFrame_00^d.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_SignalLevel_00--Nwk_SignalLevel_00-BalloonPoint_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_SignalLevel_00--Nwk_SignalLevel_00-BalloonPoint_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_SignalLevel_00--Nwk_SignalLevel_00-MainFrameS_00^d" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_SignalLevel_00--Nwk_SignalLevel_00-MainFrameS_00^d.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_SortBtn_00--Nwk_SortBtn_00-BtnMain_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_SortBtn_00--Nwk_SortBtn_00-BtnMain_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_SortBtn_00--Nwk_SortBtn_00-BtnMainShB_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_SortBtn_00--Nwk_SortBtn_00-BtnMainShB_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_SortBtn_00--Nwk_SortBtn_00-BtnMainShT_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_SortBtn_00--Nwk_SortBtn_00-BtnMainShT_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_SortBtn_00--Nwk_SortBtn_00-ClearCourseIconBestTime_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_SortBtn_00--Nwk_SortBtn_00-ClearCourseIconBestTime_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_SortBtn_00--Nwk_SortBtn_00-ClearCourseIconClear_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_SortBtn_00--Nwk_SortBtn_00-ClearCourseIconClear_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_SortBtn_00--Nwk_SortBtn_00-ClearCourseIconClearFirst_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_SortBtn_00--Nwk_SortBtn_00-ClearCourseIconClearFirst_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_SortBtn_00--Nwk_SortBtn_00-ClearCourseIconMCEasy_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_SortBtn_00--Nwk_SortBtn_00-ClearCourseIconMCEasy_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_SortBtn_00--Nwk_SortBtn_00-ClearCourseIconMCHard_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_SortBtn_00--Nwk_SortBtn_00-ClearCourseIconMCHard_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_SortBtn_00--Nwk_SortBtn_00-ClearCourseIconMCNormal_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_SortBtn_00--Nwk_SortBtn_00-ClearCourseIconMCNormal_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_SortBtn_00--Nwk_SortBtn_00-ClearCourseIconMCVeryHard_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_SortBtn_00--Nwk_SortBtn_00-ClearCourseIconMCVeryHard_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_SortBtn_00--Nwk_SortBtn_00-NCL_BtnIconSearch_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_SortBtn_00--Nwk_SortBtn_00-NCL_BtnIconSearch_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_SortBtn_00--Nwk_SortBtn_00-NCL_SortBattlePoints_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_SortBtn_00--Nwk_SortBtn_00-NCL_SortBattlePoints_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_SortBtn_00--Nwk_SortBtn_00-NCL_SortClear_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_SortBtn_00--Nwk_SortBtn_00-NCL_SortClear_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_SortBtn_00--Nwk_SortBtn_00-NCL_SortCoursePoints_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_SortBtn_00--Nwk_SortBtn_00-NCL_SortCoursePoints_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_SortBtn_00--Nwk_SortBtn_00-NCL_SortTotal_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_SortBtn_00--Nwk_SortBtn_00-NCL_SortTotal_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_SortBtn_00--Nwk_SortBtn_00-NCL_SortWeekly_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_SortBtn_00--Nwk_SortBtn_00-NCL_SortWeekly_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_SortBtn_01--Nwk_SortBtn_01-ClearCourseIconBestTime_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_SortBtn_01--Nwk_SortBtn_01-ClearCourseIconBestTime_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_SortBtn_01--Nwk_SortBtn_01-ClearCourseIconClear_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_SortBtn_01--Nwk_SortBtn_01-ClearCourseIconClear_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_SortBtn_01--Nwk_SortBtn_01-ClearCourseIconClearFirst_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_SortBtn_01--Nwk_SortBtn_01-ClearCourseIconClearFirst_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_SortBtn_01--Nwk_SortBtn_01-ClearCourseIconMCEasy_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_SortBtn_01--Nwk_SortBtn_01-ClearCourseIconMCEasy_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_SortBtn_01--Nwk_SortBtn_01-ClearCourseIconMCHard_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_SortBtn_01--Nwk_SortBtn_01-ClearCourseIconMCHard_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_SortBtn_01--Nwk_SortBtn_01-ClearCourseIconMCNormal_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_SortBtn_01--Nwk_SortBtn_01-ClearCourseIconMCNormal_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_SortBtn_01--Nwk_SortBtn_01-ClearCourseIconMCVeryHard_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_SortBtn_01--Nwk_SortBtn_01-ClearCourseIconMCVeryHard_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_SortBtn_01--Nwk_SortBtn_01-NCL_BtnIconSearch_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_SortBtn_01--Nwk_SortBtn_01-NCL_BtnIconSearch_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_SortBtn_01--Nwk_SortBtn_01-NCL_SortBattlePoints_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_SortBtn_01--Nwk_SortBtn_01-NCL_SortBattlePoints_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_SortBtn_01--Nwk_SortBtn_01-NCL_SortClear_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_SortBtn_01--Nwk_SortBtn_01-NCL_SortClear_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_SortBtn_01--Nwk_SortBtn_01-NCL_SortCoursePoints_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_SortBtn_01--Nwk_SortBtn_01-NCL_SortCoursePoints_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_SortBtn_01--Nwk_SortBtn_01-NCL_SortTotal_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_SortBtn_01--Nwk_SortBtn_01-NCL_SortTotal_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_SortBtn_01--Nwk_SortBtn_01-NCL_SortWeekly_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_SortBtn_01--Nwk_SortBtn_01-NCL_SortWeekly_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_SortWindow_00--Nwk_SortWindow_00-NCL_SortClear_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_SortWindow_00--Nwk_SortWindow_00-NCL_SortClear_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_SortWindow_00--Nwk_SortWindow_00-NCL_SortCoursePoints_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_SortWindow_00--Nwk_SortWindow_00-NCL_SortCoursePoints_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_SortWindow_00--Nwk_SortWindow_00-NCL_SortTotal_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_SortWindow_00--Nwk_SortWindow_00-NCL_SortTotal_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_SortWindow_00--Nwk_SortWindow_00-NCL_SortWeekly_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_SortWindow_00--Nwk_SortWindow_00-NCL_SortWeekly_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_StampFilterBtn_00--Nwk_StampFilterBtn_00-CommentPostStamp_00^t" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_StampFilterBtn_00--Nwk_StampFilterBtn_00-CommentPostStamp_00^t.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_TagRegister_00--Nwk_TagRegister_00-TagIcon_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_TagRegister_00--Nwk_TagRegister_00-TagIcon_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_TitleBtn_00--Nwk_TitleBtn_00-NCL_TitleIcon_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_TitleBtn_00--Nwk_TitleBtn_00-NCL_TitleIcon_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_TitleBtn_01--Nwk_TitleBtn_01-NCL_TitleIcon_01^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_TitleBtn_01--Nwk_TitleBtn_01-NCL_TitleIcon_01^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_TitleBtn_02--Nwk_TitleBtn_02-NCL_TitleIcon_02^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_TitleBtn_02--Nwk_TitleBtn_02-NCL_TitleIcon_02^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_UploadCheck_00--Nwk_UploadCheck_00-Icon_Upload_00^u" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_UploadCheck_00--Nwk_UploadCheck_00-Icon_Upload_00^u.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_UploadCheck_00--Nwk_UploadCheck_00-Icon_Upload_01^u" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_UploadCheck_00--Nwk_UploadCheck_00-Icon_Upload_01^u.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_VoiseBtn_00--Nwk_VoiseBtn_00-VoiseIcon_00^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_VoiseBtn_00--Nwk_VoiseBtn_00-VoiseIcon_00^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_VoiseBtn_00--Nwk_VoiseBtn_00-VoiseIcon_01^s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_VoiseBtn_00--Nwk_VoiseBtn_00-VoiseIcon_01^s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_WorldMapInfo_00--Nwk_WorldMapInfo_00-WM_GameSkin_airship_00^l" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_WorldMapInfo_00--Nwk_WorldMapInfo_00-WM_GameSkin_airship_00^l.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_WorldMapInfo_00--Nwk_WorldMapInfo_00-WM_GameSkin_athletic_00^l" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_WorldMapInfo_00--Nwk_WorldMapInfo_00-WM_GameSkin_athletic_00^l.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_WorldMapInfo_00--Nwk_WorldMapInfo_00-WM_GameSkin_castle_00^l" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_WorldMapInfo_00--Nwk_WorldMapInfo_00-WM_GameSkin_castle_00^l.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_WorldMapInfo_00--Nwk_WorldMapInfo_00-WM_GameSkin_desert_00^l" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_WorldMapInfo_00--Nwk_WorldMapInfo_00-WM_GameSkin_desert_00^l.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_WorldMapInfo_00--Nwk_WorldMapInfo_00-WM_GameSkin_hauntedhouse_00^l" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_WorldMapInfo_00--Nwk_WorldMapInfo_00-WM_GameSkin_hauntedhouse_00^l.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_WorldMapInfo_00--Nwk_WorldMapInfo_00-WM_GameSkin_plain_00^l" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_WorldMapInfo_00--Nwk_WorldMapInfo_00-WM_GameSkin_plain_00^l.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_WorldMapInfo_00--Nwk_WorldMapInfo_00-WM_GameSkin_snow_00^l" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_WorldMapInfo_00--Nwk_WorldMapInfo_00-WM_GameSkin_snow_00^l.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_WorldMapInfo_00--Nwk_WorldMapInfo_00-WM_GameSkin_underground_00^l" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_WorldMapInfo_00--Nwk_WorldMapInfo_00-WM_GameSkin_underground_00^l.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_WorldMapInfo_00--Nwk_WorldMapInfo_00-WM_GameSkin_water_00^l" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_WorldMapInfo_00--Nwk_WorldMapInfo_00-WM_GameSkin_water_00^l.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Nwk_WorldMapInfo_00--Nwk_WorldMapInfo_00-WM_GameSkin_woods_00^l" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nwk_WorldMapInfo_00--Nwk_WorldMapInfo_00-WM_GameSkin_woods_00^l.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Play_Comment_00--Play_Comment_00-MCB_FukidashiIcon_00^t" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Play_Comment_00--Play_Comment_00-MCB_FukidashiIcon_00^t.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Play_PlaySceneBattle_00--Play_PlaySceneBattle_00-RespawnPointMiddle_00^u" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Play_PlaySceneBattle_00--Play_PlaySceneBattle_00-RespawnPointMiddle_00^u.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Play_PlaySceneBattle_00--Play_PlaySceneBattle_00-RespawnPointStart_00^u" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Play_PlaySceneBattle_00--Play_PlaySceneBattle_00-RespawnPointStart_00^u.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Qst_Reward_00--Qst_Reward_00-RewordIcon_02^u" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Qst_Reward_00--Qst_Reward_00-RewordIcon_02^u.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>
